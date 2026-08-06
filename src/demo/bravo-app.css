@@ -1,0 +1,3119 @@
+/* ==================================================================
+   Bravo Mobile DS — generated from Figma Variables
+   (Figma Variables/Colors.json, Typography.json, Spacing.json,
+    Radius.json, Progress.json)
+   Scoped under .bravo-app so it never collides with the Jeni/Oreo
+   tokens that style the review site around it.
+   Font: DM Sans (font/family/primary-app)
+   ================================================================== */
+
+/* Tokens live on `.bravo-scope` so they can also be applied to isolated
+   component previews in the Design System page, not just the full app. */
+.bravo-app,
+.bravo-scope {
+  /* --- grays --- */
+  --bv-black: #202020;              /* grays/black */
+  --bv-white: #ffffff;              /* grays/white */
+  --bv-border-strong: #474747;      /* grays/border/strong */
+  --bv-border-subtle: #e5e5ea;      /* grays/border/subtle */
+
+  --bv-zinc-50: #f2f2f7;
+  --bv-zinc-100: #e5e5ea;
+  --bv-zinc-200: #d1d1d6;
+  --bv-zinc-300: #c7c7cc;
+  --bv-zinc-400: #aeaeb2;
+  --bv-zinc-500: #8e8e93;
+  --bv-zinc-600: #636366;
+  --bv-zinc-700: #48484a;
+  --bv-zinc-800: #3a3a3c;
+  --bv-zinc-900: #2c2c2e;
+
+  --bv-neutral-50: #fafafa;
+  --bv-neutral-100: #f5f5f5;
+  --bv-neutral-150: #f2f2f2;
+  --bv-neutral-200: #e5e5e5;
+  --bv-neutral-300: #d4d4d4;
+  --bv-neutral-400: #a3a3a3;
+  --bv-neutral-500: #737373;
+  --bv-neutral-600: #525252;
+  --bv-neutral-700: #404040;
+  --bv-neutral-800: #262626;
+  --bv-neutral-900: #171717;
+
+  /* --- brand --- */
+  --bv-primary-500: #fee160;
+  --bv-primary-400: #fee780;
+  --bv-primary-300: #feeda0;
+  --bv-primary-200: #fff3bf;
+  --bv-primary-100: #fff9df;
+
+  --bv-base-500: #c63659;
+  --bv-base-400: #d15e7a;
+  --bv-base-300: #dd869b;
+  --bv-base-200: #e8afbd;
+  --bv-base-100: #f4d7de;
+  --bv-base-red: #c51f1f;
+
+  /* --- brand/theme --- */
+  --bv-orange-bright: #fea724;
+  --bv-orange-dark: #372100;
+  --bv-cyan-bright: #0cd0e7;
+  --bv-cyan-dark: #00282d;
+  --bv-purple-bright: #8a5dff;
+  --bv-purple-dark: #120041;
+  --bv-green-bright: #02cc6e;
+  --bv-green-dark: #00311a;
+  --bv-green-neo: #00ed7f;
+
+  /* --- semantic --- */
+  --bv-success-500: #1e4d3a;
+  --bv-success-400: #2f7657;
+  --bv-success-300: #53b483;
+  --bv-success-200: #8ee4ba;
+  --bv-success-100: #d9f9e6;
+  --bv-warning-500: #78310b;
+  --bv-warning-400: #a35c00;
+  --bv-warning-300: #e9a23b;
+  --bv-warning-200: #ffd16a;
+  --bv-warning-100: #fbf2cb;
+  --bv-info-500: #163253;
+  --bv-info-400: #2e5f99;
+  --bv-info-300: #4a90e2;
+  --bv-info-200: #92bcee;
+  --bv-info-100: #c9def6;
+  --bv-error-500: #601b1b;
+  --bv-error-400: #a32e2e;
+  --bv-error-300: #f34141;
+  --bv-error-200: #f7a1a1;
+  --bv-error-100: #fde9e9;
+
+  --bv-text-primary: var(--bv-black);      /* semantic/text/primary */
+  --bv-text-on-inverse: var(--bv-white);   /* semantic/text/on-inverse */
+  --bv-border-default: rgba(0, 0, 0, 0.12);
+  --bv-hover: rgba(0, 0, 0, 0.02);
+  --bv-press: rgba(0, 0, 0, 0.05);
+  --bv-hover-inverse: rgba(255, 255, 255, 0.06);
+  --bv-press-inverse: rgba(255, 255, 255, 0.1);
+  --bv-disabled-bg: var(--bv-neutral-100);
+  --bv-disabled-text: var(--bv-neutral-400);
+  --bv-store-open: #08e800;
+  --bv-store-closed: #eb3f3f;
+  --bv-pay: #04a956;
+  --bv-connected: #5cdf1e;
+
+  /* --- spacing (Figma Spacing.json) --- */
+  --bv-space-0: 0px;
+  --bv-space-1: 4px;
+  --bv-space-1-5: 6px;
+  --bv-space-2: 8px;
+  --bv-space-3: 12px;
+  --bv-space-4: 16px;
+  --bv-space-6: 24px;
+  --bv-space-8: 32px;
+  --bv-space-10: 40px;
+  --bv-space-12: 48px;
+  --bv-space-16: 64px;
+  --bv-space-24: 96px;
+  --bv-space-32: 128px;
+
+  /* --- radius (Figma Radius.json) --- */
+  --bv-radius-0: 0px;
+  --bv-radius-sm: 2px;
+  --bv-radius-base: 4px;
+  --bv-radius-md: 6px;
+  --bv-radius-lg: 8px;
+  --bv-radius-xl: 12px;
+  --bv-radius-2xl: 16px;
+  --bv-radius-3xl: 24px;
+  --bv-radius-full: 9999px;
+
+  /* --- typography (Figma Typography.json) --- */
+  --bv-font: 'DM Sans', -apple-system, sans-serif; /* font/family/primary-app */
+  /* Display face — Figma uses Boldonse for the social feed's section tabs.
+     Single weight (400); loaded from Google Fonts in index.html. */
+  --bv-font-display: 'Boldonse', 'DM Sans', -apple-system, sans-serif;
+  --bv-line-20: 20px;                              /* font/lineHeight/20 */
+
+  /* --- effects (styles observed in Figma: "bubble", "accent-default") --- */
+  --bv-shadow-float: 0px 5px 4px rgba(0, 0, 0, 0.15);
+  --bv-inset-bubble: inset 0px 1px 4px 0px #ffffff,
+    inset 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
+  --bv-inset-glow: inset 0px 0px 6.4px 0px #ffffff;
+  --bv-inset-accent: inset 0px -4px 4px 0px #000000,
+    inset 0px 1px 5px 0px rgba(255, 255, 255, 0.6);
+
+  /* ---------- device chrome ----------
+     The artboard reserves 59px for a status bar, and a dozen offsets are
+     measured from it (the top bar, the social header fade, the pushed-screen
+     nav, the sheets). Installed to the home screen the PHONE draws the
+     status bar outside our box, so this drops to 0 and every one of those
+     offsets follows — otherwise the whole app sits a status bar too low.
+     Expressed as a token so there is one number to change, not twelve. */
+  --bv-statusbar-h: 59px;
+
+  font-family: var(--bv-font);
+  color: var(--bv-text-primary);
+}
+
+.bravo-app.standalone {
+  --bv-statusbar-h: 0px;
+}
+
+/* ---------- effect utilities ----------
+   Siya's Figma effect styles, as classes, so an effect can be dropped onto
+   any element the same way it is applied on the canvas. The tokens above
+   stay for the cases where the effect has to be composed with another
+   shadow on the same element (box-shadow does not cascade-merge).
+
+   "accent" is the dark-surface treatment: a hard black lip along the
+   bottom and a soft white catch-light along the top, which is what makes
+   the black pills read as raised rather than flat. It belongs on every
+   solid dark control — the prompt box's voice button, the progress fill,
+   and every solid Button. */
+.bv-accent {
+  box-shadow: var(--bv-inset-accent);
+}
+
+/* "bubble" is the light-surface counterpart, carried by every avatar and
+   the neutral chips. */
+.bv-bubble {
+  box-shadow: var(--bv-inset-bubble);
+}
+
+/* ---------- easing ----------
+   The built-in CSS curves are too weak to read as intentional at UI
+   durations. `ease-in` is never used: it delays the first frame, which is
+   exactly the moment the user is watching. */
+.bravo-app,
+.bravo-scope {
+  --bv-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --bv-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --bv-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Full-app layout — only when rendering the actual phone screen. */
+.bravo-app {
+  background: var(--bv-white);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ---------- map background ----------
+   Replicates the Figma crop (node 19237:3738): the map asset is placed
+   553x874 at left:-76, with the image inset within it. */
+.bv-map-bg {
+  position: absolute;
+  left: -76px;
+  top: 0;
+  width: 553px;
+  height: 874px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bv-map-bg img {
+  position: absolute;
+  left: -0.03%;
+  top: -24.41%;
+  width: 100.06%;
+  height: 137.32%;
+  max-width: none;
+}
+
+/* ---------- status bar (Figma AppleStatusBar 19548:163729) ----------
+   Installed to the home screen the phone draws its own, so ours goes
+   invisible and the real clock/battery show through. `visibility`, not
+   `display`: the 59px band has to stay in the layout or every screen
+   measured against it (the challenge nav's 65px, the search sheet's
+   `calc(100% - var(--bv-statusbar-h) - 16px - var(--bv-kb-inset, 0px))`) would shift up. */
+/* Out of the layout entirely, not just invisible: the phone's own bar sits
+   above our box, so keeping the band would push the app a status bar too
+   far down. Every offset that cleared it is on --bv-statusbar-h, which is
+   0 here, so they collapse in step. */
+.bravo-app.standalone .bv-statusbar {
+  display: none;
+}
+
+.bv-statusbar {
+  height: var(--bv-statusbar-h);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 36px;
+  font-size: 17px;
+  font-weight: 600;
+  position: relative;
+  /* Always on top, like the real OS status bar — full-screen pushes such as
+     the challenge detail slide under it rather than covering the clock. */
+  z-index: 30;
+}
+
+.bv-statusbar-levels {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ---------- top bar (Figma 19548:163730) ----------
+   Sits above .bv-scrim so the balance pills stay lit while the
+   Combined Spendable sheet is open — they are the sheet's anchor. */
+.bv-topbar {
+  position: relative;
+  z-index: 8;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 370px;
+  margin: 6px auto 0;
+}
+
+.bv-topbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Component: Balance Pill (Figma 19548:163732 / 19548:163734) */
+.bv-balance-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-100);
+  border: 0.8px solid #ededed;
+  filter: drop-shadow(0px 5px 4px rgba(0, 0, 0, 0.15));
+  box-shadow: var(--bv-inset-glow);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  font-family: inherit;
+  transition: transform 0.15s ease;
+}
+
+button.bv-balance-pill {
+  cursor: pointer;
+}
+
+button.bv-balance-pill:active {
+  transform: scale(0.96);
+}
+
+/* Component: Coin (Figma "coin a" / Group 1996)
+   The rosette is placed in percentages so the same rule holds at 19px
+   inside a balance pill and at 42px inside a promotion card. */
+.bv-coin {
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+}
+
+.bv-coin > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bv-coin > .bv-coin-mark {
+  inset: auto;
+  left: 18.55%;
+  top: 15.45%;
+  width: 62.89%;
+  height: 68.29%;
+}
+
+/* Component: Circle Icon Button (Figma 19548:163745 / 19548:163747)
+   Always a true 35x35 circle — it used to take its height from the row,
+   which made it an ellipse next to the taller balance pills. */
+.bv-circle-btn {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  border: none;
+  filter: drop-shadow(0px 5px 4px rgba(0, 0, 0, 0.15));
+  color: var(--bv-black);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.bv-circle-btn:active {
+  transform: scale(0.94);
+}
+
+/* Inside a bordered card the shadow is dropped (Figma 19577:173694). */
+.bv-circle-btn-flat {
+  filter: none;
+}
+
+/* ---------- bottom stack ---------- */
+.bv-bottom-stack {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bv-bottom-stack.search-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Component: Filter Chip (Figma 19453:11111) */
+.bv-filter-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-left: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-filter-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  padding: var(--bv-space-1-5) var(--bv-space-3);
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+  color: var(--bv-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bv-filter-chip:active {
+  background: var(--bv-neutral-150);
+}
+
+/* Component: Suggestion Chip (Figma 19453:11120) */
+.bv-suggestion-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-suggestion-row::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-suggestion-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--bv-radius-xl);
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #282828;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bv-suggestion-chip img {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--bv-radius-md);
+  object-fit: cover;
+}
+
+/* ---------- dock (prompt + nav) — Figma 19564:169322 ----------
+   No card and no drag handle: the dock is a vertical fade that goes
+   transparent at the top so the map reads through, reaching solid
+   white at 34.4% — the stop Figma specifies. */
+.bv-dock {
+  box-sizing: border-box;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--bv-white) 34.4%
+  );
+  padding: 0 var(--bv-space-4) 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--bv-space-3);
+}
+
+/* Component: Prompt Box (Figma 19453:11129) — "bravo ai" gradient ring */
+.bv-prompt-box {
+  width: 100%;
+  border-radius: var(--bv-radius-full);
+  padding: 1.5px;
+  background: linear-gradient(90deg, #4af3ff 0%, #7ce0ff 30%, #ffc36a 75%, #ff8f4a 100%);
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04))
+    drop-shadow(0px 0px 0.5px rgba(0, 0, 0, 0.24));
+}
+
+/* 'search' variant (Figma 19612:9735) — a plain hairline instead of the
+   gradient ring. The 1px border replaces the 1.5px gradient padding, so
+   the inner pill keeps the same 8/12 padding and the box the same height. */
+.bv-prompt-box.search {
+  padding: 0;
+  border: 1px solid var(--bv-neutral-400);
+  background: var(--bv-white);
+}
+
+.bv-prompt-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  background: var(--bv-white);
+  border-radius: var(--bv-radius-full);
+  padding: var(--bv-space-2) var(--bv-space-3);
+}
+
+/* Both end states occupy the same slot so the pill never reflows when the
+   mic/voice pair swaps for the submit button. */
+.bv-prompt-idle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bv-black);
+}
+
+.bv-prompt-search-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bv-black);
+}
+
+.bv-prompt-plus {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  border: 0.5px solid var(--bv-neutral-200);
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+.bv-prompt-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  /* iOS Safari zooms focused inputs below 16px, which pans the installed PWA
+     under the native keyboard. */
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-text-primary);
+}
+
+.bv-prompt-input::placeholder {
+  color: var(--bv-neutral-400);
+}
+
+.bv-prompt-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  color: var(--bv-black);
+}
+
+/* audio-lines button — "accent-default" effect style */
+.bv-prompt-voice {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-black);
+  box-shadow: var(--bv-inset-accent);
+  color: var(--bv-white);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.bv-prompt-voice:active {
+  transform: scale(0.94);
+}
+
+/* Component: Bottom Nav (Figma 19453:11130) */
+.bv-bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 32px;
+  height: 27.6px;
+}
+
+.bv-nav-item {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bv-black);
+  opacity: 0.85;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.bv-nav-item:active {
+  transform: scale(0.92);
+}
+
+.bv-nav-item.inactive {
+  opacity: 0.45;
+}
+
+.bv-nav-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--bv-radius-full);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ---------- Combined Spendable sheet (Figma 19564:172054) ----------
+   Opened by tapping either balance pill. The scrim dims the map and the
+   dock; the top bar (z-8) and the sheet (z-9) stay above it. */
+.bv-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+/* Screen-level placement — HomeScreen decides where the card sits. */
+.bv-spendable-anchor {
+  position: absolute;
+  /* clears the top bar: status bar + 6 margin + 35 pill + 12 gap */
+  top: calc(var(--bv-statusbar-h) + 53px);
+  left: var(--bv-space-4);
+  right: var(--bv-space-4);
+  z-index: 9;
+}
+
+.bv-spendable-sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* off-token: Figma uses a literal 20px here, no spacing-5 variable exists */
+  gap: 20px;
+  padding: var(--bv-space-4);
+  /* Figma says 16; softened to 24, then 36, at Siya's direction. Off-token:
+     the radius scale stops at 24 (radius-3xl), so this is a literal. */
+  border-radius: 36px;
+  background: var(--bv-white);
+}
+
+.bv-sheet-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  text-align: center;
+}
+
+.bv-sheet-title {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-sheet-total {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-sheet-rows {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+.bv-sheet-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--bv-border-subtle);
+}
+
+/* Component: Balance Row (Figma 19564:172059 / 19564:172067) */
+.bv-balance-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bv-balance-row-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.bv-balance-row-label {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-balance-row-sub {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-400);
+}
+
+.bv-balance-row-value {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--bv-space-1);
+  color: var(--bv-neutral-400);
+}
+
+.bv-balance-row-amount {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* Component: Button (Figma DS component 1344:21875) */
+.bv-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bv-space-2);
+  padding: var(--bv-space-1-5) var(--bv-space-3);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.bv-button-lg {
+  width: 100%;
+  height: 48px;
+  /* Figma says 12; raised to 16 at Siya's direction. */
+  border-radius: var(--bv-radius-2xl);
+}
+
+.bv-button-sm {
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-lg);
+}
+
+.bv-button:active {
+  transform: scale(0.98);
+}
+
+.bv-button-accent {
+  color: var(--bv-primary-500);
+}
+
+/* --- fills (Figma 19346:8464 outline, 19650:15243 success) --- */
+
+/* The default. Carries the "accent" effect — the black lip and white
+   catch-light that make the pill read as raised. Same treatment as the
+   prompt box's voice button and the challenge progress fill. */
+.bv-button-solid {
+  background: var(--bv-black);
+  color: var(--bv-text-on-inverse);
+  box-shadow: var(--bv-inset-accent);
+}
+
+.bv-button-outline {
+  background: var(--bv-white);
+  border: 0.5px solid var(--bv-border-strong);
+  color: var(--bv-text-primary);
+}
+
+.bv-button-success {
+  background: var(--bv-success-400);
+  color: var(--bv-text-on-inverse);
+}
+
+/* Yellow reads "you can do this"; grey reads "you already are". */
+.bv-button-primary {
+  background: var(--bv-primary-500);
+  color: var(--bv-black);
+}
+
+.bv-button-quiet {
+  background: var(--bv-neutral-100);
+  color: var(--bv-neutral-500);
+}
+
+/* Component: Expiry Pill (Figma 19299:7837 / 19344:8461) */
+.bv-expiry-pill {
+  flex-shrink: 0;
+  padding: var(--bv-space-1-5) var(--bv-space-2);
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-150);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+/* ==================================================================
+   Social feed — Figma 19564:170684 ("Home-Scroll Up Discovery")
+   ================================================================== */
+
+/* Figma 19564:170686 — the header sits over the feed on a white-to-
+   transparent fade, so posts dissolve as they scroll under it.
+   The content is 100px tall (59 status bar + 6 + 35 row), and Figma's
+   white stop at 75.492% is what fixes the frame height: the fade has to
+   BEGIN where the tab row ends, so 100 / 0.75492 = 132.46px.
+   z-index 4 keeps it under the status bar (5) and over the feed (3). */
+.bv-social-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  /* content is statusbar + 6 + 35; Figma's white stop at 75.492% is what
+     fixes the frame height, so the fade begins where the tab row ends */
+  height: calc((var(--bv-statusbar-h) + 41px) / 0.75492);
+  padding: calc(var(--bv-statusbar-h) + 6px) var(--bv-space-4) 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--bv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.bv-social-header-row {
+  width: 370px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+/* Component: Section Tabs (Figma 19564:171669) */
+.bv-section-tabs {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 35px;
+}
+
+.bv-section-tab {
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  align-items: stretch;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Boldonse — the display face, used only here. 14px per Figma. */
+.bv-section-tab-label {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.bv-section-tab.active .bv-section-tab-label {
+  color: var(--bv-black);
+}
+
+.bv-section-tab-rule {
+  height: 2px;
+  width: 100%;
+  background: var(--bv-black);
+  opacity: 0;
+}
+
+.bv-section-tab.active .bv-section-tab-rule {
+  opacity: 1;
+}
+
+/* The second tab centres its label; the first is left-aligned (Figma). */
+.bv-section-tab:not(:first-child) .bv-section-tab-label {
+  text-align: center;
+}
+
+/* ---------- scrolling feed ---------- */
+.bv-social-scroll {
+  position: absolute;
+  /* full height: the feed scrolls under the header's fade */
+  inset: 0;
+  z-index: 3;
+  overflow-y: auto;
+  /* panes slide in from off-screen — clip rather than scroll sideways */
+  overflow-x: hidden;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  /* puts the Leaderboard heading at y=124 per Figma (statusbar + 65) */
+  padding-top: calc(var(--bv-statusbar-h) + 65px);
+  /* clears the dock */
+  padding-bottom: 140px;
+}
+
+.bv-social-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* one tab's worth of content — the thing that slides */
+.bv-social-pane {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+}
+
+.bv-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  width: 370px;
+  margin: 0 auto;
+}
+
+.bv-leaderboard-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-leaderboard-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-leaderboard-viewall {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  cursor: pointer;
+}
+
+/* Component: Leaderboard Rail (Figma 19564:171678) */
+.bv-leaderboard-rail {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.bv-leaderboard-rail.is-dragging {
+  cursor: grabbing;
+}
+
+.bv-leaderboard-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-leaderboard-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.bv-leaderboard-avatar {
+  width: 61px;
+  height: 82px;
+  border-radius: 100px;
+}
+
+.bv-leaderboard-name {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+/* ---------- In Progress Challenge (Figma 19582:176379) ---------- */
+.bv-challenge-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  width: 370px;
+  margin: 0 auto;
+}
+
+.bv-challenge-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+  padding: var(--bv-space-4);
+  border-radius: var(--bv-radius-2xl);
+  background: var(--bv-white);
+  filter: drop-shadow(0px 0px 7.5px rgba(0, 0, 0, 0.1));
+}
+
+.bv-challenge-people {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-3);
+}
+
+/* 48x64 portraits overlapping by 15px, each with a 2px white ring that
+   separates it from the face behind. Same bubble as every other avatar.
+   border-box so the ring eats into the 48x64, as it does in Figma. */
+.bv-challenge-stack {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.bv-challenge-stack > span {
+  box-sizing: border-box;
+  width: 48px;
+  height: 64px;
+  border: 2px solid var(--bv-white);
+  border-radius: 100px;
+  flex-shrink: 0;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-clip: padding-box;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-challenge-stack > span:not(:last-child) {
+  margin-right: -15px;
+}
+
+.bv-challenge-participants {
+  flex: 1 0 0;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-challenge-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+/* Boldonse — the display face, as on the section tabs */
+.bv-challenge-name,
+.bv-challenge-reward {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-challenge-reward {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  flex-shrink: 0;
+}
+
+.bv-challenge-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-challenge-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-challenge-track {
+  width: 100%;
+  height: 9px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.bv-challenge-fill {
+  height: 100%;
+  border-radius: 1000px;
+  background: #343434;
+  /* Figma "accent-default" — same inset the voice CTA uses */
+  box-shadow: var(--bv-inset-accent);
+}
+
+/* ==================================================================
+   Challenge detail — Figma 19608:9122
+   ================================================================== */
+.bv-challenge-screen-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+}
+
+.bv-challenge-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+/* ---------- background blobs (Figma 19612:9388 / 19612:9392) ----------
+   Every number here is off the node. The nested img insets are Figma's
+   blur bleed: the artwork spills far outside its own frame, so the frame
+   is the anchor, not the visible size. */
+.bv-challenge-blobs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 402px;
+  height: 874px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* "blur gb" — frame 629x456 at (-62, -117) */
+.bv-blob-gb {
+  position: absolute;
+  left: -62px;
+  top: -117px;
+  width: 629px;
+  height: 456px;
+}
+
+/* inset: -87.72% vertical, -63.59% horizontal */
+.bv-blob-gb img {
+  position: absolute;
+  left: -63.59%;
+  top: -87.72%;
+  width: 227.18%;
+  height: 275.44%;
+  max-width: none;
+  display: block;
+}
+
+/* the third blob sits OUTSIDE the clip group in Figma, rotated 43.33deg */
+.bv-blob-ellipse {
+  position: absolute;
+  left: -140px;
+  top: 189px;
+  width: 347.576px;
+  height: 343.606px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.bv-blob-ellipse-rot {
+  transform: rotate(43.33deg);
+  flex: none;
+}
+
+.bv-blob-ellipse-box {
+  position: relative;
+  width: 292.689px;
+  height: 196.258px;
+}
+
+/* inset: -178.34% vertical, -119.58% horizontal */
+.bv-blob-ellipse-box img {
+  position: absolute;
+  left: -119.58%;
+  top: -178.34%;
+  width: 339.16%;
+  height: 456.68%;
+  max-width: none;
+  display: block;
+}
+
+/* Component: Screen Nav (Figma 19608:9127 / 19612:9480) — shared by every
+   pushed screen. Figma stacks status bar (59) + 6 gap + nav row, so the
+   nav clears the status bar rather than sliding under the dynamic island. */
+.bv-screen-nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  padding: 0 var(--bv-space-4);
+  margin-top: calc(var(--bv-statusbar-h) + 6px);
+  height: 35px;
+}
+
+.bv-screen-back {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+.bv-screen-nav-title {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* ---------- floating participants ---------- */
+.bv-challenge-play {
+  position: absolute;
+  /* below the nav, down to the sheet — the whole drag playground */
+  left: 0;
+  right: 0;
+  top: calc(var(--bv-statusbar-h) + 41px);
+  bottom: 356px;
+  z-index: 2;
+}
+
+.bv-float {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.bv-float-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bv-float-avatar {
+  border-radius: 999px;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* the same bubble every avatar carries, scaled up */
+  box-shadow: inset 0px 1.485px 5.94px 0px #ffffff,
+    inset 0px -2.97px 7.424px 0px rgba(0, 0, 0, 0.1);
+}
+
+.bv-float-crown {
+  position: absolute;
+  transform: rotate(30deg);
+  pointer-events: none;
+}
+
+/* name stays 14px at every avatar size — only the pill padding scales */
+.bv-float-name {
+  position: relative;
+  border-radius: 999px;
+  background: var(--bv-white);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-float-share {
+  display: block;
+  margin-top: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ---------- bottom sheet ---------- */
+.bv-challenge-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 356px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bv-space-6) var(--bv-space-4);
+  /* No fill in this node — the gradient runs behind the sheet content.
+     The corner radius is kept from the node but has nothing to clip. */
+  border-radius: 32px 32px 0 0;
+}
+
+.bv-challenge-sheet-top {
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+}
+
+.bv-challenge-coin {
+  display: flex;
+  justify-content: center;
+  /* the coin stage is wider than the coin; pull the slack back */
+  margin: -18px 0 -22px;
+}
+
+.bv-challenge-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-2);
+  text-align: center;
+}
+
+.bv-challenge-heading {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-challenge-blurb {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-challenge-numbers.detail .bv-challenge-amount {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.bv-challenge-merchants {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+  padding: var(--bv-space-1-5) var(--bv-space-2);
+  border: 1px solid var(--bv-neutral-200);
+  border-radius: var(--bv-radius-xl);
+  background: var(--bv-white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.bv-challenge-merchant-stack {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bv-challenge-merchant-stack img {
+  width: 25px;
+  height: 25px;
+  border-radius: var(--bv-radius-full);
+  display: block;
+}
+
+.bv-challenge-merchant-stack img:not(:last-child) {
+  margin-right: -8px;
+}
+
+/* ==================================================================
+   Eligible merchants — Figma 19612:9472 ("Community-Challenge")
+   ================================================================== */
+.bv-merchants-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the challenge screen (12), below the status bar (30) */
+  z-index: 13;
+}
+
+.bv-merchants-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+/* The nav row ends at statusbar + 41; Figma puts a 16 gap under it. */
+.bv-merchants-list {
+  position: absolute;
+  inset: calc(var(--bv-statusbar-h) + 57px) 0 0;
+  z-index: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-6);
+  /* clears the search bar */
+  padding-bottom: 90px;
+}
+
+.bv-merchants-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Same fade as the Home/Social dock — transparent to white at 34.4%. */
+.bv-merchants-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 0 var(--bv-space-4) 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--bv-white) 34.4%
+  );
+}
+
+/* ==================================================================
+   Home search — Figma 19380:5446 / 19542:163494 / 19380:5586 /
+   19380:5756 / 19559:167807. One sheet, five states.
+   ================================================================== */
+.bv-search-sheet {
+  position: absolute;
+  left: 0;
+  /* Sits ON the keyboard, never behind it. Paired with the height below,
+     this pins the TOP edge at a constant `statusbar + 16` and lets only the
+     BOTTOM follow the keyboard:
+
+       top = 100% - height - bottom
+           = 100% - (100% - statusbar - 16 - kb) - kb
+           = statusbar + 16          ← independent of the keyboard
+
+     The content is top-anchored, so opening and closing the keyboard leaves
+     everything you are reading exactly where it was. Anchoring the bottom
+     at 0 instead let the list run away behind the keyboard, and made the
+     sheet snap to full height the moment results appeared. */
+  bottom: var(--bv-kb-inset, 0px);
+  z-index: 11;
+  width: 402px;
+  /* Never rises past 16px below the status bar (59 + 16 = 75), so the grab
+     handle always clears the dynamic island. The empty state sizes to its
+     content and sits lower still. */
+  max-height: calc(100% - var(--bv-statusbar-h) - 16px - var(--bv-kb-inset, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  padding-top: var(--bv-space-2);
+  overflow: hidden;
+  border-radius: var(--bv-radius-3xl) var(--bv-radius-3xl) 0 0;
+  /* same translucent surface as the offers sheet — the map reads through */
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+}
+
+/* In the results state the sheet takes its full allowance, so its height is
+   the same whichever tab is showing — switching never resizes it under
+   your thumb. The empty state stays content-sized. */
+.bv-search-sheet.results {
+  height: calc(100% - var(--bv-statusbar-h) - 16px - var(--bv-kb-inset, 0px));
+}
+
+/* Installed, the sheet hugs its content instead of stretching to a share of
+   the artboard. Percentage-of-artboard minus a keyboard inset is fragile —
+   the two are measured by different things (iOS resizes the layout viewport
+   in a standalone app, not just the visual one) and any disagreement pushes
+   the top off the screen. A content-sized sheet simply cannot overshoot.
+   The scroll area keeps a fixed height so switching tabs still does not
+   resize it. */
+.bv-search-body {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--bv-space-4);
+  padding: 0 var(--bv-space-4);
+}
+
+/* The search bar floats over the results instead of sitting below them, so
+   the list visibly continues behind it. Pinned 32px off the sheet's bottom
+   edge — it stays there while the list scrolls under. */
+.bv-search-dock {
+  position: absolute;
+  left: var(--bv-space-4);
+  right: var(--bv-space-4);
+  /* The sheet already ends at the keyboard, so this only needs its resting
+     gap: 32px off the sheet's bottom with no keyboard, flush against one
+     when it is up (or the gap reads as a dead band of glass above the
+     keys). Adding the keyboard inset here too would double-count it. */
+  bottom: calc(32px * (1 - var(--bv-kb-open, 0)));
+  z-index: 2;
+  transition: bottom 0.2s var(--bv-ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-search-dock {
+    transition: none;
+  }
+}
+
+/* Fades the last rows into the sheet under the bar, so it reads as "more
+   below" rather than a hard cut. Matches the sheet's own translucent white
+   so it does not darken the blur behind it. */
+.bv-search-body::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 112px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 55%
+  );
+}
+
+.bv-search-sheet.results .bv-search-body {
+  flex: 1 0 0;
+}
+
+.bv-dock-search-trigger {
+  width: 100%;
+  cursor: text;
+}
+
+/* ---------- empty state ---------- */
+.bv-prompt-starters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+  /* clears the floating bar — unlike the results, the starters should sit
+     above it, not run behind it */
+  padding-bottom: 96px;
+}
+
+/* Component: Prompt Starter (Figma 1363:3722) */
+.bv-prompt-starter {
+  padding: 10px var(--bv-space-3);
+  border: none;
+  border-radius: var(--bv-radius-xl);
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: var(--bv-line-20);
+  color: #282828;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.16s var(--bv-ease-out);
+}
+
+.bv-prompt-starter:active {
+  transform: scale(0.97);
+}
+
+/* ---------- results ---------- */
+.bv-search-results {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+/* Only stretch inside the fixed-height sheet. With a content-sized sheet
+   (no matches) `flex: 1 0 0` has nothing to grow into and collapses the
+   block to zero. */
+.bv-search-sheet.results .bv-search-results,
+.bv-search-sheet.results .bv-search-scroll {
+  flex: 1 0 0;
+}
+
+/* Component: Search Tabs (Figma 19542:163501) */
+.bv-search-tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--bv-space-3);
+  flex-shrink: 0;
+}
+
+.bv-search-tab {
+  position: relative;
+  padding: var(--bv-space-1-5) var(--bv-space-3);
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+  color: var(--bv-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.bv-search-tab.active {
+  color: var(--bv-white);
+  box-shadow: none;
+}
+
+/* The travelling fill. "accent-pressed" — a single black inset, not the
+   two-part accent the raised controls use. */
+.bv-search-tab-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-800);
+  box-shadow: inset 0px 1px 5px 0px #000000;
+}
+
+.bv-search-tab-label {
+  position: relative;
+}
+
+/* Fills whatever the fixed sheet leaves, so every tab reserves the same
+   box and the sheet height is identical across All / Restaurant / People. */
+.bv-search-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Room for the floating bar (48) + its 32 offset + breathing space, so
+     the last result can be scrolled clear of it rather than trapped under.
+     No keyboard term — the sheet itself already ends above the keyboard. */
+  padding-bottom: 96px;
+}
+
+.bv-search-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-search-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+.bv-search-people-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-4);
+}
+
+.bv-search-people-rail .bv-leaderboard-rail {
+  width: 100%;
+  justify-content: space-between;
+  gap: var(--bv-space-3);
+}
+
+.bv-search-more {
+  padding: var(--bv-space-1-5) var(--bv-space-3);
+  border: 0.5px solid var(--bv-border-default);
+  border-radius: var(--bv-radius-lg);
+  background: var(--bv-white);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: var(--bv-line-20);
+  color: var(--bv-neutral-400);
+  cursor: pointer;
+  transition: transform 0.16s var(--bv-ease-out);
+}
+
+.bv-search-more:active {
+  transform: scale(0.97);
+}
+
+/* Component: Search Result Row (Figma 19542:163507) */
+.bv-search-result-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.bv-search-result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+  padding: var(--bv-space-3) 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* The 0.5px rule belongs between rows, not under the last one. */
+.bv-search-result-list > *:not(:last-child) .bv-search-result {
+  border-bottom: 0.5px solid var(--bv-border-subtle);
+}
+
+.bv-search-result-name {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #000000;
+}
+
+.bv-search-result-end {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  flex-shrink: 0;
+  color: var(--bv-neutral-400);
+}
+
+.bv-search-result-distance {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Component: Person Row (Figma 19380:5763 / 19559:167807) */
+.bv-search-person-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+}
+
+.bv-person {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+  width: 100%;
+}
+
+/* A rounded portrait, not a circle — the same shape every other avatar in
+   the app uses (30×40 in a post, 61×82 on the rail, 48×64 in the challenge
+   stack). A square here was the odd one out. */
+.bv-person-avatar {
+  width: 35px;
+  height: 47px;
+  flex-shrink: 0;
+  border-radius: 100px;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-person-copy {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bv-person-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-person-meta {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-person-follow-label {
+  display: inline-block;
+}
+
+/* No-match state: an offer to ask the assistant, not a dead end. */
+.bv-search-ask {
+  align-self: center;
+  padding: var(--bv-space-6) var(--bv-space-4);
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--bv-neutral-500);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.16s var(--bv-ease-out);
+}
+
+.bv-search-ask:active {
+  transform: scale(0.97);
+}
+
+/* The "bravo AI" wordmark (Figma 19650:15977), painted with the same
+   gradient as the prompt box's ring — that gradient is what marks an AI
+   surface, so the one place the product is named should carry it.
+   The SVG is a single union path, so it is used as a MASK rather than an
+   <img>: the gradient sits behind and the glyphs cut it out. Painting the
+   fill into the file instead would freeze the colour.
+   89.664 x 15 in the export — scaled with the 16px line, which lands it at
+   its native size. */
+.bv-search-ask-brand {
+  display: inline-block;
+  width: 89.7px;
+  height: 15px;
+  vertical-align: -2px;
+  background: linear-gradient(90deg, #4af3ff 0%, #7ce0ff 30%, #ffc36a 75%, #ff8f4a 100%);
+  -webkit-mask: url('./assets/bravo-ai-wordmark.svg') no-repeat center / contain;
+  mask: url('./assets/bravo-ai-wordmark.svg') no-repeat center / contain;
+}
+
+/* ---------- iOS keyboard (Figma 19380:5466) ----------
+   Chrome, not product UI. Inert by design — the real input is above it. */
+.bv-keyboard {
+  width: 100%;
+  height: 342px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 10px;
+  background: #e6e9ed;
+  border-radius: 27px 27px 0 0;
+  user-select: none;
+}
+
+.bv-keyboard-autocorrect {
+  width: 100%;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 22px;
+}
+
+.bv-keyboard-suggestion {
+  flex: 1 0 0;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 22px;
+  letter-spacing: -0.43px;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.bv-keyboard-separator {
+  position: absolute;
+  left: -10px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #cccccc;
+  opacity: 0.4;
+}
+
+.bv-keyboard-keys {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 8.5px 0;
+}
+
+.bv-keyboard-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.bv-keyboard-row.inset-1 {
+  padding: 0 20px;
+}
+
+.bv-keyboard-row.wide-gap {
+  gap: 14.25px;
+}
+
+.bv-keyboard-row-inner {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  gap: 6px;
+}
+
+.bv-key {
+  flex: 1 0 0;
+  min-width: 0;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8.5px;
+  background: #ffffff;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.28);
+  font-family: -apple-system, 'SF Compact', system-ui, sans-serif;
+  font-size: 25px;
+  line-height: 30px;
+  color: #1a1a1a;
+}
+
+.bv-key-mod {
+  flex: none;
+  width: 44.667px;
+  background: #adb3bc;
+  color: #1a1a1a;
+}
+
+.bv-key-abc {
+  flex: none;
+  width: 91.667px;
+  background: #adb3bc;
+  font-size: 18px;
+}
+
+.bv-key-space {
+  flex: 1 0 0;
+}
+
+.bv-key-return {
+  flex: none;
+  width: 92px;
+  background: #0088ff;
+  color: #ffffff;
+}
+
+.bv-keyboard-foot {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 27px 39px 15px 36px;
+  color: #1a1a1a;
+}
+
+.bv-keyboard-globe {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-prompt-starter,
+  .bv-search-more {
+    transition: none;
+  }
+}
+
+/* ==================================================================
+   bravo AI chat — Figma 19559:168018 / 19559:168156 / 19560:168548.
+   Three nodes, one screen: they differ only in the thinking step.
+   ================================================================== */
+.bv-ai-screen-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+}
+
+.bv-ai-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+/* The brand wash bleeding in from above the header (19559:168158). It sits
+   mostly off-canvas — only the bottom of the blur shows. */
+.bv-ai-glow {
+  position: absolute;
+  left: calc(50% - 4.5px);
+  transform: translateX(-50%);
+  top: -32px;
+  width: 395px;
+  height: 82px;
+  opacity: 0.8;
+  filter: blur(36.85px);
+  background: linear-gradient(
+    93.65deg,
+    #4af3ff 0.169%,
+    #fee160 50%,
+    #f94f4f 99.831%
+  );
+  pointer-events: none;
+}
+
+.bv-ai-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--bv-statusbar-h) + var(--bv-space-2)) var(--bv-space-4) 0;
+}
+
+.bv-ai-wordmark {
+  width: 89.663px;
+  height: 15px;
+  display: block;
+}
+
+.bv-ai-disclaimer {
+  position: relative;
+  margin-top: var(--bv-space-4);
+  padding: 0 var(--bv-space-4);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--bv-zinc-500);
+}
+
+/* The thread grows from the bottom — the newest turn sits just above the
+   prompt box, and the empty space is above it, as in the node. */
+.bv-ai-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* rides above the phone's keyboard when one is up — same variable the
+     search sheet uses, set by PresentMode in artboard units */
+  bottom: var(--bv-kb-inset, 0px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-4);
+}
+
+/* Installed there is no mock keyboard under the prompt box, so with the
+   real one dismissed it would otherwise sit flush on the bottom edge —
+   and on a phone that is where the home indicator lives. It collapses to 0
+   once a keyboard is up, or it becomes a dead band of frosted glass between
+   the bar and the keys. */
+.bravo-app.standalone .bv-ai-bottom {
+  padding-bottom: calc(36px * (1 - var(--bv-kb-open, 0)));
+}
+
+.bv-ai-thread {
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--bv-space-4);
+}
+
+.bv-ai-bubble-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 12px everywhere except the bottom-right 2px — that corner is the tail,
+   pointing back at the sender. */
+.bv-ai-bubble {
+  max-width: 300px;
+  padding: 10px var(--bv-space-3);
+  border-radius: var(--bv-radius-xl) var(--bv-radius-xl) var(--bv-radius-sm)
+    var(--bv-radius-xl);
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+  /* Figma says 14; raised to 16 at Siya's direction — your own words read
+     larger than the assistant's status lines. */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* The assistant's turn spans the thread so it stays left-aligned; without
+   this it inherits the flex-end that right-aligns your bubble. */
+.bv-ai-turn {
+  width: 100%;
+}
+
+/* Component: AI Thinking (Figma 19559:168175)
+   A two-column grid so the detail line always lands under the label,
+   whatever size the orb is. Figma's 43px indent was 33 (orb) + 10 (gap) —
+   hardcoding it meant resizing the orb silently broke the alignment. */
+.bv-ai-thinking {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+}
+
+/* Lets the orb and the label become grid items of the parent. */
+.bv-ai-thinking-row {
+  display: contents;
+}
+
+.bv-ai-thinking-label {
+  position: relative;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+}
+
+/* second column — aligns under the label, no magic indent */
+.bv-ai-thinking-detail {
+  grid-column: 2;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--bv-neutral-400);
+  white-space: nowrap;
+}
+
+.bv-orb {
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Component: Merchant Row (Figma 19612:9555) */
+.bv-merchant {
+  display: flex;
+  gap: var(--bv-space-3);
+  width: 370px;
+  height: 89px;
+  flex-shrink: 0;
+}
+
+.bv-merchant-photo {
+  position: relative;
+  width: 79px;
+  height: 89px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-xl);
+  overflow: hidden;
+}
+
+.bv-merchant-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The rate is burned into a gradient over the bottom 31px of the photo
+   (Figma offsets the overlay 58px down inside the 89px frame). */
+.bv-merchant-rate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  padding: 6px 0 8px var(--bv-space-2);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
+  backdrop-filter: blur(0.9px);
+  -webkit-backdrop-filter: blur(0.9px);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-white);
+}
+
+.bv-merchant-body {
+  width: 279px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bv-merchant-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.bv-merchant-name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-merchant-meta {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+}
+
+.bv-merchant-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-merchant-savers {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+}
+
+/* 30px round faces overlapping by 10px — avatars, so they carry the
+   same bubble inset as every other avatar in the app. */
+.bv-merchant-saver-stack {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bv-merchant-saver-stack > span {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 100px;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-merchant-saver-stack > span:not(:last-child) {
+  margin-right: -10px;
+}
+
+.bv-merchant-saved {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+/* inline-block so the count can be transformed when it changes */
+.bv-merchant-saved-count {
+  display: inline-block;
+}
+
+/* Unlike the VenueCard save button, this one keeps its shadow. */
+.bv-merchant-save {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  border: none;
+  padding: 0;
+  color: var(--bv-black);
+  cursor: pointer;
+  filter: drop-shadow(0px 5px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Component: Save Glyph — shared by MerchantRow's own button and the
+   CircleIconButton on VenueCard, so both fill and pop identically.
+   Lucide writes fill="none" as a presentation attribute; a CSS rule wins
+   over it, so the saved state can fill and un-fill on a transition. */
+.bv-save-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bv-save-glyph svg {
+  fill: transparent;
+  transition: fill 0.22s ease-out;
+}
+
+.bv-save-glyph.is-saved svg {
+  fill: var(--bv-black);
+}
+
+/* ---------- posts ---------- */
+.bv-social-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+}
+
+/* Component: Post Card (Figma 19564:171797 / 19577:173585)
+   Avatar on the left, everything else in one 12px-gap column. */
+.bv-post {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-2);
+  width: 370px;
+  margin: 0 auto;
+}
+
+.bv-post-body {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+}
+
+/* ---------- avatars ----------
+   Every avatar is painted as a background rather than an <img>, because an
+   inset box-shadow renders *underneath* replaced content — on an <img> the
+   "bubble" would be covered by the photo and never show. `lightgray` is the
+   placeholder behind a slow or missing image. */
+.bv-leaderboard-avatar,
+.bv-post-avatar,
+.bv-nav-avatar {
+  display: block;
+  flex-shrink: 0;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-post-avatar {
+  width: 30px;
+  height: 40px;
+  border-radius: 100px;
+}
+
+.bv-post-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--bv-space-1);
+}
+
+/* name • date, on one line (Figma 19577:173431) */
+.bv-post-byline {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  white-space: nowrap;
+}
+
+.bv-post-date {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-400);
+}
+
+/* The bullet is a separator, not a list marker — Figma authored it as a
+   <li> but semantically this is one byline, not a list of one. */
+.bv-post-date::before {
+  content: '•';
+  margin-right: var(--bv-space-1);
+}
+
+.bv-post-name {
+  font-size: 14px;
+  /* bold in the current node — it was regular when the date sat top-right */
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-post-labels {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+}
+
+/* Component: Achievement Label (Figma 467:5570 / 467:7926)
+   One-off tints straight from Figma — deliberately not tokens. */
+.bv-achievement {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 6px;
+  border-radius: var(--bv-radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bv-achievement-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* The full variant set (Figma DS 306:8847). Every tint is a one-off
+   value from the design system, deliberately not a palette token. */
+.bv-achievement-streak { background: #fff2de; color: #cc7700; }
+.bv-achievement-lv1    { background: #ffe5d9; color: #c56d40; }
+.bv-achievement-lv2    { background: #f3f5f8; color: #81848a; }
+.bv-achievement-lv3    { background: #ffefc6; color: #93783a; }
+.bv-achievement-lv4    { background: #fbe5ff; color: #9e53c0; }
+.bv-achievement-lv5    { background: #d4dff7; color: #4a66a1; }
+.bv-achievement-lv6 {
+  background: linear-gradient(180deg, #757678 0%, #2c2c2e 100%);
+  color: var(--bv-white);
+}
+.bv-achievement-lv7 {
+  background: linear-gradient(0deg, #8489f5 11.111%, #cdf1ff 108.17%);
+  color: #262955;
+}
+
+.bv-post-caption {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* Achievement posts set their caption a step smaller. */
+.bv-post-caption.sm {
+  font-size: 12px;
+}
+
+.bv-post-caption strong {
+  font-weight: 700;
+}
+
+/* ---------- achievement panels (Figma 19582:177102 / 177255 / 177401) ---- */
+.bv-achievement-panel {
+  /* the coin's face diameter — the base every panel's art matches */
+  --bv-achievement-art-size: 150px;
+  width: 100%;
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.bv-achievement-panel.spend {
+  background: #f8f5ff;
+  border-radius: var(--bv-radius-2xl);
+}
+
+.bv-achievement-panel.streak {
+  background: #fff9ea;
+  border-radius: var(--bv-radius-xl);
+}
+
+.bv-achievement-panel.bonus {
+  background: #fffae3;
+  border-radius: var(--bv-radius-xl);
+  gap: 0;
+}
+
+/* One art box for all three kinds, sized to the coin's face diameter
+   (BravoCoin size=150) so the panels read as a set. `contain` keeps each
+   illustration's own aspect ratio inside that square — Figma draws them at
+   three unrelated sizes (badge 126x79, flame 45x59, coin 83). */
+.bv-achievement-art {
+  width: calc(var(--bv-achievement-art-size) * var(--bv-achievement-art-scale, 1));
+  height: calc(var(--bv-achievement-art-size) * var(--bv-achievement-art-scale, 1));
+  object-fit: contain;
+  display: block;
+}
+
+/* The flame fills the box on height where the badge only reaches ~95 of it,
+   so it read heavier. 0.75 evens them out — same factor the coin uses
+   (ART_SHRINK in AchievementPanel.tsx). */
+.bv-achievement-panel.streak {
+  --bv-achievement-art-scale: 0.75;
+}
+
+.bv-achievement-caption {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #0c142b;
+  white-space: nowrap;
+}
+
+/* Component: Venue Card (Figma 19577:173665) */
+.bv-venue {
+  width: 100%;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px var(--bv-space-3) 4px 4px;
+  border: 1px solid var(--bv-neutral-150);
+  border-radius: var(--bv-radius-lg);
+}
+
+.bv-venue-main {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+  min-width: 0;
+}
+
+.bv-venue-thumb {
+  position: relative;
+  width: 79px;
+  height: 58px;
+  flex-shrink: 0;
+}
+
+.bv-venue-thumb img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--bv-radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+.bv-venue-cashback {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  padding: 2px var(--bv-space-2);
+  border-radius: 100px;
+  background: var(--bv-black);
+  color: var(--bv-white);
+  /* body/lg — stepped up from 12 so the bonus reads at a glance */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.bv-venue-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+.bv-venue-name {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-venue-meta {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-post-photos {
+  width: 100%;
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+/* No scroll-snap: `mandatory` re-snaps on any layout change, which can
+   jump a carousel to the far end mid-demo. */
+.bv-post-photos.is-dragging {
+  cursor: grabbing;
+}
+
+.bv-post-photos::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-post-photo {
+  width: 280px;
+  height: 302px;
+  /* radius stepped up to 16 in the current design */
+  border-radius: var(--bv-radius-2xl);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* actions sit alone on the right — the place chip became the venue card */
+.bv-post-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bv-space-3);
+}
+
+.bv-post-action {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+/* ---------- social dock ---------- */
+.bv-dock-social {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  overflow: visible;
+}
+
+.bv-dock-row {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-3);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.bv-dock-row > .bv-prompt-box {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+}
+
+.bv-dock-row > .bv-compose-btn {
+  flex: 0 0 48px;
+}
+
+/* Bottom nav collapses out of the dock while scrolling down. The slot
+   owns the spacing so the dock closes up as the nav leaves. */
+.bv-dock-social {
+  gap: 0;
+}
+
+/* The nav is treated as one face of a cube hinged along its top edge: on
+   the way out it tips backward through the dock rather than sliding down.
+   The perspective is deliberately short (320px) so the far edge
+   foreshortens hard and the turn reads as depth, not a squash. */
+.bv-nav-slot {
+  width: 100%;
+  height: 27.6px;
+  margin-top: var(--bv-space-3);
+  overflow: hidden;
+  perspective: 320px;
+  perspective-origin: 50% 0%;
+  transition: height 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-top 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bv-nav-slot .bv-bottom-nav {
+  transform-origin: 50% 0%;
+  backface-visibility: hidden;
+  transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.22s ease-out;
+}
+
+.bv-dock-social.nav-hidden .bv-nav-slot {
+  height: 0;
+  margin-top: 0;
+}
+
+/* -90deg swings the lower edge away from the viewer (−Z), so the face
+   turns out of sight instead of toward you. */
+.bv-dock-social.nav-hidden .bv-nav-slot .bv-bottom-nav {
+  transform: rotateX(-90deg);
+  opacity: 0;
+}
+
+/* Compose FAB (Figma 19564:171724) — primary-500 with a glow of itself */
+.bv-compose-btn {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-3xl);
+  background: var(--bv-primary-500);
+  border: none;
+  color: var(--bv-black);
+  cursor: pointer;
+  filter: drop-shadow(0px 0px 7.2px var(--bv-primary-500));
+  transition: transform 0.15s ease;
+}
+
+.bv-compose-btn:active {
+  transform: scale(0.94);
+}
+
+/* ---------- promotions ----------
+   Only present when a promotion is live (demo toggle in the review site). */
+
+/* Component: Promo Chip (Figma 19453:10434) */
+.bv-promo-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--bv-space-2) var(--bv-space-3);
+  border-radius: var(--bv-radius-xl);
+  background: var(--bv-orange-bright);
+  box-shadow: var(--bv-inset-bubble);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: var(--bv-line-20);
+  color: var(--bv-white);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bv-promo-chip-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-md);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.bv-promo-chip-icon img {
+  width: 20px;
+  height: 21.7px;
+}
+
+/* Figma exports Close as a flat image; rebuilt with Lucide X per the
+   project's icons-are-Lucide-only rule. */
+/* Every bottom sheet parks its close in the same corner (Figma 19661:16109
+   on the search sheet): 36px, 12px in from the top and right edges. */
+.bv-sheet-close-corner {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+}
+
+.bv-sheet-close {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-100);
+  border: none;
+  padding: 0;
+  color: var(--bv-neutral-600);
+  cursor: pointer;
+}
+
+.bv-promo-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+}
+
+/* Component: Promo Card (Figma 19564:172570 / 19564:172586) */
+.bv-promo-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+  padding: var(--bv-space-3);
+  /* Figma says 16; raised to 24 at Siya's direction. */
+  border-radius: var(--bv-radius-3xl);
+  background: var(--bv-white);
+  filter: drop-shadow(0px 0px 7.5px rgba(0, 0, 0, 0.1));
+}
+
+.bv-promo-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-promo-card-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+.bv-promo-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-promo-card-expiry {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+/* (the promo card's expiry badge is now the shared .bv-expiry-pill) */
+
+.bv-promo-card-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-promo-card-terms {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+}
+
+/* ==================================================================
+   Offers for you — Figma 19243:4646 (in place on Home: 19650:15069)
+   Replaces the old centred promotions modal.
+   ================================================================== */
+
+/* Transparent, not a scrim: the design does not dim the map. It only
+   exists so a tap outside the sheet closes it. */
+.bv-sheet-catcher {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* Translucent white over a 7.5px blur, so the map reads through. */
+.bv-offers-sheet {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 11;
+  width: 402px;
+  height: 636px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: var(--bv-space-2);
+  overflow: hidden;
+  border-radius: var(--bv-radius-3xl) var(--bv-radius-3xl) 0 0;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+  touch-action: none;
+}
+
+.bv-offers-handle {
+  width: 48px;
+  height: 4px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-300);
+}
+
+.bv-offers-body {
+  flex: 1 0 0;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  padding: 0 var(--bv-space-4) 15px;
+}
+
+.bv-offers-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* The close now sits in the sheet corner, so the title block keeps clear of
+   it rather than sharing a row. */
+.bv-offers-titles {
+  flex: 1 0 0;
+  min-width: 0;
+  padding-right: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+}
+
+.bv-offers-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-offers-sub {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+/* The sheet is a fixed 636px, so the two sections scroll inside it. */
+.bv-offers-scroll {
+  flex: 1 0 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-8);
+}
+
+.bv-offers-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-offers-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+}
+
+.bv-offers-promos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+/* Component: Offer Card (Figma 19243:4657) */
+.bv-offer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+  width: 100%;
+}
+
+.bv-offer-photo {
+  position: relative;
+  width: 97px;
+  height: 108px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-xl);
+  overflow: hidden;
+}
+
+.bv-offer-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The boosted rate burns into the bottom 32px of the photo, with the rate
+   it replaces struck through beside it. */
+.bv-offer-rate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 0 0 var(--bv-space-2) var(--bv-space-2);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
+  backdrop-filter: blur(0.9px);
+  -webkit-backdrop-filter: blur(0.9px);
+  color: var(--bv-white);
+  line-height: 1.2;
+}
+
+.bv-offer-rate-new {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.bv-offer-rate-old {
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+/* Pill at the top, CTA at the bottom, so rows align however long the
+   merchant name runs. */
+.bv-offer-body {
+  flex: 1 0 0;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.bv-offer-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.bv-offer-name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-offer-meta {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+}
+
+/* ---------- placeholder state for undesigned tabs ---------- */
+.bv-coming-soon {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.bv-coming-soon h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.bv-coming-soon p {
+  font-size: 13px;
+  color: var(--bv-neutral-500);
+}

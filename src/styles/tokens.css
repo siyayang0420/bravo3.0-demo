@@ -1,0 +1,145 @@
+/* ============================================
+   Oreo Agentic UI Library — design tokens
+   Used by the Jeni review-site shell ONLY.
+   The phone demo uses its own scoped system:
+   see src/demo/bravo-app.css
+   ============================================ */
+
+:root {
+  /* Backgrounds */
+  --color-bg-base: #ffffff;
+  --color-bg-elevated: #f9f9f9;
+  --color-bg-subtle: #0000000d;
+  --color-bg-dismiss: #00000008;
+  --color-bg-surface: #ffffff;
+  --color-bg-inverse: #202020;
+
+  /* Text */
+  --color-text-primary: #000000;
+  --color-text-secondary: #646464;
+  --color-text-tertiary: #838383;
+  --color-text-placeholder: #8d8d8d;
+  --color-text-disabled: #bbbbbb;
+  --color-text-waiting: #d9d9d9;
+  --color-text-on-inverse: #ffffff;
+
+  /* Borders */
+  --color-border-default: #0000001f;
+  --color-border-subtle: #00000017;
+  --color-border-focus: #000000de;
+  --color-border-inverse: #ffffff26;
+
+  /* Status */
+  --color-status-progress: #3e63dd;
+  --color-status-progress-subtle: #3e63dd1f;
+  --color-status-success: #12a594;
+  --color-status-success-subtle: #12a5941f;
+  --color-status-warning: #ef5f00;
+  --color-status-warning-subtle: #ef5f001f;
+  --color-status-error: #dc3e42;
+  --color-status-error-subtle: #dc3e421f;
+
+  /* Palette (tags, badges, chips) */
+  --color-purple-bg: #f4f0fe;
+  --color-purple-text: #6550b9;
+  --color-pink-bg: #fee9f5;
+  --color-pink-text: #c2298a;
+  --color-blue-bg: #def7f9;
+  --color-blue-text: #107d98;
+  --color-mint-bg: #ddf9f2;
+  --color-mint-text: #027864;
+  --color-orange-bg: #ffefd6;
+  --color-orange-text: #cc4e00;
+  --color-brown-bg: #fffab8;
+  --color-brown-text: #7d5e54;
+
+  /* Interaction */
+  --color-interaction-hover: #00000005;
+  --color-interaction-press: #0000000d;
+
+  /* Overlay */
+  --color-overlay-strong: #0000009c;
+  --color-overlay-subtle: #00000045;
+
+  /* Spacing */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-7: 14px;
+  --space-8: 16px;
+  --space-10: 20px;
+  --space-12: 24px;
+  --space-18: 36px;
+  --space-24: 48px;
+  --space-32: 64px;
+  --space-48: 96px;
+  --space-64: 128px;
+
+  /* Radius */
+  --radius-control-tiny: 4px;
+  --radius-control: 8px;
+  --radius-card-sm: 12px;
+  --radius-card-md: 16px;
+  --radius-card-lg: 20px;
+  --radius-container: 24px;
+  --radius-capsule: 999px;
+
+  /* Shadows */
+  --shadow-default: 0 0 1px rgba(0, 0, 0, 0.24), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-active: 0 6px 12px rgba(0, 0, 0, 0.06);
+  --shadow-floating: 0 0 1px rgba(0, 0, 0, 0.24), 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-overlay: 0 0 1px rgba(0, 0, 0, 0.24), 0 4px 48px rgba(0, 0, 0, 0.06);
+
+  /* Fonts */
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: 'Fragment Mono', 'SF Mono', monospace;
+}
+
+/* Jeni is dark-first */
+[data-theme='dark'] {
+  --color-bg-base: #111111;
+  --color-bg-elevated: #191919;
+  --color-bg-subtle: #ffffff0f;
+  --color-bg-dismiss: #ffffff0a;
+  --color-bg-surface: #222222;
+  --color-bg-inverse: #fcfcfc;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b4b4b4;
+  --color-text-tertiary: #7b7b7b;
+  --color-text-placeholder: #6e6e6e;
+  --color-text-disabled: #606060;
+  --color-text-waiting: #3a3a3a;
+  --color-text-on-inverse: #000000;
+
+  --color-border-default: #ffffff26;
+  --color-border-subtle: #ffffff1c;
+  --color-border-focus: #ffffffed;
+  --color-border-inverse: #0000001f;
+
+  --color-purple-bg: #4b21f6;
+  --color-purple-text: #f4f0fe;
+  --color-pink-bg: #fd177f;
+  --color-pink-text: #fee9f5;
+  --color-blue-bg: #0088f1;
+  --color-blue-text: #def7f9;
+  --color-mint-bg: #03dba5;
+  --color-mint-text: #115949;
+  --color-orange-bg: #ff6202;
+  --color-orange-text: #ffefd6;
+  --color-brown-bg: #7d5e54;
+  --color-brown-text: #ffe629;
+
+  --color-interaction-hover: #ffffff0f;
+  --color-interaction-press: #ffffff1a;
+
+  --color-overlay-strong: #ffffffb0;
+  --color-overlay-subtle: #00000080;
+
+  --shadow-default: 0 0 1px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.24);
+  --shadow-floating: 0 0 1px rgba(0, 0, 0, 0.6), 0 4px 24px rgba(0, 0, 0, 0.32);
+  --shadow-overlay: 0 0 1px rgba(0, 0, 0, 0.6), 0 4px 48px rgba(0, 0, 0, 0.4);
+}

@@ -1,0 +1,22 @@
+// Component — the standard pushed-screen header (Figma 19608:9127 on the
+// challenge detail, 19612:9480 on the merchants list). Identical in both:
+// a 32px borderless back button, 6px gap, Boldonse 14px title, sitting
+// 65px down so it clears the status bar and the dynamic island.
+import { ArrowLeft } from 'lucide-react'
+
+export default function ScreenNav({
+  title,
+  onBack,
+}: {
+  title: string
+  onBack: () => void
+}) {
+  return (
+    <header className="bv-screen-nav">
+      <button type="button" className="bv-screen-back" aria-label="Back" onClick={onBack}>
+        <ArrowLeft size={20} strokeWidth={1.9} />
+      </button>
+      <span className="bv-screen-nav-title">{title}</span>
+    </header>
+  )
+}

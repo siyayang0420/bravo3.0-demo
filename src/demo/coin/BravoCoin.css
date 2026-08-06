@@ -1,0 +1,66 @@
+.coin-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.coin-stage:active { cursor: grabbing; }
+
+.coin-shadow {
+  position: absolute;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.55), rgba(0,0,0,0) 70%);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.coin {
+  position: relative;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.coin-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  /* overflow + border-radius does not clip a composited layer in WebKit, so the
+     gloss escapes as a rectangle on iOS. clip-path is honoured there. */
+  clip-path: circle(50%);
+}
+.coin-face svg { display: block; width: 100%; height: 100%; }
+
+.coin-gloss {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(105deg,
+    rgba(255,255,255,0) 40%,
+    rgba(255,255,255,.5) 50%,
+    rgba(255,255,255,0) 60%);
+  will-change: transform, opacity;
+}
+
+.coin-rim { position: absolute; inset: 0; transform-style: preserve-3d; }
+
+.coin-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: repeating-linear-gradient(0deg,
+    #7c6415 0px, #caa93a 1.4px, #f2dd88 2.4px, #caa93a 3.4px, #7c6415 4.8px);
+  box-shadow: inset 0 0 3px rgba(0,0,0,.35);
+  will-change: filter;
+}

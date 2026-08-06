@@ -1,0 +1,459 @@
+/* ============================================
+   Jeni shell layout — nav bar / sidebar / main
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ---------- Nav bar ---------- */
+.nav-bar {
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  background: var(--color-bg-base);
+  border-bottom: 1px solid var(--color-border-subtle);
+  z-index: 20;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.nav-brand-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-control-tiny);
+  object-fit: cover;
+  display: block;
+}
+
+.nav-brand-version {
+  font-size: 12px;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-capsule);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.icon-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-control);
+  color: var(--color-text-secondary);
+  transition: all 0.15s ease;
+}
+
+.icon-button:hover {
+  background: var(--color-interaction-hover);
+  color: var(--color-text-primary);
+}
+
+/* ---------- Body: sidebar + main ---------- */
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--color-bg-elevated);
+  border-right: 1px solid var(--color-border-subtle);
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow-y: auto;
+}
+
+.sidebar-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-tertiary);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+
+.sidebar-item {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-control);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: all 0.15s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.sidebar-item:hover {
+  background: var(--color-interaction-hover);
+}
+
+.sidebar-item.active {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+}
+
+.sidebar-item svg {
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: var(--space-6) var(--space-4);
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+/* ---------- Main content ---------- */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.section-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-24) var(--space-18) var(--space-48);
+}
+
+/* ---------- Shared typography ---------- */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-status-warning);
+  margin-bottom: var(--space-6);
+}
+
+.page-title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: var(--space-8);
+}
+
+.page-lede {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  max-width: 620px;
+  margin-bottom: var(--space-18);
+}
+
+.section-heading {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: var(--space-24) 0 var(--space-8);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card-md);
+  box-shadow: var(--shadow-default);
+  padding: var(--space-12);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-8);
+}
+
+/* ---------- Tags ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-capsule);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.tag.purple { background: var(--color-purple-bg); color: var(--color-purple-text); }
+.tag.pink   { background: var(--color-pink-bg);   color: var(--color-pink-text); }
+.tag.blue   { background: var(--color-blue-bg);   color: var(--color-blue-text); }
+.tag.mint   { background: var(--color-mint-bg);   color: var(--color-mint-text); }
+.tag.orange { background: var(--color-orange-bg); color: var(--color-orange-text); }
+.tag.neutral { background: var(--color-bg-subtle); color: var(--color-text-secondary); }
+.tag.success { background: var(--color-status-success-subtle); color: var(--color-status-success); }
+.tag.warning { background: var(--color-status-warning-subtle); color: var(--color-status-warning); }
+.tag.error   { background: var(--color-status-error-subtle);   color: var(--color-status-error); }
+.tag.progress { background: var(--color-status-progress-subtle); color: var(--color-status-progress); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-control);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--color-bg-inverse);
+  color: var(--color-text-on-inverse);
+}
+
+.btn-primary:hover { opacity: 0.85; }
+
+.btn-secondary {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+}
+
+.btn-secondary:hover { background: var(--color-interaction-hover); }
+
+/* ---------- Presentation stage ---------- */
+.bv-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* dvh follows the viewport as mobile browser chrome hides/shows */
+  height: 100dvh;
+  overscroll-behavior: none;
+}
+
+/* On a phone the artboard is fitted, not cropped, so the whole app stays
+   visible. The surround is white rather than black so the few px left over
+   read as the app's own background instead of letterbox bars. */
+.bv-stage.compact {
+  background: #fff;
+}
+
+.bv-stage-close {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-capsule);
+  /* dark fill so it reads over the app's light surfaces too */
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  transition: opacity 0.4s ease;
+}
+
+/* Dims out of the way while presenting; any interaction brings it back. */
+.bv-stage-close.dim {
+  opacity: 0.25;
+}
+
+.bv-stage-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+/* ============================================
+   Responsive
+   Below 820px the sidebar stops being a column
+   and becomes a horizontal tab strip under the
+   nav bar, and the type scale steps down.
+   ============================================ */
+@media (max-width: 820px) {
+  /* dvh tracks the viewport as mobile browser chrome hides/shows */
+  .app-shell {
+    height: 100dvh;
+  }
+
+  .nav-bar {
+    height: auto;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-6);
+    padding-top: max(var(--space-2), env(safe-area-inset-top));
+  }
+
+  .nav-brand {
+    gap: var(--space-3);
+    font-size: 13px;
+    min-width: 0;
+  }
+
+  .nav-brand span:not(.nav-brand-version) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* the byline and version chip are the first things to go */
+  .nav-brand-version,
+  .nav-actions > span {
+    display: none;
+  }
+
+  .app-body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar-label,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar-item {
+    width: auto;
+    flex-shrink: 0;
+    height: 32px;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .main-content {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .section-page {
+    padding: var(--space-12) var(--space-6) var(--space-24);
+  }
+
+  .page-title {
+    font-size: 28px;
+    margin-bottom: var(--space-6);
+  }
+
+  .page-lede {
+    font-size: 15px;
+    margin-bottom: var(--space-12);
+  }
+
+  .section-heading {
+    font-size: 18px;
+    margin: var(--space-12) 0 var(--space-6);
+  }
+
+  .card {
+    padding: var(--space-8);
+  }
+
+  /* single column — 280px minimums overflow a phone */
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  /* wide content (tables, code) scrolls inside itself rather than
+     pushing the page sideways */
+  .section-page table,
+  .section-page pre {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* ---------- Scrollbars ---------- */
+.main-content::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--color-bg-subtle);
+  border-radius: 4px;
+}
