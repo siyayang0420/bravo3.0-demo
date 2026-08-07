@@ -35,6 +35,8 @@ import LeaderboardRail from '../demo/components/LeaderboardRail'
 import PostCard from '../demo/components/PostCard'
 import LikeButton from '../demo/components/LikeButton'
 import ProfileChallengeCard from '../demo/components/ProfileChallengeCard'
+import TasteIdentityPanel from '../demo/components/TasteIdentityPanel'
+import TasteRadar from '../demo/components/TasteRadar'
 import VenueCard from '../demo/components/VenueCard'
 import AchievementPanel from '../demo/components/AchievementPanel'
 import ChallengeCard from '../demo/components/ChallengeCard'
@@ -42,9 +44,9 @@ import ScreenNav from '../demo/components/ScreenNav'
 import SaveGlyph from '../demo/components/SaveGlyph'
 import MerchantRow from '../demo/components/MerchantRow'
 import thumbDimsum from '../demo/assets/thumb-dimsum.jpg'
-import avatarHappy1 from '../demo/assets/social/avatar-happy1.png'
-import avatarHappy000 from '../demo/assets/social/avatar-happy000.png'
-import avatarHappyman from '../demo/assets/social/avatar-happyman.png'
+import { BOBBY, pickPeople } from '../demo/data/people'
+import { publicProfile } from '../demo/data/profileDemo'
+import { PROMPTS } from '../demo/data/promptDemo'
 import socialPhoto from '../demo/assets/social/post-photo.jpg'
 import venueThumb from '../demo/assets/social/venue-amcafe.jpg'
 import merchantPhoto from '../demo/assets/social/merchant-photo.png'
@@ -54,6 +56,11 @@ import saver2 from '../demo/assets/social/saver-2.png'
 import saver3 from '../demo/assets/social/saver-3.png'
 
 const ALL_LEVELS: AchievementLevel[] = ['lv1', 'lv2', 'lv3', 'lv4', 'lv5', 'lv6', 'lv7']
+
+// Preview faces — same shared roster the app uses, offset clear of every
+// other page's pool draw so the library doesn't echo faces shown elsewhere.
+const previewFaces = pickPeople(4, 11, ['bobby'])
+const [avatarHappy1, avatarHappy000, avatarHappyman] = previewFaces.map((p) => p.avatar)
 
 // Live so the travelling pill can actually be seen in the library.
 function SearchTabsPreview() {
@@ -219,7 +226,8 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
       'The bravo ai input. Two variants of one Figma component: `ai` wears the gradient ring (cyan → orange) that identifies AI surfaces and carries add / mic / voice-mode; `search` is a plain neutral-400 hairline with a search icon and nothing at the end. The pill, padding and 14px input are shared. The ai ring turns — the same colours at the same stops, with only the gradient angle sweeping 90° → 450° over 6s, so a paused ring is the Figma node exactly. The `ai` end has three states: idle (mic + voice-mode), typed (a single dark submit arrow), and recording (19377:5090) — tapping the mic empties the field and drops in a VoiceInput pill of ten metering bars + Stop, with the submit arrow beside it. Tap the mic in the preview below to see it.',
     usedOn: ['Home', 'Social', 'Eligible merchants'],
     props: [
-      { name: 'placeholder', type: 'string', required: true, description: 'Placeholder copy — currently mirrors the active suggestion.' },
+      { name: 'placeholder', type: 'string', required: false, description: 'A single, static placeholder. Ignored when `placeholders` is given.' },
+      { name: 'placeholders', type: 'string[]', required: false, description: 'Two or more hints to cycle, one every 3.6s — what the dock box uses so each screen advertises what the assistant is good for there (promptDemo.ts). With more than one the native placeholder is dropped and an animated line is painted over the field instead: the outgoing hint flips up and fades, the next rises from below. Pauses while there is text or a recording in progress; crossfades only under prefers-reduced-motion.' },
       { name: 'variant', type: "'ai' | 'search'", required: false, description: "Defaults to 'ai'. 'search' is the merchants-list form (19612:9735)." },
       { name: 'voiceTranscript', type: 'string', required: false, description: 'Arms the mic. Tapping it swaps the field for the recording pill (19377:5090); Stop→send submits this text. Absent → the mic is a decorative glyph.' },
       { name: 'onVoiceMode', type: '() => void', required: false, description: 'Tapping the voice-mode (audio-lines) button. The AI chat uses it to open voice mode (19691:50951).' },
@@ -233,6 +241,8 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
       <div style={{ width: 340, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* voiceTranscript arms the mic — tap it to see the recording pill */}
         <PromptBox placeholder="New onboarded restaurants..." voiceTranscript="Happy Lambs Hot Pot" />
+        {/* Live rotation — the same list the map's dock cycles. */}
+        <PromptBox placeholders={PROMPTS.map.placeholders} />
         <PromptBox variant="search" placeholder="Search a restaurant" />
       </div>
     ),
@@ -431,7 +441,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     preview: (
       <div style={{ width: 340, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {(['follow', 'follow-back', 'following', 'mutual'] as const).map((f) => (
-          <PersonRow key={f} name="happy1" avatar={avatarHappy1} visited={73} posts={15} follow={f} />
+          <PersonRow key={f} name={previewFaces[0].name} avatar={avatarHappy1} visited={73} posts={15} follow={f} />
         ))}
       </div>
     ),
@@ -645,9 +655,9 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     preview: (
       <LeaderboardRail
         entries={[
-          { id: '1', name: 'happy1', avatar: avatarHappy1 },
-          { id: '2', name: 'happy000', avatar: avatarHappy000 },
-          { id: '3', name: 'happyman', avatar: avatarHappyman },
+          { id: '1', name: previewFaces[0].name, avatar: avatarHappy1 },
+          { id: '2', name: previewFaces[1].name, avatar: avatarHappy000 },
+          { id: '3', name: previewFaces[2].name, avatar: avatarHappyman },
         ]}
       />
     ),
@@ -676,7 +686,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
         <PostCard
           post={{
             id: 'pv-1',
-            author: 'Noooodle123',
+            author: previewFaces[0].name,
             avatar: avatarHappy1,
             streak: '2X',
             level: 'lv1',
@@ -689,7 +699,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
         <PostCard
           post={{
             id: 'pv-2',
-            author: 'Emma',
+            author: previewFaces[1].name,
             avatar: avatarHappy000,
             streak: '8X',
             level: 'lv6',
@@ -701,7 +711,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
         <PostCard
           post={{
             id: 'pv-3',
-            author: 'catTheFood',
+            author: previewFaces[2].name,
             avatar: avatarHappyman,
             streak: '8X',
             level: 'lv6',
@@ -757,7 +767,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
         <ChallengeCard
           challenge={{
             name: 'Summer Dining Challenge',
-            participantsLabel: 'Bonnie and 2+ are in this challenge with you',
+            participantsLabel: `${previewFaces[1].name} and 2+ are in this challenge with you`,
             participants: [avatarHappy000, avatarHappyman, avatarHappy1],
             reward: '$5',
             spent: 512.56,
@@ -772,32 +782,80 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
   {
     id: 'profile-challenge-card',
     name: 'ProfileChallengeCard',
-    figmaNodes: ['19629:11109', '19682:49505'],
+    figmaNodes: ['19629:11109', '19682:49505', '19696:51781'],
     file: 'src/demo/components/ProfileChallengeCard.tsx',
     summary:
-      'The challenge strip on a profile. Two modes: `active` (Profile-Public) shows an ongoing dining challenge — partner faces, "{name} and 3+ …", title, days left, progress; `start` (Profile-Sender-Private) is the invite to begin one — one face plus an add button, "You\'re eligible to start this challenge…", and an empty $1,000 goal with the reward coin. Not the feed\'s ChallengeCard, which carries a spent/goal line this drops.',
+      'The challenge strip on a profile. Three modes: `active` (Profile-Public) shows an ongoing dining challenge — partner faces, "{name} and 3+ …", title, days left, progress; `start` (Profile-Sender-Private) is the invite to begin one — the profile OWNER\'s own face (never a partner\'s — it\'s your own prompt to start) plus an add button, "Start a challenge with friends…", and an empty $1,000 goal with the reward coin; `invited` is what a receiver sees on their own profile — the inviter\'s face, "{inviter} invited you to a challenge, accept now to join {reward} extra Bonus!", the title + reward, the SAME progress the `active` card shows (joining doesn\'t reset the count), then Decline / Accept. `start` and `invited` are the two sides of one flow, picked by which of the two demo users (Bobby / Happy) is signed in — see ProfileScreen. Tapping either card (not its buttons) opens the pre-accept ChallengeScreen via `onOpen`. Not the feed\'s ChallengeCard, which carries a spent/goal line this drops.',
     usedOn: ['Profile'],
     props: [
-      { name: 'mode', type: "'active' | 'start'", required: true, description: 'Ongoing challenge vs the start-one invite.' },
-      { name: 'name', type: 'string', required: true, description: 'Whose profile — names the "{name} and 3+" line in active mode.' },
-      { name: 'partners', type: 'string[]', required: true, description: 'Avatar URLs for the face stack.' },
+      { name: 'mode', type: "'active' | 'start' | 'invited'", required: true, description: 'Ongoing challenge, the start-one invite, or a received invite.' },
+      { name: 'name', type: 'string', required: false, description: 'active only. Whose profile — names the "{name} and 3+" line.' },
+      { name: 'partners', type: 'string[]', required: false, description: 'active only. Avatar URLs for the face stack.' },
+      { name: 'avatar', type: 'string', required: false, description: 'start only. The profile owner\'s own face — the one bubble this mode shows.' },
+      { name: 'inviter', type: 'ProfilePerson', required: false, description: 'invited only. Who sent the invite — their face and name in the copy.' },
+      { name: 'onOpen', type: '() => void', required: false, description: 'start/invited only. Tapping the card body (not its buttons) — opens the pre-accept ChallengeScreen (RECEIVER_VIEW / SENDER_VIEW in pendingChallengeDemo.ts).' },
+      { name: 'onAccept', type: '() => void', required: false, description: 'invited only. Not wired to a state change — accepting does not currently flip the card to active.' },
+      { name: 'onDecline', type: '() => void', required: false, description: 'invited only.' },
     ],
-    tokens: ['--bv-white', '--bv-radius-2xl', '--bv-font-display', '--bv-inset-bubble', '--bv-inset-accent', '--bv-neutral-300', '--bv-space-3', '--bv-space-4'],
+    tokens: ['--bv-white', '--bv-radius-2xl', '--bv-font-display', '--bv-inset-bubble', '--bv-inset-accent', '--bv-neutral-300', '--bv-border-default', '--bv-space-3', '--bv-space-4'],
     icons: ['Plus'],
     flutterNote:
-      'Reuses the same 48×64 ringed avatars and accent-fill progress bar as the feed ChallengeCard. The progress and $0/$1,000 in start mode are illustrative (near-empty); active mode hardcodes the Figma 50.87%. The reward coin is the shared Coin component.',
+      'Reuses the same 48×64 ringed avatars and accent-fill progress bar as the feed ChallengeCard. The progress and $0/$1,000 in start mode are illustrative (near-empty); active AND invited mode both hardcode the Figma 50.87% / $512.56 / 67 days — invited reuses active\'s numbers rather than authoring its own, since accepting joins the challenge already in progress. The reward coin is the shared Coin component. invited mode reuses the shared Button component (outline/solid, size sm) rather than one-off buttons — only its outline border colour is overridden locally to Figma\'s lighter border-default hairline, since Button\'s own outline uses border-strong everywhere else. `onOpen` wraps the card body in a real `<button>` (a plain `<div>` when omitted, as in this preview) — the add button and Decline/Accept sit outside it so they never trigger it.',
     preview: (
       <div style={{ width: 370, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <ProfileChallengeCard
           mode="active"
-          name="Bobby"
-          partners={[avatarHappy1, avatarHappyman, avatarHappy000, avatarHappy1]}
+          name={BOBBY.name}
+          partners={previewFaces.map((p) => p.avatar)}
         />
-        <ProfileChallengeCard
-          mode="start"
-          name="Bobby"
-          partners={[avatarHappy1, avatarHappyman]}
-        />
+        <ProfileChallengeCard mode="start" avatar={BOBBY.avatar} />
+        <ProfileChallengeCard mode="invited" inviter={{ name: 'Bobby', avatar: BOBBY.avatar }} />
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
+    id: 'taste-identity-panel',
+    name: 'TasteIdentityPanel',
+    figmaNodes: ['19677:16435', '19668:16136', '19677:16426', '19635:14218'],
+    file: 'src/demo/components/TasteIdentityPanel.tsx',
+    summary:
+      'The profile\'s "Taste Identity" tab, in three stacked cards. A dark "Top N% Diner" summary (the app\'s only dark surface — flat #747474 under a 40% radial that runs dark in the middle out to near-white at the rim, an INVERTED vignette, inside a 2px GRADIENT border that runs #707070 down to #626262, plus a three-sided white rim light) carries the period, three counts and the friends ranking. Below it the AI read — the gradient "bravo AI" mark, "says:" slanted −10° because Figma fakes the italic rather than setting one — sits over the TasteRadar. Last is the cuisine breakdown, each row an illustrated marker, a label, a drawn bar and its share. All of it comes off ProfileData.tasteIdentity, so every profile through the shared template has one.',
+    usedOn: ['Profile'],
+    props: [
+      { name: 'profile', type: 'ProfileData', required: true, description: 'Reads `tasteIdentity`, plus `avatar`, `name` and `joined` for the header, the AI sentence and the "Since …" label.' },
+    ],
+    tokens: ['--bv-white', '--bv-radius-2xl', '--bv-font-display', '--bv-inset-bubble', '--bv-neutral-150', '--bv-neutral-200', '--bv-neutral-500', '--bv-space-2', '--bv-space-3', '--bv-space-4', '--bv-space-6', '--bv-space-8'],
+    icons: ['Share2', 'Store', 'UtensilsCrossed', 'MessageSquare'],
+    flutterNote:
+      'Two kinds of picture, deliberately: the four small UI icons are Lucide (their Figma nodes are literally named share / store / utensils-crossed / message-square), while the five cuisine markers are exported artwork under assets/taste/ — illustrations, not glyphs, so they must not be swapped for icons. The dark card\'s 2px edge is a gradient (#707070 → #626262): CSS cannot put a gradient on a border, so the border is transparent and the stroke is a background layer clipped to border-box while the surface layers clip to padding-box — which is also why the flat #747474 is a gradient layer rather than a background-color, since a background-color fills the border box and hides the stroke. In Flutter this is a Container with a gradient-painted border, no such trick needed. The card\'s rim light is three inset shadows and needs flutter_inset_box_shadow, paint order reversed; its drop shadow is a normal 0 12px 32px — note the Figma MCP reports it as Tailwind drop-shadow-[…16px] because CSS filter: drop-shadow() takes half the blur a box-shadow does. The dark card\'s radial is an ellipse measured off the node (276.48×95 on a 370×190 box → 74.72% × 50%); the layer\'s 40% opacity is baked into the stops because a CSS background layer cannot carry its own alpha — in Flutter set the opacity on the gradient layer instead. The bar widths in the breakdown are data (143/109/86/79/69 artboard px), not computed from the percentages: the design\'s widths fall off far more gently than the numbers do.',
+    preview: (
+      <div style={{ width: 370 }}>
+        <TasteIdentityPanel profile={publicProfile(BOBBY)} />
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
+    id: 'taste-radar',
+    name: 'TasteRadar',
+    figmaNodes: ['19689:50291', '19689:50292', '19689:50295'],
+    file: 'src/demo/components/TasteRadar.tsx',
+    summary:
+      'The six-axis Taste DNA radar: three nested rounded-hexagon grid rings behind one filled data polygon, every axis labelled with its name and score outside its vertex. Drawn in SVG rather than imported, because the polygon\'s shape IS the data — an exported asset would freeze one profile\'s numbers.',
+    usedOn: ['Profile'],
+    props: [
+      { name: 'axes', type: 'TasteRadarAxis[]', required: true, description: '{ label, value } per axis, clockwise from the top. Six in the design; any count works.' },
+      { name: 'max', type: 'number', required: true, description: 'The value that would touch the outer ring. The panel passes the strongest axis × 1.25, which is the headroom Figma\'s own drawing sits at.' },
+      { name: 'radius', type: 'number', required: false, description: 'Circumradius of the outer ring. Defaults to 108.86 — Figma\'s 217.718 / 2.' },
+    ],
+    tokens: ['--bv-font', '--bv-neutral-200', '--bv-neutral-500', '--bv-black'],
+    icons: [],
+    flutterNote:
+      'Two measurements are off the node, not assumed. (1) The hexagon is NOT regular: the outer ring exports 196.588 × 217.718 where a regular pointy-top hexagon of that height is 188.55 wide, so it is stretched 4.3% horizontally — that is RX_RATIO, and dropping it makes the chart read too narrow. (2) Every corner is rounded: the top corner runs 29.5px between tangent points, i.e. ~14.75px cut back along each edge on a 108.86 circumradius, so CORNER_CUT is stored as that fraction and scales with the ring. Corners are quadratic with the vertex as control point — visually identical to Figma\'s cubics at this size. Fill is #25CDD9 at 30%, no stroke; rings are a 1px --bv-neutral-200 stroke, no fill.',
+    preview: (
+      <div style={{ width: 338 }}>
+        <TasteRadar axes={publicProfile(BOBBY).tasteIdentity.radar} max={58 * 1.25} />
       </div>
     ),
     previewBg: 'light',

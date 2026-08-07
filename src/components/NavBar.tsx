@@ -18,7 +18,7 @@ export default function NavBar() {
       </div>
       <div className="nav-actions">
         <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
-          Prepared by Siya Yang · July 2026
+          Prepared by Siya Yang · August 2026
         </span>
         <button
           className="icon-button"

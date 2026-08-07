@@ -718,7 +718,9 @@ throughout. Say the word if they were deliberate.
 
 `src/demo/assets/social/` — avatars and the post photo were exported at
 1024×1536 (~2.2 MB each) and downscaled to the sizes actually rendered;
-the folder is 860 KB total instead of 11 MB.
+the folder is 860 KB total instead of 11 MB. The leaderboard, post feed and
+in-progress-challenge avatar stack all draw from the shared cast (see
+**Shared cast** below) rather than one photo per slot.
 
 ---
 
@@ -870,6 +872,50 @@ exactly as it would in the product:
 | `19558:167654` | *reused* | **LeaderboardRail** | The people rail is the same 61×82 rail as Social's leaderboard. It shows four, so **"View more people" only appears when five or more matched** — otherwise it is offering to reveal nobody |
 | `19542:163538` | *extended* | **PromptBox** | Gains a controlled `value` and a submit end-state |
 | `1344:21875` | *extended* | **Button** | `primary` (yellow) and `quiet` (grey) for the follow states |
+
+### The dock adapts to the screen it sits on (`promptDemo.ts`)
+
+The assistant is on every tab, but what it is *for* changes with what you
+are looking at. So both the dock's placeholder and the sheet's starter chips
+are keyed to the screen rather than being one global list:
+
+| Screen | `PromptContext` | Placeholders |
+|---|---|---|
+| Map / Home | `'map'` | "New onboarded restaurants" · "Best cafe near me" |
+| Community | `'social'` | "Where {friend} dined last night" · "Challenge restaurants I can go" |
+| Your own profile | `'me'` | "Total spend last week" · "Who's my best friend" |
+
+`useSearchLauncher(context)` takes it, puts `placeholders` into the props it
+spreads onto the dock's box, and hands `starters` to the sheet. The screens
+no longer author a placeholder string of their own.
+
+- **{friend} is a real cast member**, drawn from `people.ts` — naming
+  someone who doesn't appear anywhere in the feed would read as filler.
+- **Each screen's starters lead with its two placeholders**, so what the box
+  advertises is something you can actually tap, then add two more.
+
+**The placeholder rotates, and the rotation is painted, not native.** A
+`placeholder` attribute cannot be animated and swapping its text just snaps,
+so with more than one hint `PromptBox` drops the attribute and draws the
+line itself over the field: the outgoing hint **flips up and fades** (`y`
++ `rotateX` against a `perspective` on the track), the next **rises from
+below**. `AnimatePresence mode="wait"` keeps them from overlapping mid-turn,
+and `overflow: hidden` on the track is what makes them enter and leave
+rather than drift past the field. It cycles every 3.6s and **pauses
+whenever there is something else to read** — text in the field, or a
+recording in progress. Under `prefers-reduced-motion` it crossfades.
+
+**Tapping a starter sends it.** A starter is a question for the assistant,
+not a search term, so it goes straight to the AI thread and the thinking
+line reads back the chip you chose. It previously only filled the search
+field, which left the chip's own copy going nowhere.
+
+That last part is why the thinking copy widened: Figma's "Looking for
+restaurants with “Happy” …" / "Found 5 places …" was written when every
+prompt was a restaurant search. "Found 5 places" under "Who's my best
+friend" reads as a bug, so the two lines are now "Looking for “{query}” …"
+and "Found 5 results …". Deliberate deviation from `19559:168156` /
+`19560:168548`; the shape and the per-step pacing are unchanged.
 
 ### The two prompt-box end states (`19542:163538`)
 
@@ -1038,6 +1084,15 @@ on "happy" so a single query lights up both sections. The filtering is real
 `includes()` against the query, not a hardcoded result set, so typing
 "lamb" or "cafe" narrows it correctly.
 
+**The five people are now real cast members under their own names** (see
+**Shared cast** below) rather than the old `happy1`/`happy000`/… handles, so
+a face and the name beside it agree. One consequence to know: the merchants
+still all contain "Happy", and one cast member *is* named Happy (she leads
+the list so the canned query still returns a person) — but "Happy" now
+matches **one** person instead of five, so the **"View more people"** rail
+affordance, which only appears at five or more, stays hidden on that query.
+Widen the cast slice in `searchDemo.ts` if that rail needs demoing.
+
 ---
 
 ## Pending screens
@@ -1056,12 +1111,22 @@ One screen, two modes. `ProfileScreen({ profile, mode, onBack, active, onNavigat
 - **`me`** (Profile-Sender-Private 19682:49464) — the signed-in user, a real
   **tab**: the Home top bar (balance pills + bell + settings, no back) and the
   shared bottom **dock** (`useSearchLauncher`'s prompt box + `BottomNav`) frame
-  it, and the challenge is the "start one" invite ("You're eligible to start
-  this challenge…", one face + add). `active`/`onNavigate` drive its bottom nav.
+  it. The challenge card depends on **which demo user is signed in** — see
+  "Two challenge sides" below. `active`/`onNavigate` drive its bottom nav.
 
 The middle — header, stat cards, tabs, Activity feed — is identical, so it's
-one component driven by `mode` + data. me mode reuses the whole Home dock, so
-its prompt box opens search and the bottom nav navigates like every other tab.
+one component driven by `mode` + data. me mode borrows the community chrome
+top and bottom:
+
+- **Both headers overlay** the feed with the same white → transparent fade as
+  `.bv-social-header` (75.492% white stop, pointer-events off except the header
+  row) — me mode's balance-pill bar and public mode's back + Follow / Send
+  money. The scroll fills the frame and is top-padded to clear the fade so
+  content passes up under it (`has-dock` adds the bottom padding for the dock).
+- **Bottom dock** reuses `.bv-dock.bv-dock-social` + `.bv-nav-slot` (minus the
+  compose button), so the prompt box opens search, the bottom nav navigates,
+  and — like the Friends feed — the nav **folds away on scroll down and
+  returns on scroll up** (same `navHidden` listener + cube-face collapse).
 
 **Almost all of it reuses existing components** — the reusability pass paid
 off:
@@ -1072,19 +1137,210 @@ off:
 | 8X / Lv.7 chips | **AchievementLabel** (`StreakLabel` + `LevelLabel`) |
 | Follow / Send money | **Button** (`solid` / `outline`) |
 | Back arrow, settings gear | plain `.bv-screen-back` buttons |
-| Activity / Taste Identity / Collectives | **SectionTabs**, scoped by `.bv-profile-tabs` to a smaller DM-Sans style (the social tabs are Boldonse) |
+| Activity / Taste Identity / Collectives | **SectionTabs**, scoped by `.bv-profile-tabs` to a smaller DM-Sans style (the social tabs are Boldonse). The active tab is **700** here — Figma sets the selected label bold, which the social tabs' single-weight Boldonse can't do |
 | Bottom "Search a restaurant" | **PromptBox** `variant="search"` |
 | Venue in posts | **VenueCard** (via PostCard) |
 
 New parts are only: the header (avatar + identity + counts), the two stat
-cards, and **ProfileChallengeCard** (`active` / `start` modes) — *not* the
-feed's ChallengeCard, which carries a reward coin and spent/goal line this
-composition drops.
+cards, **ProfileChallengeCard** (`active` / `start` / `invited` modes) —
+*not* the feed's ChallengeCard, which carries a reward coin and spent/goal
+line this composition drops — and the Taste Identity tab below.
+
+### Taste Identity tab (Figma `19677:16435`)
+
+| Figma node | Component | File | Notes |
+|---|---|---|---|
+| `19677:16435` | **TasteIdentityPanel** | `components/TasteIdentityPanel.tsx` | The whole tab — three cards, 24px apart |
+| `19668:16136` | *inline* | same (`.bv-taste-stat`) | The dark "Top N% Diner" summary |
+| `19677:16426` | *inline* | same (`.bv-taste-ai`) | "bravo AI says:" + the radar |
+| `19689:50291` | **TasteRadar** | `components/TasteRadar.tsx` | Six-axis hexagonal Taste DNA chart |
+| `19635:14218` | *inline* | same (`.bv-taste-dna`) | Cuisine breakdown rows |
+
+Data lives on `ProfileData.tasteIdentity` (`data/profileDemo.ts`), so every
+profile through the shared template gets one. Three things are worth knowing
+before touching this:
+
+**The dark card is the app's only dark surface**, and every part of its edge
+is doing something:
+
+- **Surface** — flat `#747474` under a 40% radial that runs *dark in the
+  middle* out to near-white at the rim: an **inverted** vignette, which is
+  what gives it the brushed-metal read. The ellipse is measured off the node
+  (276.48 × 95 on a 370 × 190 box → 74.72% × 50%), and the layer's 40% is
+  baked into the stops because a CSS background layer can't carry its own
+  alpha.
+- **Border** — a 2px **gradient**, `#707070` at the top down to `#626262`,
+  not a flat colour. CSS borders can't take a gradient, so the border is
+  `transparent` and the stroke is a third background layer clipped to
+  `border-box` while the two surface layers clip to `padding-box`. That is
+  also why the flat `#747474` has to be a `linear-gradient(#747474,#747474)`
+  layer rather than a `background-color` — a background-color fills the
+  border box and would hide the stroke.
+- **Rim + shadow** — three inset white rim lights plus one ordinary
+  `0 12px 32px` drop shadow. Note the 32: the Figma MCP reports this as
+  Tailwind `drop-shadow-[…16px]` because CSS `filter: drop-shadow()` takes
+  half the blur a `box-shadow` does. The box-shadow value is **32**.
+
+None of this is a named Figma style, so it stays local rather than becoming a
+token — the only shared style on the card is `bubble`, on its avatar.
+
+**The radar is drawn, not imported** — the data polygon's shape *is* the data,
+so an exported SVG would freeze one profile's numbers. Two measurements come
+off the node rather than being assumed:
+
+- The hexagon is **not regular**. The outer ring exports 196.588 × 217.718,
+  where a regular pointy-top hexagon of that height would be 188.55 wide — so
+  it's stretched **4.3% horizontally** (`RX_RATIO`). Drop it and the chart
+  reads noticeably too narrow.
+- Every corner is **rounded**. The top corner runs 29.5px between tangent
+  points — ~14.75px cut back along each edge on a 108.86 circumradius — so
+  `CORNER_CUT` holds that as a fraction and the rounding scales with the ring.
+  Corners are quadratic with the vertex as the control point, visually
+  identical to Figma's cubics at this size.
+
+Fill is `#25CDD9` at 30% with **no** stroke; the three rings are a 1px
+`--bv-neutral-200` stroke with no fill.
+
+**Two kinds of picture, deliberately.** The four small UI icons are Lucide —
+their Figma nodes are literally named `share` / `store` / `utensils-crossed` /
+`message-square`. The five cuisine markers are exported **artwork** under
+`assets/taste/`, illustrations rather than glyphs, and must not be swapped for
+icons. They ship downscaled to 112px (the Michelin export was 1024px / 2 MB).
+
+Two smaller notes: the breakdown's bar widths are **data** (143/109/86/79/69
+artboard px), not derived from the percentages — the design's widths fall off
+far more gently than the numbers do, so computing them would redraw the chart
+the designer drew. And "says:" is slanted with a −10° skew because Figma fakes
+the italic that way; DM Sans has no italic cut here, so the skew *is* the
+design rather than a fallback.
+
+### Two challenge sides — the demo-user switch
+
+The review site's tweaker (`LiveDemo.tsx`) can sign the demo in as either of
+two people, so a reviewer plays both sides of the invite flow without a
+backend:
+
+| User | `DemoUserId` | Their own profile shows |
+|---|---|---|
+| **Bobby** | `'bobby'` | `start` — "Start a challenge with friends…", the invite-out card (19682:49505) |
+| **Happy** | `'happy'` | `invited` — "Bobby invited you to a challenge, accept now to join $5 extra Bonus!", Decline / Accept (19696:51781) |
+
+This is carried on `DemoUser.challengeCardMode` (+ `challengeInviter` for the
+receiver) in `profileDemo.ts`, folded into `ProfileData` by `meProfile(user)`.
+`ProfileScreen` picks the card: `mode="me"` reads `profile.challengeCardMode`;
+`mode="public"` (someone else's profile) always shows `active`, regardless of
+who is signed in.
+
+**`invited` is a third `ProfileChallengeCard` shape**, not a variant of
+`start` — its top row is the inviter's face + a fixed sentence (not the
+avatar stack + "and 3+" copy). Its progress row shows **the same running
+total as the `active` card** (`$512.56/$1000`, 67 days left, the bar at
+50.87%) — joining accepts into the challenge already in progress, not a
+fresh $0 count, so it reuses `ACTIVE`'s numbers rather than `START`'s empty
+ones. Below that sits a `Decline` / `Accept` button row (`Button`
+`outline` / `solid`, `size="sm"`, each stretched to `flex: 1` by
+`.bv-profile-challenge-actions`). The outline button's border is overridden
+to `--bv-border-default` (Figma's soft 12%-black hairline) rather than
+`Button`'s own `--bv-border-strong` — the one place that lighter hairline
+appears, so it's a scoped override, not a new `Button` variant.
+
+**`start` shows the profile OWNER's own face**, not a partner's — it's your
+own prompt to start a challenge, so `mode="start"` takes an `avatar` prop
+(the owner's photo) instead of `partners`.
+
+**`active` shows three faces, and the profile's owner is always one of
+them** (they lead the stack). The card reads "{name} and 3+ are in a dining
+challenge", so a stack that didn't contain the person whose profile you're
+on contradicted its own copy. `publicProfile` over-draws from the shared
+cast and filters the owner out before taking the other two, so they can
+never appear twice — see **Shared cast**.
+
+Both `start` and `invited` wrap their body (everything but the buttons) in a
+tappable `Open` element — a real `<button>` when `onOpen` is given, a plain
+`<div>` otherwise (the Design System previews). The add button (`start`) and
+Decline/Accept (`invited`) sit **outside** that wrapper as siblings, so they
+never trigger it; `start`'s add button also calls `stopPropagation` since
+it's *inside* the stack that IS part of the open target. Neither
+`Decline`/`Accept` nor `onOpen`-driven accept is wired to a persistent state
+change — accepting doesn't flip the card itself to `active`, it just closes
+the detail screen back to the profile (see below).
+
+### The pre-accept challenge detail — one screen, two datasets
+
+Tapping either card (`start` or `invited`) opens **the same `ChallengeScreen`**
+already used from the Friends feed, but before anyone but the host has
+answered:
+
+| Who's viewing | Figma | Dataset (`pendingChallengeDemo.ts`) | Your own seat |
+|---|---|---|---|
+| Bobby (`start` card) | `19682:49684` | `SENDER_VIEW` | accepted, reads "You" |
+| Happy (`invited` card) | `19743:54823` | `RECEIVER_VIEW` | `'pending-you'`, an Accept pill |
+
+Same challenge, same four seats, same positions in both — only whose seat
+reads "You" (and therefore which one carries the Accept pill) changes.
+`ProfileScreen` picks the dataset from `profile.challengeCardMode`, the same
+field that already picked the card.
+
+**Each dataset's `spent` mirrors the card that opens it**, so the detail
+never contradicts the strip you tapped: `SENDER_VIEW` is `$0/$1,000` like
+the `start` card, `RECEIVER_VIEW` is `$512.56/$1000` like the `invited`
+one — joining accepts into a challenge already in progress, so a $0 detail
+behind a $512.56 card read as a bug. (The bar itself stays derived from
+`spent / goal`, so it lands on 51.26% against the card's authored 50.87% —
+the same Figma rounding gap called out for ChallengeCard above.)
+
+**All four bubbles sit in the top half of the play area.** Figma's y values
+(327–358 for the lower row) put them under the Bravo coin that crowns the
+sheet: a pending bubble is ~128 artboard px tall against a ~418px play
+area, so anything past y≈258 overflows. The lower row is pulled up to
+245–258 and the upper row to 105–138, keeping the whole group clear of the
+coin while preserving the design's four-corner arrangement.
+
+**`FloatingAvatar` gained a `status`.** It defaults to `'accepted'` — every
+bubble the component originally drew, unchanged — plus three new ones for
+this pre-accept moment:
+
+- `'pending-you'` — your own unanswered invite. The name pill is replaced by
+  a real `<button>` ("Accept"), guarded with `stopPropagation` on
+  `pointerdown` *and* `click` so it survives inside a `drag`-enabled parent
+  without starting a drag.
+- `'pending-other'` — someone else's unanswered invite. Same dimmed photo +
+  hourglass, but the pill still just names them.
+- `'empty'` — a seat nobody has been invited to yet: a flat neutral-400
+  circle with a `Plus` glyph instead of a photo, "---" instead of a name.
+
+Pending/empty bubbles are a **fixed 60px**, not the usual
+`avatarWidth(share)` formula — nobody has spent anything yet, so the formula
+would compute the base 40px, and a shrunk bubble reads as broken rather than
+"hasn't answered." `Participant` also gained `isHost?: boolean`, for the one
+case `isYou` can't cover: on Happy's screen, Bobby (the host) is accepted but
+isn't "you" — he still has to sit outside the "Invited: n/N" count the way
+"you" always do.
+
+**Two things ChallengeScreen had to stop assuming once shares can tie at
+zero:**
+
+- **The crown.** `reduce((a,b) => b.share > a.share ? b : a)` picks whoever's
+  first when every share is 0 (nobody has spent anything, so `b.share >
+  a.share` is never true) — it would have crowned an arbitrary bubble.
+  Guarded behind `Math.max(...shares) > 0`.
+- **The percentage label.** `0.00%` is correct once someone has actually
+  spent something (matches every existing bubble); a *fresh* challenge reads
+  plain `0%` instead — Figma draws it that way even for the accepted host.
+  Special-cased on `share === 0`, not on status, since it's the value that
+  changed meaning, not who's wearing it.
+
+`ChallengeScreen` also gained an optional `onAccept`, wired only to whichever
+bubble has `status: 'pending-you'` — `ProfileScreen` uses it to close the
+detail screen back to the profile (a UI acknowledgment, not a persisted
+accept — see the note above).
 
 **One profile template, swapped per person.** `profileDemo.ts` holds one set
 of counts / stats / feed; `publicProfile(person)` stamps a `{ name, avatar }`
 onto it. So opening any person's profile shows *their* face and name over the
-shared demo content — which is all a review build needs.
+shared demo content — which is all a review build needs. `DEMO_USERS` (and
+therefore `BravoApp`'s `user` prop, `me`, and the nav avatar) build on
+`BOBBY`/`HAPPY` from the **shared cast** below, not on their own imports.
 
 **Opening profiles is decoupled via context** (`ProfileLauncher.tsx`).
 `ProfileProvider` is mounted once in `BravoApp`; `useOpenProfile()(person)`
@@ -1096,6 +1352,51 @@ tab (`BravoApp` renders `ProfileScreen mode="me"` when `tab === 'profile'`).
 
 Taste Identity and Collectives have no content in the design, so they render a
 "Coming soon" panel; Activity carries the feed.
+
+---
+
+## Shared cast (`src/demo/data/people.ts`)
+
+Every avatar in the app — nav, profile, leaderboard, posts, challenges,
+search, achievements — is drawn from **one 12-person roster** built from
+Siya's real photos (`src/demo/assets/social/*.jpg`), not a grab-bag of
+per-screen placeholder images.
+
+- **`PEOPLE`** is the roster; **`PERSON`** indexes it by id. **`BOBBY`** and
+  **`HAPPY`** are named exports — they're fixed identities (the tweaker's two
+  demo users, and Bobby is the pre-accept flow's hardcoded "You"), not pool
+  picks, so every screen that needs "the signed-in user's own face" reads
+  these constants directly rather than drawing from the shuffle.
+- **The name always belongs to the face.** No screen authors a display name
+  of its own any more — leaderboard entries, post authors, challenge
+  participants and search rows all read `person.name` beside
+  `person.avatar`, so the label under a photo is that photo's actual name.
+  The old placeholder handles (`happy1`, `Noooodle123`, `Uuuuzili`, …) are
+  gone.
+- **Nobody holds two seats in one challenge.** `pickPeople` takes a
+  contiguous window, so a single call never repeats a person; where a seat is
+  also filled by hand (Bobby is the feed challenge's "You", the profile owner
+  is on their own card) that person is passed to `exclude` — or filtered out
+  of an over-draw — so the random picks can't duplicate them. The Friends
+  challenge card's avatar stack and its detail screen's bubbles are now the
+  **same four people**, not two independent draws.
+- **`pickPeople(n, offset, exclude)`** returns `n` faces from a **module-load-time**
+  Fisher–Yates shuffle (`PEOPLE_SHUFFLED`) — random once per page-load, not
+  per render, so faces don't flicker/reshuffle on every re-render, and not
+  reseeded on reload's next load either (it *will* differ across reloads,
+  which is the point — "make it random" per Siya). Callers pass a distinct
+  `offset` per section (leaderboard, posts, friend posts, challenge stacks,
+  search results, the design-system previews, …) purely so two lists on the
+  same screen don't happen to show identical faces — it carries no other
+  meaning and there's no requirement that offsets stay disjoint.
+- **Figma's "James"** (the pre-accept challenge detail's third seat) has no
+  match in the real 12 — `pendingChallengeDemo.ts` stands Jason in for him
+  (`const thirdFriend = PERSON.jason`), named in the data rather than
+  hardcoded as "James" anywhere in JSX.
+- **`BottomNav` takes an `avatar` prop** (default `BOBBY.avatar`, used only by
+  its own Design System preview) rather than importing a fixed image, so it
+  reflects whichever demo user is signed in — wired through `BravoApp` →
+  `HomeScreen`/`SocialScreen`/`ProfileScreen` from the tweaker's `user` state.
 
 ---
 

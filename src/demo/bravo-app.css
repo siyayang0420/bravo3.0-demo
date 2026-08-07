@@ -134,10 +134,15 @@
   --bv-font-display: 'Boldonse', 'DM Sans', -apple-system, sans-serif;
   --bv-line-20: 20px;                              /* font/lineHeight/20 */
 
-  /* --- effects (styles observed in Figma: "bubble", "accent-default") --- */
+  /* --- effects (styles observed in Figma: "bubble", "hard bubble",
+         "accent-default") --- */
   --bv-shadow-float: 0px 5px 4px rgba(0, 0, 0, 0.15);
   --bv-inset-bubble: inset 0px 1px 4px 0px #ffffff,
     inset 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
+  /* "hard bubble" (Figma) — same recipe, a stronger bottom shadow (0.2).
+     Used on the tappable chip buttons. */
+  --bv-inset-bubble-hard: inset 0px 1px 4px 0px #ffffff,
+    inset 0px -2px 5px 0px rgba(0, 0, 0, 0.2);
   --bv-inset-glow: inset 0px 0px 6.4px 0px #ffffff;
   --bv-inset-accent: inset 0px -4px 4px 0px #000000,
     inset 0px 1px 5px 0px rgba(255, 255, 255, 0.6);
@@ -203,26 +208,83 @@
   user-select: none;
 }
 
-/* ---------- map background ----------
-   Replicates the Figma crop (node 19237:3738): the map asset is placed
-   553x874 at left:-76, with the image inset within it. */
-.bv-map-bg {
+/* ---------- map ----------
+   Real MapLibre map filling the artboard, at the base layer so the top bar
+   (z-8) and the bottom stack (z-6) float over it. Interactive: pan + zoom. */
+.bv-map {
   position: absolute;
-  left: -76px;
-  top: 0;
-  width: 553px;
-  height: 874px;
-  overflow: hidden;
-  pointer-events: none;
+  inset: 0;
+  z-index: 0;
+}
+/* the tiles are light and clean on their own — no filter needed */
+.bv-map .maplibregl-canvas {
+  outline: none;
+}
+/* keep the attribution readable but out of the way, above the dock fade */
+.bv-map .maplibregl-ctrl-bottom-right {
+  bottom: 96px;
+  z-index: 1;
+}
+.bv-map .maplibregl-ctrl-attrib {
+  font-size: 9px;
+  border-radius: 8px 0 0 0;
 }
 
-.bv-map-bg img {
-  position: absolute;
-  left: -0.03%;
-  top: -24.41%;
-  width: 100.06%;
-  height: 137.32%;
-  max-width: none;
+/* the blue "you are here" dot */
+.bv-map-user {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #2b7fff;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* restaurant pin — white pill, round photo on the left, name + meta.
+   Anchored at its left edge so the photo sits on the location. */
+.bv-map-pin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 210px;
+  padding: 5px 12px 5px 5px;
+  background: var(--bv-white);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  user-select: none;
+}
+
+.bv-map-pin-photo {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #e6e6e6 50% / cover no-repeat;
+}
+
+.bv-map-pin-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.bv-map-pin-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--bv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-map-pin-meta {
+  font-size: 11px;
+  color: #6b6b6b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ---------- status bar (Figma AppleStatusBar 19548:163729) ----------
@@ -399,8 +461,8 @@ button.bv-balance-pill:active {
   gap: var(--bv-space-1);
   padding: var(--bv-space-1-5) var(--bv-space-3);
   border-radius: var(--bv-radius-full);
-  background: var(--bv-neutral-100);
-  box-shadow: var(--bv-inset-bubble);
+  background: var(--bv-white);
+  box-shadow: var(--bv-inset-bubble-hard);
   border: none;
   font-family: inherit;
   font-size: 14px;
@@ -436,8 +498,8 @@ button.bv-balance-pill:active {
   gap: 10px;
   padding: 8px 12px;
   border-radius: var(--bv-radius-xl);
-  background: var(--bv-neutral-100);
-  box-shadow: var(--bv-inset-bubble);
+  background: var(--bv-white);
+  box-shadow: var(--bv-inset-bubble-hard);
   border: none;
   font-family: inherit;
   font-size: 14px;
@@ -600,6 +662,43 @@ button.bv-balance-pill:active {
 .bv-prompt-input.hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Holds the field and the rotating hint in the same box, so the hint can be
+   painted exactly over the placeholder position. */
+.bv-prompt-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* The hint's track. `overflow: hidden` is what turns the flip into an
+   entrance and an exit rather than two lines drifting past the field, and
+   the perspective gives the rotateX somewhere to turn. */
+.bv-prompt-rotator {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 160px;
+}
+
+.bv-prompt-rotator-line {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.2;
+  /* Same colour the native ::placeholder uses — this stands in for it. */
+  color: var(--bv-neutral-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
 }
 
 .bv-prompt-end {
@@ -1454,6 +1553,31 @@ button.bv-balance-pill:active {
     inset 0px -2.97px 7.424px 0px rgba(0, 0, 0, 0.1);
 }
 
+/* Pending: the photo underneath, dimmed, with a waiting glyph on top —
+   never eats a drag or a tap, so it sits over the photo, under nothing. */
+.bv-float-avatar-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--bv-white);
+  pointer-events: none;
+}
+
+/* Empty seat: no photo, just an open invite — the JSX never sets a
+   background-image for this status, so this flat fill is all that shows. */
+.bv-float-avatar-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bv-neutral-400);
+  color: var(--bv-white);
+}
+
 /* tap reaction — emoji fly out of the middle of the avatar, from behind it */
 .bv-float-burst {
   position: absolute;
@@ -1493,6 +1617,18 @@ button.bv-balance-pill:active {
   line-height: 1.2;
   color: var(--bv-black);
   white-space: nowrap;
+}
+
+/* Your own unanswered invite — a real button in the name pill's place, so
+   it needs its own reset (the pill it replaces is a <span>). */
+.bv-float-accept {
+  border: none;
+  appearance: none;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--bv-black);
+  color: var(--bv-white);
+  box-shadow: var(--bv-inset-accent);
 }
 
 .bv-float-share {
@@ -1997,6 +2133,7 @@ button.bv-balance-pill:active {
   font-weight: 700;
   line-height: 1.2;
   color: var(--bv-black);
+  margin-bottom: 6px;
 }
 
 .bv-person-meta {
@@ -2362,9 +2499,10 @@ button.bv-balance-pill:active {
   position: relative;
   font-size: 16px;
   font-weight: 400;
-  line-height: 16px;
+  /* wraps to a second line when the query is long, so it never runs off */
+  line-height: 20px;
   color: var(--bv-neutral-500);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 /* second column — aligns under the label, no magic indent */
@@ -3038,7 +3176,7 @@ button.bv-balance-pill:active {
   padding: var(--bv-space-2) var(--bv-space-3);
   border-radius: var(--bv-radius-xl);
   background: var(--bv-orange-bright);
-  box-shadow: var(--bv-inset-bubble);
+  box-shadow: var(--bv-inset-bubble-hard);
   border: none;
   font-family: inherit;
   font-size: 14px;
@@ -3393,49 +3531,68 @@ button.bv-balance-pill:active {
   overflow: hidden;
 }
 
-/* Top nav: back on the left, actions (or gear) on the right. Clears the
-   status bar the same way ScreenNav does. */
-.bv-profile-nav {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--bv-space-4);
-  margin-top: calc(var(--bv-statusbar-h) + 6px);
-  min-height: 32px;
-}
-
 .bv-profile-nav-actions {
   display: flex;
   gap: var(--bv-space-2);
 }
 
-/* me mode: the Home top bar (balance pills + bell/settings), cleared below
-   the status bar since the screen covers the full frame. */
-.bv-profile-topbar {
-  position: relative;
-  z-index: 8;
+/* Both headers overlay the feed with the same white → transparent fade as the
+   community header, so content scrolls up under them. me mode carries the
+   Home top bar (balance pills + bell/settings); public mode the back arrow +
+   Follow / Send money. The 75.492% white stop fixes the fade height where the
+   header row ends. */
+.bv-profile-topbar,
+.bv-profile-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: calc((var(--bv-statusbar-h) + 41px) / 0.75492);
+  padding: calc(var(--bv-statusbar-h) + 6px) var(--bv-space-4) 0;
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  width: 370px;
-  margin: calc(var(--bv-statusbar-h) + 6px) auto 0;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--bv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  margin: 0;
 }
 
+.bv-profile-topbar-row,
+.bv-profile-nav-row {
+  width: 370px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+/* The scroll fills the frame and passes under the faded header — so it always
+   clears the header up top, and clears the dock at the bottom in me mode. */
 .bv-profile-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Hidden like every other scroller in the app (social feed, search, offers).
+     This one was the exception, and a desktop scrollbar is not just cosmetic
+     here: it took 15px off the content box, so the 370px cards measured 355. */
+  scrollbar-width: none;
   display: flex;
   flex-direction: column;
   gap: var(--bv-space-4);
-  padding: var(--bv-space-4) var(--bv-space-4) 24px;
+  padding: calc(var(--bv-statusbar-h) + 65px) var(--bv-space-4) 24px;
 }
 
-/* Clear the pinned dock in me mode. */
+.bv-profile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .bv-profile-scroll.has-dock {
-  padding-bottom: 120px;
+  padding-bottom: 140px;
 }
 
 /* ---------- header ---------- */
@@ -3453,6 +3610,30 @@ button.bv-balance-pill:active {
   background-size: cover;
   background-position: center;
   box-shadow: var(--bv-inset-bubble);
+}
+
+/* Everything under the header — held back (see ProfileScreen) until the
+   hero avatar lands, then fades in as one group. Repeats .bv-profile-scroll's
+   own gap so wrapping these children doesn't change their spacing. */
+.bv-profile-below-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+/* The flying avatar clone — see ProfileLauncher. A sibling of .bv-profile-wrap
+   (z-index 13), not nested inside it, so its own opacity is never dragged
+   down by the wrap's entrance fade. Rendered at its landing rect and
+   animated in with a transform only (translate + scale), so the flight is a
+   pure compositor operation, never a layout one. */
+.bv-avatar-fly {
+  position: absolute;
+  z-index: 14;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--bv-inset-bubble);
+  pointer-events: none;
 }
 
 .bv-profile-identity {
@@ -3552,6 +3733,24 @@ button.bv-balance-pill:active {
   border-radius: var(--bv-radius-2xl);
   background: var(--bv-white);
   box-shadow: 0 0 7.5px rgba(0, 0, 0, 0.1);
+}
+
+/* The card's tappable body ('start'/'invited' only) — reproduces the
+   section's own 12px column gap for its children (top, headline, the 6px
+   numbers+track group), plus a button reset when it IS a button. */
+.bv-profile-challenge-open {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  /* Only a <button> (onOpen given) gets the browser's own pointer cursor —
+     the plain-<div> fallback below stays non-interactive. */
 }
 
 .bv-profile-challenge-top {
@@ -3661,6 +3860,24 @@ button.bv-balance-pill:active {
   box-shadow: var(--bv-inset-accent);
 }
 
+/* ---------- invited mode: Decline / Accept ---------- */
+.bv-profile-challenge-actions {
+  display: flex;
+  gap: var(--bv-space-3);
+  width: 100%;
+}
+
+.bv-profile-challenge-actions .bv-button {
+  flex: 1;
+}
+
+/* Figma specs border-default (a soft 12%-black hairline) here, lighter than
+   Button's own outline style (border-strong) — this is the one place that
+   hairline appears, so it is overridden rather than added as a new variant. */
+.bv-profile-challenge-actions .bv-button-outline {
+  border-color: var(--bv-border-default);
+}
+
 /* ---------- tabs ---------- */
 .bv-profile-tabs .bv-section-tab {
   width: auto;
@@ -3675,6 +3892,7 @@ button.bv-balance-pill:active {
 
 .bv-profile-tabs .bv-section-tab.active .bv-section-tab-label {
   color: var(--bv-black);
+  font-weight: 700;
 }
 
 /* ---------- feed / empty ---------- */
@@ -3689,4 +3907,316 @@ button.bv-balance-pill:active {
   text-align: center;
   font-size: 14px;
   color: var(--bv-neutral-400);
+}
+
+/* ---------- Taste Identity tab (Figma 19677:16435) ----------
+   Three stacked cards: the dark "Top N% Diner" summary, the AI read over the
+   Taste DNA radar, then the cuisine breakdown. See TasteIdentityPanel. */
+.bv-taste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+}
+
+/* -- Top N% Diner (19668:16136) --
+   The one dark surface in the app. Figma paints a flat #747474 under a 40%
+   radial that runs DARK at the middle out to near-white at the rim — an
+   inverted vignette, which is what gives the card its brushed-metal read.
+   The ellipse is measured off the node (276.48 x 95 on a 370 x 190 box, so
+   74.72% x 50%), and the layer's 40% is baked into the stops because a
+   background layer cannot carry its own opacity. */
+.bv-taste-stat {
+  box-sizing: border-box;
+  display: flex;
+  /* 370px in the design — which is exactly the scroll's content width on the
+     402 artboard, so this stays 100% rather than hardcoding it. */
+  width: 100%;
+  padding: var(--bv-space-4);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--bv-space-8);
+
+  border-radius: var(--bv-radius-2xl);
+  /* The 2px edge is a GRADIENT, not a flat colour — #707070 at the top down
+     to #626262, so the rim catches light like a real bezel. A border cannot
+     take a gradient directly, so the border sits transparent and the stroke
+     is a third background layer clipped to the border box, with the two
+     surface layers clipped to the padding box on top of it. That also means
+     the surface's flat #747474 has to be a gradient layer rather than a
+     background-color, which would fill the border box and hide the stroke. */
+  border: 2px solid #A7A7A7;
+  background: radial-gradient(
+        74.72% 50% at 50% 50%,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(181, 181, 181, 0.4) 100%
+      )
+      padding-box,
+    linear-gradient(#747474, #747474) padding-box,
+    linear-gradient(180deg, #707070 0%, #626262 100%) border-box;
+  box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.34),
+    -1.3px 0 2px 0 rgba(255, 255, 255, 0.45) inset,
+    1.3px 0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 2px 5.4px 0 rgba(255, 255, 255, 0.45) inset;
+  color: var(--bv-white);
+}
+
+/* The card centres its children, so each row carries its own full width —
+   without it they shrink to content and space-between stops spreading. */
+.bv-taste-stat-head,
+.bv-taste-stat-metrics,
+.bv-taste-stat-foot {
+  width: 100%;
+}
+
+.bv-taste-stat-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.bv-taste-stat-identity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+}
+
+/* Stretches to the row's height at the node's own 78:106, so it always
+   matches the two lines of type beside it rather than fighting them.
+   align-self, not height:100% — a percentage height against an auto-height
+   flex parent resolves to auto, which collapsed it. */
+.bv-taste-stat-avatar {
+  flex-shrink: 0;
+  align-self: stretch;
+  aspect-ratio: 78 / 106;
+  border-radius: 100px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--bv-white);
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-taste-stat-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+}
+
+/* Both lines are nowrap in Figma; without it the headline breaks after
+   "Top 32%" as soon as space-between squeezes the column. */
+.bv-taste-stat-period {
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.bv-taste-stat-headline {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.bv-taste-stat-share {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--bv-white);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.bv-taste-stat-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-taste-stat-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* The trailing two are floored so the three columns keep Figma's rhythm
+   rather than bunching around their own text widths. */
+.bv-taste-stat-metric:not(:first-child) {
+  min-width: 82px;
+}
+
+.bv-taste-stat-metric b {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bv-taste-stat-metric span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-150);
+}
+
+.bv-taste-stat-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-3);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.bv-taste-stat-brand {
+  flex-shrink: 0;
+  display: block;
+  width: 45.42px;
+  height: 13px;
+}
+
+/* -- the AI read + radar (19677:16426) -- */
+.bv-taste-ai {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-8);
+  padding: var(--bv-space-4);
+  border-radius: var(--bv-radius-2xl);
+  border: 1px solid var(--bv-neutral-200);
+}
+
+.bv-taste-ai-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+  width: 100%;
+}
+
+.bv-taste-ai-says {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+/* Figma slants the word rather than setting an italic cut — DM Sans has no
+   true italic here, so the skew is the design, not a fallback. */
+.bv-taste-ai-says-word {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  transform: skewX(-10deg) scaleY(0.98);
+}
+
+.bv-taste-ai-summary {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-taste-radar {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bv-taste-radar-ring {
+  fill: none;
+  stroke: var(--bv-neutral-200);
+  stroke-width: 1;
+}
+
+.bv-taste-radar-fill {
+  fill: #25cdd9;
+  fill-opacity: 0.3;
+}
+
+.bv-taste-radar-name,
+.bv-taste-radar-value {
+  font-family: var(--bv-font);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bv-taste-radar-name {
+  fill: var(--bv-neutral-500);
+}
+
+.bv-taste-radar-value {
+  fill: var(--bv-black);
+}
+
+/* -- cuisine breakdown (19635:14218) -- */
+.bv-taste-dna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+.bv-taste-dna-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-taste-dna-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bv-taste-dna-since {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-taste-dna-row {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+/* Artwork, not a glyph — no chip behind it, exactly as drawn. */
+.bv-taste-dna-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.bv-taste-dna-meter {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.bv-taste-dna-label {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+/* A single drawn bar, not a filled track — the design has no rail behind it.
+   Width is set inline, in artboard px, straight from the node. */
+.bv-taste-dna-bar {
+  flex-shrink: 0;
+  height: 4px;
+  border-radius: 1000px;
+  background: #343434;
+}
+
+.bv-taste-dna-pct {
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
 }
