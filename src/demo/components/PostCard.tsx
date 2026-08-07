@@ -12,7 +12,9 @@
 // The three comment variants in the design (text+images / text only /
 // images only) are not separate code paths — they fall out of which
 // content fields are present.
-import { MessageSquare, Heart } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
+import LikeButton from './LikeButton'
+import { useOpenProfile } from './ProfileLauncher'
 import useDragScroll from '../hooks/useDragScroll'
 import { StreakLabel, LevelLabel, type AchievementLevel } from './AchievementLabel'
 import VenueCard, { type Venue } from './VenueCard'
@@ -59,17 +61,26 @@ export default function PostCard({
 }) {
   const photos = useDragScroll<HTMLDivElement>()
   const isAchievement = !!post.achievement
+  const openProfile = useOpenProfile()
+  const viewProfile = () => openProfile({ name: post.author, avatar: post.avatar })
 
   return (
     <article className="bv-post">
-      {/* background, not <img> — see .bv-post-avatar in the CSS */}
-      <span className="bv-post-avatar" style={{ backgroundImage: `url(${post.avatar})` }} />
+      {/* background, not <img> — see .bv-post-avatar in the CSS. Tapping the
+          author (face or name) opens their profile. */}
+      <span
+        className="bv-post-avatar bv-post-person"
+        style={{ backgroundImage: `url(${post.avatar})` }}
+        onClick={viewProfile}
+      />
 
       <div className="bv-post-body">
         <header className="bv-post-identity">
           {/* Date sits inline after the name, bulleted — not top-right. */}
           <div className="bv-post-byline">
-            <span className="bv-post-name">{post.author}</span>
+            <button type="button" className="bv-post-name bv-post-person" onClick={viewProfile}>
+              {post.author}
+            </button>
             <span className="bv-post-date">{post.date}</span>
           </div>
           <div className="bv-post-labels">
@@ -97,12 +108,10 @@ export default function PostCard({
           {/* Achievements can be liked but not replied to. */}
           {!isAchievement && (
             <button type="button" className="bv-post-action" aria-label="Comment" onClick={onComment}>
-              <MessageSquare size={15.625} strokeWidth={1.9} />
+              <MessageSquare size={20} strokeWidth={1.9} />
             </button>
           )}
-          <button type="button" className="bv-post-action" aria-label="Like" onClick={onLike}>
-            <Heart size={15.625} strokeWidth={1.9} />
-          </button>
+          <LikeButton onLike={onLike} />
         </div>
       </div>
     </article>

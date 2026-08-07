@@ -3,6 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Signal, Wifi, BatteryFull } from 'lucide-react'
 import HomeScreen from './screens/HomeScreen'
 import SocialScreen from './screens/SocialScreen'
+import ProfileScreen from './screens/ProfileScreen'
+import ProfileProvider from './components/ProfileLauncher'
+import { ME_PROFILE } from './data/profileDemo'
 import type { NavId } from './components/BottomNav'
 import useStandalone from '../hooks/useStandalone'
 
@@ -15,7 +18,7 @@ const TAB_LABELS: Record<NavId, string> = {
 }
 
 /** Tabs with an implemented design — the rest show the placeholder. */
-const BUILT_TABS: NavId[] = ['map', 'friends']
+const BUILT_TABS: NavId[] = ['map', 'friends', 'profile']
 
 export default function BravoApp({
   hasPromotion = false,
@@ -52,38 +55,52 @@ export default function BravoApp({
         </span>
       </div>
 
-      {tab === 'friends' ? (
-        <SocialScreen active={tab} onNavigate={setTab} intro={intro} />
-      ) : (
-        <HomeScreen
-          active={tab}
-          onNavigate={setTab}
-          hasPromotion={hasPromotion}
-          intro={intro}
-        />
-      )}
-
-      {/* Tabs without designs yet show a placeholder over the map.
-          Will be replaced as Figma screens land. */}
-      <AnimatePresence>
-        {!BUILT_TABS.includes(tab) && (
-          <motion.div
-            className="bv-coming-soon"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            onClick={() => setTab('map')}
-          >
-            <h3>{TAB_LABELS[tab]}</h3>
-            <p>
-              Design in progress — tap anywhere
-              <br />
-              to return to the map.
-            </p>
-          </motion.div>
+      {/* Any person tapped inside a screen opens their public profile over
+          the top — see ProfileProvider. */}
+      <ProfileProvider>
+        {tab === 'profile' ? (
+          // The nav avatar is your own profile — a full tab with the app's
+          // top bar and bottom nav.
+          <ProfileScreen
+            profile={ME_PROFILE}
+            mode="me"
+            active={tab}
+            onNavigate={setTab}
+            onBack={() => setTab('map')}
+          />
+        ) : tab === 'friends' ? (
+          <SocialScreen active={tab} onNavigate={setTab} intro={intro} />
+        ) : (
+          <HomeScreen
+            active={tab}
+            onNavigate={setTab}
+            hasPromotion={hasPromotion}
+            intro={intro}
+          />
         )}
-      </AnimatePresence>
+
+        {/* Tabs without designs yet show a placeholder over the map.
+            Will be replaced as Figma screens land. */}
+        <AnimatePresence>
+          {!BUILT_TABS.includes(tab) && (
+            <motion.div
+              className="bv-coming-soon"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              onClick={() => setTab('map')}
+            >
+              <h3>{TAB_LABELS[tab]}</h3>
+              <p>
+                Design in progress — tap anywhere
+                <br />
+                to return to the map.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </ProfileProvider>
     </div>
   )
 }

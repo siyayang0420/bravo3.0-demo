@@ -8,10 +8,10 @@ import avatar from '../assets/avatar.png'
 export type NavId = 'map' | 'friends' | 'scan' | 'rewards' | 'profile'
 
 const ITEMS: { id: NavId; icon: React.ReactNode; label: string }[] = [
-  { id: 'map', icon: <Map size={22} strokeWidth={1.9} />, label: 'Map' },
-  { id: 'friends', icon: <UsersRound size={22} strokeWidth={1.9} />, label: 'Friends' },
-  { id: 'scan', icon: <ScanQrCode size={22} strokeWidth={1.9} />, label: 'Scan' },
-  { id: 'rewards', icon: <CircleStar size={22} strokeWidth={1.9} />, label: 'Rewards' },
+  { id: 'map', icon: <Map size={24} strokeWidth={1.9} />, label: 'Map' },
+  { id: 'friends', icon: <UsersRound size={24} strokeWidth={1.9} />, label: 'Friends' },
+  { id: 'scan', icon: <ScanQrCode size={24} strokeWidth={1.9} />, label: 'Scan' },
+  { id: 'rewards', icon: <CircleStar size={24} strokeWidth={1.9} />, label: 'Rewards' },
 ]
 
 export default function BottomNav({
@@ -33,11 +33,14 @@ export default function BottomNav({
           {item.icon}
         </button>
       ))}
-      {/* background, not <img> — see .bv-post-avatar in the CSS */}
+      {/* background, not <img> — see .bv-post-avatar in the CSS.
+          The other items show selection by dropping the dimming; a photo
+          cannot, so this one rings itself instead. */}
       <button
         type="button"
-        className="bv-nav-avatar"
+        className={`bv-nav-avatar ${active === 'profile' ? 'active' : ''}`}
         aria-label="Profile"
+        aria-current={active === 'profile' ? 'page' : undefined}
         style={{ backgroundImage: `url(${avatar})` }}
         onClick={() => onSelect('profile')}
       />

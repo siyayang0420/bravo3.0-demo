@@ -2,6 +2,7 @@
 // Horizontally scrolling row of 61x82 portrait avatars with a name under
 // each. Sits under the "Leaderboard / View all" heading.
 import useDragScroll from '../hooks/useDragScroll'
+import { useOpenProfile } from './ProfileLauncher'
 
 export type LeaderboardEntry = {
   id: string
@@ -17,6 +18,7 @@ export default function LeaderboardRail({
   onSelect?: (id: string) => void
 }) {
   const rail = useDragScroll<HTMLDivElement>()
+  const openProfile = useOpenProfile()
 
   return (
     <div className="bv-leaderboard-rail" ref={rail}>
@@ -25,7 +27,12 @@ export default function LeaderboardRail({
           key={entry.id}
           type="button"
           className="bv-leaderboard-item"
-          onClick={() => onSelect?.(entry.id)}
+          onClick={() => {
+            // Tapping a face opens their profile; onSelect stays for callers
+            // that also want the id (none override the profile jump today).
+            openProfile({ name: entry.name, avatar: entry.avatar })
+            onSelect?.(entry.id)
+          }}
         >
           {/* background, not <img> — see .bv-post-avatar in the CSS */}
           <span
