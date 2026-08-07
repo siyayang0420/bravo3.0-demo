@@ -33,6 +33,8 @@ import { StreakLabel, LevelLabel, type AchievementLevel } from '../demo/componen
 import SectionTabs from '../demo/components/SectionTabs'
 import LeaderboardRail from '../demo/components/LeaderboardRail'
 import PostCard from '../demo/components/PostCard'
+import LikeButton from '../demo/components/LikeButton'
+import ProfileChallengeCard from '../demo/components/ProfileChallengeCard'
 import VenueCard from '../demo/components/VenueCard'
 import AchievementPanel from '../demo/components/AchievementPanel'
 import ChallengeCard from '../demo/components/ChallengeCard'
@@ -211,23 +213,26 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
   {
     id: 'prompt-box',
     name: 'PromptBox',
-    figmaNodes: ['19453:11129'],
+    figmaNodes: ['19453:11129', '19377:5090'],
     file: 'src/demo/components/PromptBox.tsx',
     summary:
-      'The bravo ai input. Two variants of one Figma component: `ai` wears the gradient ring (cyan → orange) that identifies AI surfaces and carries add / mic / voice-mode; `search` is a plain neutral-400 hairline with a search icon and nothing at the end. The pill, padding and 14px input are shared.',
+      'The bravo ai input. Two variants of one Figma component: `ai` wears the gradient ring (cyan → orange) that identifies AI surfaces and carries add / mic / voice-mode; `search` is a plain neutral-400 hairline with a search icon and nothing at the end. The pill, padding and 14px input are shared. The ai ring turns — the same colours at the same stops, with only the gradient angle sweeping 90° → 450° over 6s, so a paused ring is the Figma node exactly. The `ai` end has three states: idle (mic + voice-mode), typed (a single dark submit arrow), and recording (19377:5090) — tapping the mic empties the field and drops in a VoiceInput pill of ten metering bars + Stop, with the submit arrow beside it. Tap the mic in the preview below to see it.',
     usedOn: ['Home', 'Social', 'Eligible merchants'],
     props: [
       { name: 'placeholder', type: 'string', required: true, description: 'Placeholder copy — currently mirrors the active suggestion.' },
       { name: 'variant', type: "'ai' | 'search'", required: false, description: "Defaults to 'ai'. 'search' is the merchants-list form (19612:9735)." },
-      { name: 'onSubmit', type: '(value: string) => void', required: false, description: 'Fires on Enter with a non-empty value.' },
+      { name: 'voiceTranscript', type: 'string', required: false, description: 'Arms the mic. Tapping it swaps the field for the recording pill (19377:5090); Stop→send submits this text. Absent → the mic is a decorative glyph.' },
+      { name: 'onVoiceMode', type: '() => void', required: false, description: 'Tapping the voice-mode (audio-lines) button. The AI chat uses it to open voice mode (19691:50951).' },
+      { name: 'onSubmit', type: '(value: string) => void', required: false, description: 'Fires on Enter, on the submit arrow, and on Stop→send with a non-empty value.' },
     ],
-    tokens: ['--bv-white', '--bv-radius-full', '--bv-neutral-200', '--bv-neutral-400', '--bv-black', '--bv-inset-accent'],
-    icons: ['Plus', 'Mic', 'AudioLines', 'Search'],
+    tokens: ['--bv-white', '--bv-radius-full', '--bv-neutral-200', '--bv-neutral-400', '--bv-black', '--bv-inset-accent', '--bv-info-100', '--bv-info-400'],
+    icons: ['Plus', 'Mic', 'AudioLines', 'Search', 'ArrowUp'],
     flutterNote:
-      'The gradient ring is a padding trick (gradient background + inset white container). Flutter has no gradient BoxBorder — wrap a Container with a gradient decoration around an inset white Container, or paint it. The `search` variant is a normal 1px Border, so it needs no such trick.',
+      'The gradient ring is a padding trick (gradient background + inset white container). Flutter has no gradient BoxBorder — wrap a Container with a gradient decoration around an inset white Container, or paint it. The `search` variant is a normal 1px Border, so it needs no such trick. The rotation is one AnimationController on a 6s repeat() driving the gradient transform — do NOT rebuild the gradient with new colours per frame; the colours never change, only the angle.',
     preview: (
       <div style={{ width: 340, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <PromptBox placeholder="New onboarded restaurants..." />
+        {/* voiceTranscript arms the mic — tap it to see the recording pill */}
+        <PromptBox placeholder="New onboarded restaurants..." voiceTranscript="Happy Lambs Hot Pot" />
         <PromptBox variant="search" placeholder="Search a restaurant" />
       </div>
     ),
@@ -659,10 +664,10 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     props: [
       { name: 'post', type: 'Post', required: true, description: 'author, avatar, streak, level, date, and then any of caption / venue / photos / achievement.' },
       { name: 'onComment', type: '() => void', required: false, description: 'Comment icon tap. Hidden on achievement posts.' },
-      { name: 'onLike', type: '() => void', required: false, description: 'Heart icon tap.' },
+      { name: 'onLike', type: '() => void', required: false, description: 'Heart tap — the heart itself is the LikeButton component (see its own entry).' },
       { name: 'onSaveVenue', type: '() => void', required: false, description: 'Bookmark on the venue card.' },
     ],
-    tokens: ['--bv-black', '--bv-neutral-150', '--bv-neutral-400', '--bv-neutral-500', '--bv-radius-2xl', '--bv-radius-lg', '--bv-space-1', '--bv-space-2', '--bv-space-3'],
+    tokens: ['--bv-neutral-150', '--bv-neutral-400', '--bv-neutral-500', '--bv-radius-2xl', '--bv-radius-lg', '--bv-space-1', '--bv-space-2', '--bv-space-4'],
     icons: ['MessageSquare', 'Heart', 'Bookmark'],
     flutterNote:
       'Avatar is 30×40 (rounded portrait); the leaderboard uses 61×82 — same shape, two sizes. Photos are 280×302 at radius 16 with a 15px gutter. Body column is 332px (370 − 30 − 8). Achievement posts set the caption to 12px and drop the comment action, keeping only the heart.',
@@ -710,6 +715,29 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     previewBg: 'light',
   },
   {
+    id: 'like-button',
+    name: 'LikeButton',
+    figmaNodes: ['19577:173449'],
+    file: 'src/demo/components/LikeButton.tsx',
+    summary:
+      'The heart action on a post, with its like burst and count. Comment and Like both sit at 20px in neutral-500 (not black). On tap the glyph fills red (#c51f1f) and pops 1 → 1.2 → 1, a count appears to its right (gray, 8px gap), and two small red hearts drift up out of the heart. The burst is one of five hand-tuned shapes chosen at random each like, so the path is never the same twice; every track eases in and out so the hearts lift and settle softly. Skipped under prefers-reduced-motion.',
+    usedOn: ['Social'],
+    props: [
+      { name: 'likes', type: 'number', required: false, description: 'Existing likes the tap adds to. Defaults to 0, so liking reads "1".' },
+      { name: 'onLike', type: '() => void', required: false, description: 'Fires on each tap (like and unlike).' },
+    ],
+    tokens: ['--bv-neutral-500', '--bv-radius-full', '--bv-space-2'],
+    icons: ['Heart'],
+    flutterNote:
+      'The liked colour is one --bv-like-color (#c51f1f) shared by the glyph fill and every particle; the count stays neutral-500 even while the heart is red. The five burst shapes live in a BURSTS table — pick one at random per like rather than computing a fresh arc, and animate each particle x/y with an ease-in-out curve. Centre the particles with a fixed offset, not a transform, or the animated transform will fight the centring.',
+    preview: (
+      <div style={{ display: 'flex', justifyContent: 'flex-end', width: 200, gap: 16 }}>
+        <LikeButton likes={0} />
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
     id: 'challenge-card',
     name: 'ChallengeCard',
     figmaNodes: ['19582:176379'],
@@ -736,6 +764,39 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
             goal: 1000,
             expires: '2026/12/15',
           }}
+        />
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
+    id: 'profile-challenge-card',
+    name: 'ProfileChallengeCard',
+    figmaNodes: ['19629:11109', '19682:49505'],
+    file: 'src/demo/components/ProfileChallengeCard.tsx',
+    summary:
+      'The challenge strip on a profile. Two modes: `active` (Profile-Public) shows an ongoing dining challenge — partner faces, "{name} and 3+ …", title, days left, progress; `start` (Profile-Sender-Private) is the invite to begin one — one face plus an add button, "You\'re eligible to start this challenge…", and an empty $1,000 goal with the reward coin. Not the feed\'s ChallengeCard, which carries a spent/goal line this drops.',
+    usedOn: ['Profile'],
+    props: [
+      { name: 'mode', type: "'active' | 'start'", required: true, description: 'Ongoing challenge vs the start-one invite.' },
+      { name: 'name', type: 'string', required: true, description: 'Whose profile — names the "{name} and 3+" line in active mode.' },
+      { name: 'partners', type: 'string[]', required: true, description: 'Avatar URLs for the face stack.' },
+    ],
+    tokens: ['--bv-white', '--bv-radius-2xl', '--bv-font-display', '--bv-inset-bubble', '--bv-inset-accent', '--bv-neutral-300', '--bv-space-3', '--bv-space-4'],
+    icons: ['Plus'],
+    flutterNote:
+      'Reuses the same 48×64 ringed avatars and accent-fill progress bar as the feed ChallengeCard. The progress and $0/$1,000 in start mode are illustrative (near-empty); active mode hardcodes the Figma 50.87%. The reward coin is the shared Coin component.',
+    preview: (
+      <div style={{ width: 370, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <ProfileChallengeCard
+          mode="active"
+          name="Bobby"
+          partners={[avatarHappy1, avatarHappyman, avatarHappy000, avatarHappy1]}
+        />
+        <ProfileChallengeCard
+          mode="start"
+          name="Bobby"
+          partners={[avatarHappy1, avatarHappyman]}
         />
       </div>
     ),
@@ -795,19 +856,20 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     figmaNodes: ['19608:9127', '19612:9480'],
     file: 'src/demo/components/ScreenNav.tsx',
     summary:
-      'The header every pushed screen wears: a borderless 32px back button, 6px gap, and a Boldonse 14px title. Identical on the challenge detail and the merchants list, so it is one component.',
+      'The header every pushed screen wears: a borderless 32px back button, 6px gap, and a Boldonse 14px title. Identical on the challenge detail and the merchants list, so it is one component. An optional trailing label sits at the right edge in the same type as the title — the challenge detail uses it for "Invited: 3/3".',
     usedOn: ['Challenge detail', 'Eligible merchants'],
     props: [
       { name: 'title', type: 'string', required: true, description: 'Screen title, in the display face.' },
+      { name: 'trailing', type: 'string', required: false, description: 'Right-aligned label, same type as the title. Omitted on screens that have no count to show.' },
       { name: 'onBack', type: '() => void', required: true, description: 'Pops the screen.' },
     ],
     tokens: ['--bv-font-display', '--bv-black', '--bv-radius-full', '--bv-space-1-5', '--bv-space-4'],
     icons: ['ArrowLeft'],
     flutterNote:
-      'The 65px top margin is not padding to taste — it is 59 (status bar) + 6 (Figma gap), so the row clears the dynamic island. On a device use the real safe-area inset instead of the literal.',
+      'The 65px top margin is not padding to taste — it is 59 (status bar) + 6 (Figma gap), so the row clears the dynamic island. On a device use the real safe-area inset instead of the literal. The trailing label is pushed by a margin-left:auto, not by spreading the row — the title must keep its 6px gap from the back button, so in Flutter use a Spacer between the title and the trailing Text rather than spaceBetween.',
     preview: (
       <div style={{ width: 370 }}>
-        <ScreenNav title="Eligible merchants" onBack={() => {}} />
+        <ScreenNav title="Challenge" trailing="Invited: 3/3" onBack={() => {}} />
       </div>
     ),
     previewBg: 'light',

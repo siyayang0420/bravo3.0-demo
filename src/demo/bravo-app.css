@@ -372,7 +372,9 @@ button.bv-balance-pill:active {
   gap: 8px;
 }
 
-.bv-bottom-stack.search-hidden {
+/* the dock steps aside while the search sheet stands in for it */
+.bv-bottom-stack.search-hidden,
+.bv-dock-social.search-hidden {
   visibility: hidden;
   pointer-events: none;
 }
@@ -473,14 +475,46 @@ button.bv-balance-pill:active {
   gap: var(--bv-space-3);
 }
 
-/* Component: Prompt Box (Figma 19453:11129) — "bravo ai" gradient ring */
+/* Custom properties are strings by default, so `--bv-ring-angle` would jump
+   from one keyframe to the next instead of sweeping. Registering it as an
+   <angle> is what makes it interpolate. Unsupported browsers fall back to
+   the initial value and simply hold the ring still. */
+@property --bv-ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 90deg;
+}
+
+@keyframes bv-ring-spin {
+  to {
+    --bv-ring-angle: 450deg;
+  }
+}
+
+/* Component: Prompt Box (Figma 19453:11129) — "bravo ai" gradient ring.
+   The ring turns: same colours, same stops, only the gradient angle moves.
+   It starts and ends at Figma's 90deg, so a paused ring is the node exactly.
+   Linear, because a rotation that eases would read as a wobble. */
 .bv-prompt-box {
   width: 100%;
   border-radius: var(--bv-radius-full);
   padding: 1.5px;
-  background: linear-gradient(90deg, #4af3ff 0%, #7ce0ff 30%, #ffc36a 75%, #ff8f4a 100%);
+  background: linear-gradient(
+    var(--bv-ring-angle),
+    #4af3ff 0%,
+    #7ce0ff 30%,
+    #ffc36a 75%,
+    #ff8f4a 100%
+  );
+  animation: bv-ring-spin 6s linear infinite;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04))
     drop-shadow(0px 0px 0.5px rgba(0, 0, 0, 0.24));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-prompt-box {
+    animation: none;
+  }
 }
 
 /* 'search' variant (Figma 19612:9735) — a plain hairline instead of the
@@ -490,6 +524,9 @@ button.bv-balance-pill:active {
   padding: 0;
   border: 1px solid var(--bv-neutral-400);
   background: var(--bv-white);
+  /* No gradient to turn — don't leave the property animating under a
+     background that has been painted over. */
+  animation: none;
 }
 
 .bv-prompt-inner {
@@ -499,7 +536,10 @@ button.bv-balance-pill:active {
   width: 100%;
   background: var(--bv-white);
   border-radius: var(--bv-radius-full);
-  padding: var(--bv-space-2) var(--bv-space-3);
+  /* Right padding is 4px over Figma's 12: the voice button is a filled
+     circle and crowded the ring at 12, where the plus on the left is an
+     outline and does not. */
+  padding: var(--bv-space-2) 16px var(--bv-space-2) var(--bv-space-3);
 }
 
 /* Both end states occupy the same slot so the pill never reflows when the
@@ -553,6 +593,15 @@ button.bv-balance-pill:active {
   color: var(--bv-neutral-400);
 }
 
+/* Recording: Figma hides the placeholder at opacity 0 rather than removing
+   the field, and the Input keeps its flex-1. So the field stays a
+   full-width spacer — invisible, inert, but still pushing the Voice Input
+   pill and the submit button to the right edge, exactly as in the node. */
+.bv-prompt-input.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .bv-prompt-end {
   display: flex;
   align-items: center;
@@ -579,6 +628,64 @@ button.bv-balance-pill:active {
 
 .bv-prompt-voice:active {
   transform: scale(0.94);
+}
+
+/* The mic is a real control once a transcript is wired up, but it must not
+   look like one — no chrome, just the glyph, exactly as in the idle node. */
+.bv-prompt-mic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ---------- Voice Input (Figma I19377:5111;1355:26180) ----------
+   Replaces the field while the mic records: ten metering bars, then Stop. */
+.bv-prompt-recording {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+.bv-voice-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  padding: 0 var(--bv-space-4);
+  border-radius: var(--bv-radius-full);
+  /* Figma's rgba(201, 222, 246, 0.5) is info-100 at half strength — kept as
+     the token rather than the flattened literal. */
+  background: color-mix(in srgb, var(--bv-info-100) 50%, transparent);
+}
+
+.bv-voice-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+
+.bv-voice-bar {
+  display: block;
+  width: 2px;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-info-400);
+}
+
+.bv-voice-stop {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-info-400);
+  cursor: pointer;
 }
 
 /* Component: Bottom Nav (Figma 19453:11130) */
@@ -612,18 +719,35 @@ button.bv-balance-pill:active {
   opacity: 0.45;
 }
 
+/* Matches the four Lucide icons beside it. Figma draws this one larger than
+   the rest, which read as a mistake rather than emphasis. */
 .bv-nav-avatar {
-  width: 28px;
-  height: 28px;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
   border-radius: var(--bv-radius-full);
   border: none;
   padding: 0;
   cursor: pointer;
 }
 
-/* ---------- Combined Spendable sheet (Figma 19564:172054) ----------
-   Opened by tapping either balance pill. The scrim dims the map and the
-   dock; the top bar (z-8) and the sheet (z-9) stay above it. */
+/* Selected state. The icon items show it by dropping their dimming, which a
+   photo cannot do, so this one takes a ring instead. border-box keeps the
+   button 22px with the ring inside, so the row does not shift on select. */
+.bv-nav-avatar.active {
+  border: 1px solid var(--bv-black);
+}
+
+/* ---------- pop-up overlay ----------
+   One overlay behind every pop-up: it dims what is underneath and closes
+   the pop-up when tapped. Two depths, because the Combined Spendable sheet
+   (Figma 19564:172054) hangs off the balance pills and has to leave them
+   lit, while the bottom sheets own the screen and dim the top bar along
+   with everything else. The status bar (z-30) stays above both, as on iOS.
+
+     z-6  bottom stack        z-9   spendable sheet
+     z-7  .bv-scrim           z-10  .bv-scrim.over-topbar
+     z-8  top bar             z-11  offers / search sheet          */
 .bv-scrim {
   position: absolute;
   inset: 0;
@@ -632,6 +756,10 @@ button.bv-balance-pill:active {
   padding: 0;
   background: rgba(0, 0, 0, 0.35);
   cursor: pointer;
+}
+
+.bv-scrim.over-topbar {
+  z-index: 10;
 }
 
 /* Screen-level placement — HomeScreen decides where the card sits. */
@@ -1272,6 +1400,18 @@ button.bv-balance-pill:active {
   color: var(--bv-black);
 }
 
+/* Right-aligned counterpart to the title ("Invited: 4/4"). Same type; the
+   auto margin is what pushes it, so the title keeps its 6px gap from the
+   back button instead of spreading across the row. */
+.bv-screen-nav-trailing {
+  margin-left: auto;
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
 /* ---------- floating participants ---------- */
 .bv-challenge-play {
   position: absolute;
@@ -1301,6 +1441,9 @@ button.bv-balance-pill:active {
 }
 
 .bv-float-avatar {
+  /* sits above the tap-reaction emoji so they read as coming from behind */
+  position: relative;
+  z-index: 1;
   border-radius: 999px;
   background-color: lightgray;
   background-position: 50%;
@@ -1309,6 +1452,28 @@ button.bv-balance-pill:active {
   /* the same bubble every avatar carries, scaled up */
   box-shadow: inset 0px 1.485px 5.94px 0px #ffffff,
     inset 0px -2.97px 7.424px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* tap reaction — emoji fly out of the middle of the avatar, from behind it */
+.bv-float-burst {
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bv-float-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 1;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
+  /* centred on the emitter before the burst transform runs */
+  margin-left: -0.5em;
+  margin-top: -0.5em;
 }
 
 .bv-float-crown {
@@ -1320,6 +1485,7 @@ button.bv-balance-pill:active {
 /* name stays 14px at every avatar size — only the pill padding scales */
 .bv-float-name {
   position: relative;
+  z-index: 2;
   border-radius: 999px;
   background: var(--bv-white);
   font-size: 14px;
@@ -2118,6 +2284,34 @@ button.bv-balance-pill:active {
   gap: var(--bv-space-4);
 }
 
+/* ---------- voice mode (Figma 19691:50951) ----------
+   Covers the chat when the voice-mode button is hit. Same chrome; the
+   thread is replaced by a centered orb, the box by a placeholder + X. */
+.bv-ai-voice-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Full-bleed flex box so the orb sits dead centre regardless of the inline
+   transform framer-motion writes while it breathes. */
+.bv-ai-voice-orb {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.bv-ai-voice-dock {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--bv-space-6);
+  width: 370px;
+}
+
 .bv-ai-bubble-row {
   width: 100%;
   display: flex;
@@ -2428,11 +2622,21 @@ button.bv-balance-pill:active {
 }
 
 .bv-post-name {
+  /* now a button (opens the author's profile) — strip the chrome */
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
   font-size: 14px;
   /* bold in the current node — it was regular when the date sat top-right */
   font-weight: 700;
   line-height: 1.2;
   color: var(--bv-black);
+}
+
+/* Face and name both open the profile. */
+.bv-post-person {
+  cursor: pointer;
 }
 
 .bv-post-labels {
@@ -2656,7 +2860,8 @@ button.bv-balance-pill:active {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--bv-space-3);
+  /* 16px between comment and the heart group (Figma 19577:173449). */
+  gap: var(--bv-space-4);
 }
 
 .bv-post-action {
@@ -2669,8 +2874,64 @@ button.bv-balance-pill:active {
   background: none;
   border: none;
   padding: 0;
-  color: var(--bv-black);
+  /* Icons are neutral-500 gray, not black (Figma 19577:173449). */
+  color: var(--bv-neutral-500);
   cursor: pointer;
+}
+
+/* Like button — heart + count in a row; the glyph pops and particles fly
+   out of the heart's centre. Wider than the square action so the count fits;
+   8px between heart and number, per the node. */
+.bv-like {
+  width: auto;
+  gap: var(--bv-space-2);
+  /* Single source for the liked colour — glyph fill and every particle. */
+  --bv-like-color: #c51f1f;
+}
+
+/* Relative anchor for the emitter, sized to the 20px glyph. */
+.bv-like-heart {
+  position: relative;
+  display: inline-flex;
+}
+
+.bv-like-glyph {
+  display: inline-flex;
+}
+
+/* Unliked stays the neutral-500 outline; liking turns the glyph red. */
+.bv-like[aria-pressed='true'] .bv-like-glyph {
+  color: var(--bv-like-color);
+}
+
+/* Inter-style 14px medium, always gray even while the heart is red. */
+.bv-like-count {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--bv-neutral-500);
+}
+
+/* Zero-size origin dead-centre of the heart. */
+.bv-like-emitter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Centred by a fixed negative offset, NOT translate — framer-motion writes
+   the particle's transform inline as it flies, which would clobber a
+   translate(-50%,-50%). A 12px glyph offset by -6/-6 sits on the origin. */
+.bv-like-particle {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  color: var(--bv-like-color);
 }
 
 /* ---------- social dock ---------- */
@@ -2692,7 +2953,10 @@ button.bv-balance-pill:active {
   box-sizing: border-box;
 }
 
-.bv-dock-row > .bv-prompt-box {
+/* the prompt box, or the search trigger wrapping it, takes the leftover
+   width next to the compose button */
+.bv-dock-row > .bv-prompt-box,
+.bv-dock-row > .bv-dock-search-trigger {
   flex: 1 1 0;
   width: auto;
   min-width: 0;
@@ -2895,17 +3159,10 @@ button.bv-balance-pill:active {
    Replaces the old centred promotions modal.
    ================================================================== */
 
-/* Transparent, not a scrim: the design does not dim the map. It only
-   exists so a tap outside the sheet closes it. */
-.bv-sheet-catcher {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  border: none;
-  padding: 0;
-  background: none;
-  cursor: pointer;
-}
+/* This sheet uses the shared `.bv-scrim.over-topbar` — see the pop-up
+   overlay block above. Figma leaves the map undimmed here, but every
+   pop-up in the app now dims behind it, and consistency wins over the
+   node. Its own translucency still lets the map read through the sheet. */
 
 /* Translucent white over a 7.5px blur, so the map reads through. */
 .bv-offers-sheet {
@@ -3116,4 +3373,320 @@ button.bv-balance-pill:active {
 .bv-coming-soon p {
   font-size: 13px;
   color: var(--bv-neutral-500);
+}
+
+/* ==================================================================
+   Profile (Figma Profile-Public 19612:9840 / Profile-Private 19703:52774)
+   ================================================================== */
+.bv-profile-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 13;
+}
+
+.bv-profile-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top nav: back on the left, actions (or gear) on the right. Clears the
+   status bar the same way ScreenNav does. */
+.bv-profile-nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--bv-space-4);
+  margin-top: calc(var(--bv-statusbar-h) + 6px);
+  min-height: 32px;
+}
+
+.bv-profile-nav-actions {
+  display: flex;
+  gap: var(--bv-space-2);
+}
+
+/* me mode: the Home top bar (balance pills + bell/settings), cleared below
+   the status bar since the screen covers the full frame. */
+.bv-profile-topbar {
+  position: relative;
+  z-index: 8;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 370px;
+  margin: calc(var(--bv-statusbar-h) + 6px) auto 0;
+}
+
+.bv-profile-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  padding: var(--bv-space-4) var(--bv-space-4) 24px;
+}
+
+/* Clear the pinned dock in me mode. */
+.bv-profile-scroll.has-dock {
+  padding-bottom: 120px;
+}
+
+/* ---------- header ---------- */
+.bv-profile-head {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-4);
+}
+
+.bv-profile-avatar {
+  flex-shrink: 0;
+  width: 67px;
+  height: 91px;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-profile-identity {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.bv-profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-3);
+}
+
+.bv-profile-name {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-profile-name-row .bv-ach-label {
+  /* labels hug together, not the 12px name gap */
+  margin-left: 0;
+}
+
+.bv-profile-joined {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-400);
+}
+
+.bv-profile-counts {
+  display: flex;
+  gap: var(--bv-space-4);
+  color: var(--bv-neutral-600);
+}
+
+.bv-profile-counts span {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.bv-profile-counts b {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ---------- stat cards ---------- */
+.bv-profile-stats {
+  display: flex;
+  gap: var(--bv-space-2);
+}
+
+.bv-profile-stat {
+  flex: 1;
+  height: 63px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--bv-radius-lg);
+  background: var(--bv-neutral-50);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    0 0 0.5px rgba(0, 0, 0, 0.24);
+}
+
+.bv-profile-stat b {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-profile-stat span {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+/* ---------- challenge strip ---------- */
+.bv-profile-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+  padding: var(--bv-space-4);
+  border-radius: var(--bv-radius-2xl);
+  background: var(--bv-white);
+  box-shadow: 0 0 7.5px rgba(0, 0, 0, 0.1);
+}
+
+.bv-profile-challenge-top {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-3);
+}
+
+.bv-profile-challenge-stack {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.bv-profile-challenge-stack > span,
+.bv-profile-challenge-add {
+  box-sizing: border-box;
+  width: 48px;
+  height: 64px;
+  border-radius: var(--bv-radius-full);
+  border: 2px solid var(--bv-white);
+  background-size: cover;
+  background-position: center;
+  background-clip: padding-box;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-profile-challenge-stack > span:not(:first-child),
+.bv-profile-challenge-add {
+  margin-left: -15px;
+}
+
+.bv-profile-challenge-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bv-neutral-300);
+  color: var(--bv-white);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.bv-profile-challenge-blurb {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-profile-challenge-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bv-profile-challenge-headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-profile-challenge-title {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-profile-challenge-days {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-profile-challenge-reward {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  font-family: var(--bv-font-display);
+  font-size: 14px;
+  color: var(--bv-black);
+}
+
+.bv-profile-challenge-numbers {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-profile-challenge-track {
+  position: relative;
+  height: 9px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.bv-profile-challenge-fill {
+  height: 100%;
+  border-radius: 1000px;
+  background: #343434;
+  box-shadow: var(--bv-inset-accent);
+}
+
+/* ---------- tabs ---------- */
+.bv-profile-tabs .bv-section-tab {
+  width: auto;
+}
+
+.bv-profile-tabs .bv-section-tab-label {
+  /* body face, not the social tabs' Boldonse */
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--bv-neutral-400);
+}
+
+.bv-profile-tabs .bv-section-tab.active .bv-section-tab-label {
+  color: var(--bv-black);
+}
+
+/* ---------- feed / empty ---------- */
+.bv-profile-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.bv-profile-empty {
+  padding: 48px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--bv-neutral-400);
 }

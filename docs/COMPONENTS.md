@@ -40,8 +40,8 @@ This file is the running index. Keep it updated as screens land.
 | `19548:163745` | **CircleIconButton** (scan) | `components/CircleIconButton.tsx` | 35px white circle, Lucide `ScanLine` |
 | `19548:163747` | **CircleIconButton** (bell) | `components/CircleIconButton.tsx` | Same component, Lucide `Bell` |
 | `19453:11111` | **FilterChip** | `components/FilterChip.tsx` | "bubble" inner-shadow style, optional `ChevronDown` |
-| `19453:11120` | **SuggestionChip** | `components/SuggestionChip.tsx` | 30px thumbnail + label |
-| `19453:11129` | **PromptBox** | `components/PromptBox.tsx` | `variant`: `ai` (gradient ring, plus / mic / voice) or `search` (hairline, search icon only) |
+| `19453:11120` | **SuggestionChip** | `components/SuggestionChip.tsx` | 30px thumbnail + label. Each is a canned prompt: `onClick` calls `useSearchLauncher().ask(label)`, which sends the chip's own copy straight to the AI thread — no sheet, no typing |
+| `19453:11129` | **PromptBox** | `components/PromptBox.tsx` | `variant`: `ai` (turning gradient ring, plus / mic / voice) or `search` (hairline, search icon only) |
 | `19453:11130` | **BottomNav** | `components/BottomNav.tsx` | map · users-round · scan-qr-code · circle-star · avatar |
 | `19564:169322` | *inline* | `screens/HomeScreen.tsx` (`.bv-dock`) | Dock container — see below |
 | `19548:163729` | *inline* | `BravoApp.tsx` | Apple status bar — chrome, not product UI |
@@ -63,6 +63,58 @@ through at the end of the turn.
 For Flutter: this is a `Transform` with a perspective entry in the matrix
 (`Matrix4..setEntry(3, 2, 1/320)..rotateX(-pi/2)`) plus an alignment of
 `Alignment.topCenter` — not an `Offset` slide.
+
+### PromptBox — the ring turns
+
+The `ai` variant's gradient ring rotates continuously: **same four colours at
+the same four stops, only the gradient's angle moves.** It sweeps 90° → 450°
+over 6s, `linear` and infinite, so a paused ring is Figma's 90° exactly and
+the wrap is seamless.
+
+The angle is a registered custom property:
+
+```css
+@property --bv-ring-angle { syntax: '<angle>'; inherits: false; initial-value: 90deg; }
+```
+
+Registration is the whole trick — an unregistered custom property is a
+string, so it would **jump** between keyframes instead of sweeping.
+Browsers without `@property` fall back to the initial value and hold the
+ring still, which is the old design, so there is nothing to guard.
+
+The `search` variant paints over the gradient with a hairline border, so it
+sets `animation: none` rather than animating a property nothing reads.
+Killed under `prefers-reduced-motion`.
+
+For Flutter: a `SweepGradient`/`LinearGradient` whose `transform` is driven
+by an `AnimationController` on a 6s `repeat()`, not a shader swap.
+
+### PromptBox — recording state (`19377:5090`)
+
+A third end-state beside idle and typed. Tapping the mic swaps the field for
+the **Voice Input** pill (`VoiceInput.tsx`, Figma `I19377:5111;1355:26180`):
+ten metering bars in `info-100/50%`, then a **Stop** button in `info-400`,
+with the black submit arrow to its right. The field is hidden at opacity 0
+(Figma's own treatment), not unmounted, so its caret survives the take.
+
+- **The bar keyframes are Figma's, not invented.** Pulled from
+  `get_motion_context`: ten independent 2s `easeInOut` loops whose peaks are
+  offset (bar 1 crests at ~17% of the cycle, bar 10 at ~34%), so the row
+  ripples rather than pulsing as one block. The exact height tracks live in
+  `VoiceInput.tsx`.
+- **The mic only arms when a `voiceTranscript` is supplied.** Without one it
+  stays the decorative glyph it was — so the dock's non-interactive trigger
+  box never records; only the search sheet's live box does. Its transcript
+  is `"Happy"`.
+- **Stop → the pill, Send (↑) → submit.** Recording submits what it *heard*,
+  not the empty field, and hands off through the same `onAsk` a typed query
+  uses — so the arrow lands on the bravo AI thread (this is the `19377:5090`
+  → AI-page flow the design implies).
+- Killed under `prefers-reduced-motion` — the bars hold at their rest
+  heights.
+
+For Flutter: one `AnimationController` per bar (or one controller with ten
+`Interval`s) driving `SizedBox` heights; do not rebuild the row per frame.
 
 ### Dock redesign (`19564:169322`)
 
@@ -174,7 +226,8 @@ Opens from either **BalancePill** in the Home top bar. Tapping the scrim closes 
   hardcode it.
 - **Top bar stays above the scrim.** The balance pills keep full brightness
   while the sheet is open (they are its anchor); the map and the dock dim.
-  This matches the design mock — confirm it is intentional.
+  This matches the design mock — confirm it is intentional. It is the only
+  pop-up that behaves this way: see **Pop-up overlay** below.
 - **Sheet corner radius is 36, not the 16 Figma specifies** — an explicit
   direction from Siya (16 → 24 → 36). Off-token: the radius scale stops at
   24 (`radius-3xl`), so it is a literal. The Promotions sheet is **26**, not
@@ -219,9 +272,10 @@ What the new node specifies that the modal did not:
 
 - **The surface is `rgba(255,255,255,0.9)` over a 7.5px backdrop blur.** The
   map has to read through it — a plain white fill is wrong.
-- **There is no scrim.** The map stays undimmed, unlike both previous sheets.
-  The full-bleed catcher behind the sheet is transparent and exists only so a
-  tap outside closes it.
+- **The node draws no scrim** — the map stays undimmed behind it. This is the
+  one place the build departs from the node: every pop-up in the app now dims
+  behind it (see **Pop-up overlay** below), and consistency won over the
+  single node. The sheet's own translucency still lets the map read through.
 - **Fixed 636px tall**, pinned to the bottom edge, covering the dock. The two
   sections scroll inside it; the sheet itself does not resize.
 - **The handle is a real affordance** — drag down past 120px, or flick at
@@ -262,8 +316,35 @@ activation call.
 - The close control is a flat image export in Figma; rebuilt as a Lucide `X`
   on a neutral circle per the Lucide-only rule, so its greys are an
   approximation.
-- This modal dims the **whole** app including the top bar, unlike the
+- This sheet dims the **whole** app including the top bar, unlike the
   Combined Spendable sheet whose anchor pills stay lit.
+
+### Pop-up overlay
+
+Every pop-up in the app sits on one overlay, `.bv-scrim`: a full-bleed
+`rgba(0,0,0,0.35)` button that dims what is behind it and closes the pop-up
+when tapped, fading in and out over 0.18s with the surface it belongs to.
+
+It has **two depths**, because one pop-up hangs off the chrome and the rest
+cover it:
+
+| | z | dims |
+|---|---|---|
+| bottom stack (filters, dock, nav) | 6 | |
+| `.bv-scrim` | 7 | map + dock |
+| top bar (balance pills) | 8 | |
+| Combined Spendable sheet | 9 | |
+| `.bv-scrim.over-topbar` | 10 | map + dock + **top bar** |
+| Offers / Search sheet | 11 | |
+
+The Combined Spendable sheet uses the shallow one so its anchor pills stay
+lit; Offers and Search use `over-topbar`, since nothing up there anchors
+them. The status bar sits at z-30, above both, as it does on iOS. The fake
+keyboard is a child of the search sheet, so it rides above the scrim with it
+rather than needing a z-index of its own.
+
+For Flutter: one `ModalBarrier` widget parameterised by the two depths, not
+a scrim re-declared per sheet — the depths are the only thing that varies.
 
 ---
 
@@ -319,12 +400,14 @@ Three changes from the first build of this node:
 
 **The countdown is derived, not authored** — the same rule as the bar width.
 Figma's two numbers disagree: "67 days left" against an expiry of
-`2026/12/15`, which is 133 days out from today. Computing it from `expires`
-keeps this card consistent with the **detail** screen, which still prints the
-date itself and was not part of this change. If 67 is the intended number,
-the expiry in the demo data is the thing to move (≈`2026/10/10`), not the
-label. Clamped at 0 so a passed challenge reads "0 days left", and it
-singularises at 1.
+`2026/12/15`, which is 131 days out from today. If 67 is the intended
+number, the expiry in the demo data is the thing to move (≈`2026/10/10`),
+not the label. Clamped at 0 so a passed challenge reads "0 days left", and
+it singularises at 1.
+
+`daysLeftLabel(expires)` is exported from `ChallengeCard.tsx` and used by
+the **detail** screen too, which no longer prints a date — one countdown,
+one implementation, so the card and the screen can never disagree.
 
 ### Challenge detail (`19608:9122`)
 
@@ -348,6 +431,37 @@ other. Durations are staggered per index so they do not bob in unison.
 
 **The coin is the same `BravoCoin`** as the feed — drag to spin, tap to
 flip, `$5` engraved on the back.
+
+**It rests value-side up and introduces itself.** `restAngle={180}` puts the
+`$5` face toward the viewer at rest instead of the emblem, and
+`introDelay={2000}` makes it spend `introFlips: 2` half-turns two seconds
+after mount — forward through the emblem and forward again onto the value —
+so the reward reads, turns away, and comes back. Both are *forward* turns
+rather than a there-and-back, so the spin never reverses mid-flight. Each
+flip is fired from the physics loop's settle branch, not a timer, so the
+second starts only once the first has landed; touching the coin cancels
+whatever the intro had left.
+
+**The flip itself runs 40% shorter here.** Rather than retune four numbers
+by eye, `FASTER_FLIP` steps the same physics at `1 / 0.6` the rate, which
+preserves the shape of the motion exactly: `tapImpulse` and `restEps` are
+velocities so they scale with the rate, `spring` is an acceleration so it
+scales with the square, and `friction` is a per-frame decay so it scales as
+a power. Replaying the loop numerically, a half-turn settles in 112 frames
+against the default's 186 — 0.602 of the duration.
+
+All of it is **props on this instance**, not package defaults — `coinConfig`
+ships `restAngle: 0, introDelay: 0` and its original feel, so the
+AchievementPanel's coin in the feed keeps its emblem-up rest, its tap-flip
+timing and its scroll-in hint untouched.
+
+**The nav carries a right-hand count**, `Invited: 3/3` — `ScreenNav`'s
+`trailing` slot, in the same Boldonse 14 as the title. The numerator counts
+the avatars actually on screen, minus your own: you are *in* the challenge,
+not invited to it, so `Participant.isYou` marks that one bubble and it is
+filtered out. The denominator is `inviteLimit` in the demo data. It is set
+to 3, so this challenge reads as full — note the blurb still says "Invite up
+to 4 friends", which is one more seat than the count admits.
 
 **The progress bar refills from zero on every open.** It is a plain
 `initial → animate` on mount; the screen unmounts on back, so re-entering
@@ -387,7 +501,7 @@ from the right exactly as the challenge screen does over the feed.
 
 | Figma node | Component | File | Notes |
 |---|---|---|---|
-| `19612:9480` | **ScreenNav** | `components/ScreenNav.tsx` | Back button + Boldonse 14 title — extracted here and adopted by the challenge screen too |
+| `19612:9480` | **ScreenNav** | `components/ScreenNav.tsx` | Back button + Boldonse 14 title — extracted here and adopted by the challenge screen too. Optional `trailing` label sits right, same type as the title (`Invited: 4/4`) |
 | `19612:9555` (×7) | **MerchantRow** | `components/MerchantRow.tsx` | 79×89 photo, rate on a gradient, savers stack, save button |
 | `19612:9735` | **PromptBox** `variant="search"` | `components/PromptBox.tsx` | Same DS Prompt Box, search icon in Start Actions and nothing in End |
 | `19612:9734` | *reused* | `.bv-merchants-dock` | The same transparent → white 34.4% fade as the Home/Social dock |
@@ -466,6 +580,27 @@ fields the data carries. The only two rules the component applies are:
 achievement posts set the caption to 12px (vs 14) and drop the comment
 action, keeping the heart.
 
+**The heart is its own component (`LikeButton.tsx`) with a like burst and
+count.** Comment and Like both render at 20px in **neutral-500** (`#737373`,
+not black), matching the venue save bookmark. On tap:
+
+- the glyph fills **red (`#c51f1f`)** and pops `1 → 1.2 → 1` (a quick,
+  non-bouncy ease-out over ~0.26s); the colour is one `--bv-like-color`
+  custom property on `.bv-like`, shared by the fill and every particle;
+- a **count** appears to its right (Figma 19577:173449), 8px gap, 14px
+  medium — and stays gray even while the heart is red. It is `likes + 1`
+  (default `likes` 0, so it reads "1");
+- two small red hearts drift up out of the heart's centre.
+
+The burst is **not one computed arc** — it picks one of **five hand-tuned
+shapes** (`BURSTS`) at random each like, so the pair never traces the same
+path twice; the shapes differ in spread, height, curvature, lean and stagger.
+Every track eases **in and out** (not ease-out) so the hearts lift and settle
+softly rather than snapping. Like state is per-post (each card owns its
+button) and the burst is skipped under `prefers-reduced-motion`. Particles are
+centred by a fixed `-6px` offset, **not** a transform, because framer-motion
+overwrites the inline transform as they fly (same trap as the voice orb).
+
 Captions accept either a plain string or `{ text, bold }[]`, because
 variants 5 and 6 bold a run mid-sentence ("**5-month**", "**$5**").
 
@@ -496,6 +631,12 @@ its Flutter twin in that repo (`flutter/bravo_coin.dart`) — the physics loop,
 
 > Do not edit `src/demo/coin/*` here. Change it in the bravo-coin repo,
 > re-copy, and mirror the numbers in the Dart file.
+>
+> **Outstanding:** the resting-angle and intro-flip support added for the
+> challenge screen (`restAngle` / `introDelay` / `introFlips` in
+> `coinConfig.js`, the settle-branch trigger and the pointer-down cancel in
+> `useCoinInteraction.js`) was written **here first**. Port it upstream and
+> mirror it in `flutter/bravo_coin.dart` before the two drift further.
 
 Because it ships as JS, `allowJs` is on in `tsconfig.json` (with `checkJs`
 off, so that source is not held to this project's strictness). The panel
@@ -601,6 +742,7 @@ they are steps in a sequence rather than separate implementations:
 | `19559:168175` | **AiThinking** | `components/AiThinking.tsx` | Orb + step, with the detail line under it |
 | `19559:168177` | **OrbSphere** | `components/OrbSphere.tsx` | The live orb — see below |
 | `19650:15977` | *reused* | the `bravo AI` wordmark | Same SVG as the no-match CTA, here at its native 89.663×15 |
+| `19691:50951` | **AiVoiceScreen** | `screens/AiVoiceScreen.tsx` | Voice mode — see below |
 | — | *reused* | **PromptBox**, **IosKeyboard** | Including the standalone rule that drops the mock keyboard |
 
 Each step carries its **own hold time** (`aiChatDemo.ts`) rather than a fixed
@@ -631,6 +773,34 @@ blank orbs elsewhere on the page. Speed changes go through the live instance.
 The orb already handles the things that matter for a demo: transparent
 premultiplied canvas so it composites over anything, pauses when scrolled out
 of view, caps DPR at 2, and slows to 25% under `prefers-reduced-motion`.
+
+### Voice mode (`19691:50951`)
+
+Reached from the **voice-mode** (audio-lines) button in the chat's prompt box
+— `PromptBox` gained an `onVoiceMode` callback for it — and fades in over the
+thread. It keeps the chat's chrome (glow, header, disclaimer) and replaces
+the thread with:
+
+- **One large centred orb.** Figma pins a flat 120px PNG here; this uses the
+  live `OrbSphere` instead, at **150px** — bigger than the node, per the ask —
+  and a touch faster (`speed={4}`) so it reads as actively listening. It is a
+  second orb instance beside the thinking one; both `destroy()` on unmount, so
+  opening and closing voice mode never accumulates WebGL contexts.
+  - **Centred by a flex box, not a transform.** The wrapper is `inset:0` with
+    `place items center`; the scale animation lives on an inner layer. This
+    matters because framer-motion writes `transform` inline while it
+    animates, which would clobber a `translate(-50%,-50%)` centring and drift
+    the orb by half its size once it settled.
+  - **It breathes as if speaking.** The inner layer loops an uneven run of
+    scales (~0.93 to ~1.07, alternating below/above 1), built once per mount
+    so each entry differs, `mirror`-repeated so it eases back through itself.
+    Held at 1 under `prefers-reduced-motion`.
+- **A collapsed prompt box** — no plus, no mic, just the placeholder and a
+  single black **X** (the `accent` button) that ends voice mode and fades back
+  to the thread.
+
+The screen is presentation-only: the box does not take focus, so no keyboard
+is raised and the `standalone` split does not apply here.
 
 ---
 
@@ -874,6 +1044,58 @@ on "happy" so a single query lights up both sections. The filtering is real
 
 Add a section per screen as Figma links arrive. Before writing code, list the
 candidate components and check them against the table above — reuse first.
+
+---
+
+## Profile (Figma `Profile-Public 19612:9840` / `Profile-Private 19703:52774`)
+
+One screen, two modes. `ProfileScreen({ profile, mode, onBack, active, onNavigate })`:
+
+- **`public`** (Profile-Public 19612:9840) — someone else: back arrow, Follow /
+  Send money, an active dining challenge, no app chrome. Opened as an overlay.
+- **`me`** (Profile-Sender-Private 19682:49464) — the signed-in user, a real
+  **tab**: the Home top bar (balance pills + bell + settings, no back) and the
+  shared bottom **dock** (`useSearchLauncher`'s prompt box + `BottomNav`) frame
+  it, and the challenge is the "start one" invite ("You're eligible to start
+  this challenge…", one face + add). `active`/`onNavigate` drive its bottom nav.
+
+The middle — header, stat cards, tabs, Activity feed — is identical, so it's
+one component driven by `mode` + data. me mode reuses the whole Home dock, so
+its prompt box opens search and the bottom nav navigates like every other tab.
+
+**Almost all of it reuses existing components** — the reusability pass paid
+off:
+
+| Piece on the profile | Reused |
+|---|---|
+| The Activity feed | **PostCard** as-is (the same variants) |
+| 8X / Lv.7 chips | **AchievementLabel** (`StreakLabel` + `LevelLabel`) |
+| Follow / Send money | **Button** (`solid` / `outline`) |
+| Back arrow, settings gear | plain `.bv-screen-back` buttons |
+| Activity / Taste Identity / Collectives | **SectionTabs**, scoped by `.bv-profile-tabs` to a smaller DM-Sans style (the social tabs are Boldonse) |
+| Bottom "Search a restaurant" | **PromptBox** `variant="search"` |
+| Venue in posts | **VenueCard** (via PostCard) |
+
+New parts are only: the header (avatar + identity + counts), the two stat
+cards, and **ProfileChallengeCard** (`active` / `start` modes) — *not* the
+feed's ChallengeCard, which carries a reward coin and spent/goal line this
+composition drops.
+
+**One profile template, swapped per person.** `profileDemo.ts` holds one set
+of counts / stats / feed; `publicProfile(person)` stamps a `{ name, avatar }`
+onto it. So opening any person's profile shows *their* face and name over the
+shared demo content — which is all a review build needs.
+
+**Opening profiles is decoupled via context** (`ProfileLauncher.tsx`).
+`ProfileProvider` is mounted once in `BravoApp`; `useOpenProfile()(person)`
+pushes the public ProfileScreen over everything. **PostCard** (author face +
+name) and **LeaderboardRail** (each face) call it, so any person is tappable.
+Outside the provider — the Design System previews — the hook is a no-op, so
+those components still render standalone. The nav avatar is separate: it's a
+tab (`BravoApp` renders `ProfileScreen mode="me"` when `tab === 'profile'`).
+
+Taste Identity and Collectives have no content in the design, so they render a
+"Coming soon" panel; Activity carries the feed.
 
 ---
 
