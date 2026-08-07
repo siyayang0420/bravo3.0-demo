@@ -7,8 +7,10 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import BravoCoin from '../coin/BravoCoin.jsx'
+import { coinConfig } from '../coin/coinConfig.js'
 import FloatingAvatar, { type Participant } from '../components/FloatingAvatar'
 import ScreenNav from '../components/ScreenNav'
+import { daysLeftLabel } from '../components/ChallengeCard'
 import MerchantsScreen from './MerchantsScreen'
 import { type Merchant } from '../components/MerchantRow'
 import challengeBg from '../assets/social/challenge-bg.svg'
@@ -28,12 +30,27 @@ export type ChallengeDetail = {
   goal: number
   expires: string
   merchantCount: number
+  /** Denominator of the nav's "Invited: n/N". */
+  inviteLimit: number
   participants: Participant[]
   /** The list behind "View N eligible merchants" (Figma 19612:9472). */
   merchants: Merchant[]
 }
 
 const money = (n: number) => `$${n % 1 ? n.toFixed(2) : n}`
+
+// The coin flips 40% quicker here than the package default, without changing
+// the shape of the motion: the same physics stepped at 1/0.6 the rate. The
+// impulse and the settle threshold are velocities, so they scale with the
+// rate; the spring is an acceleration, so it scales with the square; friction
+// is a per-frame decay, so it scales as a power.
+const FLIP_RATE = 1 / 0.6
+const FASTER_FLIP = {
+  tapImpulse: coinConfig.tapImpulse * FLIP_RATE,
+  spring: coinConfig.spring * FLIP_RATE ** 2,
+  friction: coinConfig.friction ** FLIP_RATE,
+  restEps: coinConfig.restEps * FLIP_RATE,
+}
 
 export default function ChallengeScreen({
   challenge,
@@ -68,6 +85,7 @@ export default function ChallengeScreen({
   const leaderId = challenge.participants.reduce((a, b) =>
     b.share > a.share ? b : a,
   ).id
+  const invited = challenge.participants.filter((p) => !p.isYou).length
 
   return (
     <div className="bv-challenge-screen">
@@ -88,7 +106,14 @@ export default function ChallengeScreen({
         </div>
       </div>
 
-      <ScreenNav title="Challenge" onBack={onBack} />
+      {/* Invites sent, counted from the avatars actually on screen so the
+          two can never disagree. You are in the challenge, not invited to
+          it, so your own bubble does not count. */}
+      <ScreenNav
+        title="Challenge"
+        trailing={`Invited: ${invited}/${challenge.inviteLimit}`}
+        onBack={onBack}
+      />
 
       {/* everything above the sheet is the drag playground */}
       <div className="bv-challenge-play" ref={playArea}>
@@ -107,8 +132,17 @@ export default function ChallengeScreen({
       <section className="bv-challenge-sheet">
         <div className="bv-challenge-sheet-top">
           <div className="bv-challenge-coin">
-            {/* same coin as the feed — drag to spin, tap to flip */}
-            <BravoCoin value={challenge.reward} size={91} thickness={8} />
+            {/* Same coin as the feed — drag to spin, tap to flip. Here it
+                rests value-side up and, two seconds in, turns away and back
+                so the reward introduces itself. */}
+            <BravoCoin
+              value={challenge.reward}
+              size={91}
+              thickness={8}
+              restAngle={180}
+              introDelay={2000}
+              {...FASTER_FLIP}
+            />
           </div>
 
           <div className="bv-challenge-copy">
@@ -121,7 +155,9 @@ export default function ChallengeScreen({
               <span className="bv-challenge-amount">
                 {money(challenge.spent)}/{money(challenge.goal)}
               </span>
-              <span>Exp: {challenge.expires}</span>
+              {/* Countdown, not a date — same wording and the same shared
+                  helper as the ChallengeCard in the feed. */}
+              <span>{daysLeftLabel(challenge.expires)}</span>
             </div>
             <div className="bv-challenge-track">
               {/* Refills from empty on every mount — the screen unmounts on

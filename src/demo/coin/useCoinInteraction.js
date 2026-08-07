@@ -16,8 +16,14 @@ export function useCoinInteraction({
   config,
 }) {
   const st = useRef({
-    rotY: 0, rotX: 0, velY: 0, velX: 0,
+    rotY: config.restAngle, rotX: 0, velY: 0, velX: 0,
     dragging: false, moved: 0, lastX: 0, lastY: 0, downT: 0,
+    // Intro, once per mount: sit still for introDelay, then spend the
+    // half-turns. Two of them carry the coin forward through the emblem and
+    // back onto the value face — forward twice rather than there-and-back,
+    // so the spin never reverses mid-flight.
+    introAt: performance.now() + config.introDelay,
+    introFlips: config.introDelay > 0 ? config.introFlips : 0,
   });
 
   useEffect(() => {
@@ -42,6 +48,13 @@ export function useCoinInteraction({
         if (Math.abs(s.velY) < c.restEps && Math.abs(s.rotY - target) < 0.2) {
           s.rotY = target;
           s.velY = 0;
+
+          // Spend an intro half-turn. Fired from the settle branch, not a
+          // timer, so each flip starts only once the last one has landed.
+          if (s.introFlips > 0 && performance.now() >= s.introAt) {
+            s.velY += c.tapImpulse;
+            s.introFlips--;
+          }
         }
       }
 
@@ -89,6 +102,7 @@ export function useCoinInteraction({
     s.lastX = e.clientX;
     s.lastY = e.clientY;
     s.velY = s.velX = 0;
+    s.introFlips = 0; // hands on the coin — drop whatever the intro had left
     e.currentTarget.setPointerCapture?.(e.pointerId);
   };
 

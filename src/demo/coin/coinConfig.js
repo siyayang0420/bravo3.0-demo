@@ -17,4 +17,9 @@ export const coinConfig = {
   spring: 0.01,     // pull toward nearest face (→up snaps harder)
   tapImpulse: 15,   // flip strength on tap
   restEps: 0.05,    // settle threshold
+
+  // intro (plays once per mount; off by default, opted into per instance)
+  restAngle: 0,     // face at rest: 0 = emblem, 180 = value. Multiples of 180 only.
+  introDelay: 0,    // ms of stillness before the welcome flip (0 = no intro)
+  introFlips: 2,    // half-turns to play: 2 turns away and back to the same face
 };

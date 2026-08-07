@@ -12,6 +12,7 @@ import PostCard, { type Post } from '../components/PostCard'
 import ChallengeCard, { type Challenge } from '../components/ChallengeCard'
 import ChallengeScreen, { type ChallengeDetail } from './ChallengeScreen'
 import PromptBox from '../components/PromptBox'
+import useSearchLauncher from '../components/SearchLauncher'
 import BottomNav, { type NavId } from '../components/BottomNav'
 import avatarHappy1 from '../assets/social/avatar-happy1.png'
 import avatarHappy000 from '../assets/social/avatar-happy000.png'
@@ -180,18 +181,19 @@ const ELIGIBLE_MERCHANTS: Merchant[] = MERCHANT_NAMES.map((name, i) => ({
 const CHALLENGE_DETAIL: ChallengeDetail = {
   name: 'Summer Dining Challenge',
   blurb:
-    'Spend $1,000 together at eligible merchants. Everyone gets an extra $5. Stackable with merchant bonuses.',
+    'Spend $1,000 together. Everyone earns an extra $5. Stackable with merchant bonuses. Invite up to 4 friends.',
   reward: 5,
   spent: 512.56,
   goal: 1000,
   expires: '2026/12/15',
   merchantCount: 24,
+  inviteLimit: 3,
   merchants: ELIGIBLE_MERCHANTS,
   participants: [
     { id: 'u1', name: 'Uuuuzili', avatar: avatarHappyman, share: 15.1, x: 79, y: 213 },
     { id: 'u2', name: 'Relxxx123', avatar: avatarHappy1, share: 13.08, x: 252, y: 8 },
     { id: 'u3', name: 'theFlex', avatar: avatarHappy0, share: 10.02, x: 258, y: 225 },
-    { id: 'u4', name: 'You', avatar: avatarHappy000, share: 8.58, x: 65, y: 65 },
+    { id: 'u4', name: 'You', avatar: avatarHappy000, share: 8.58, x: 65, y: 65, isYou: true },
   ],
 }
 
@@ -270,6 +272,7 @@ export default function SocialScreen({
 }) {
   const [tab, setTab] = useState<TabId>('foryou')
   const [navHidden, setNavHidden] = useState(false)
+  const { searchOpen, promptProps, overlays } = useSearchLauncher()
   const [detailOpen, setDetailOpen] = useState(false)
   // +1 when moving right through the tabs, -1 when moving left. Drives
   // which side each pane enters from and leaves toward.
@@ -384,13 +387,18 @@ export default function SocialScreen({
 
       {/* dock — same fade + nav as Home, plus the compose button */}
       <motion.div
-        className={`bv-dock bv-dock-social${navHidden ? ' nav-hidden' : ''}`}
+        className={`bv-dock bv-dock-social${navHidden ? ' nav-hidden' : ''}${
+          searchOpen ? ' search-hidden' : ''
+        }`}
         initial={intro ? { y: 40, opacity: 0 } : false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 320, damping: 32, delay: 0.1 }}
       >
         <div className="bv-dock-row">
-          <PromptBox placeholder="New onboarded restaurants..." />
+          {/* Same as Home — mic/voice in place, placeholder opens the sheet. */}
+          <div className="bv-dock-search-trigger">
+            <PromptBox placeholder="New onboarded restaurants..." {...promptProps} />
+          </div>
           <button type="button" className="bv-compose-btn" aria-label="New post">
             <SquarePen size={24.96} strokeWidth={1.9} />
           </button>
@@ -417,6 +425,9 @@ export default function SocialScreen({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* search sheet + AI thread — the prompt dock's own layers */}
+      {overlays}
     </>
   )
 }

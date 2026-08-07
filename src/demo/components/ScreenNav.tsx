@@ -6,9 +6,13 @@ import { ArrowLeft } from 'lucide-react'
 
 export default function ScreenNav({
   title,
+  trailing,
   onBack,
 }: {
   title: string
+  /** Optional right-aligned label, e.g. "Invited: 4/4". Same type as the
+      title — it reads as a second heading, not as metadata. */
+  trailing?: string
   onBack: () => void
 }) {
   return (
@@ -17,6 +21,7 @@ export default function ScreenNav({
         <ArrowLeft size={20} strokeWidth={1.9} />
       </button>
       <span className="bv-screen-nav-title">{title}</span>
+      {trailing && <span className="bv-screen-nav-trailing">{trailing}</span>}
     </header>
   )
 }

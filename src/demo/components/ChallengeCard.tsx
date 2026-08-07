@@ -21,11 +21,12 @@ const DAY = 86_400_000
 
 // Derived from `expires`, not authored — same rule as the bar width. Figma
 // shows "67 days left" against an expiry of 2026/12/15, which do not agree;
-// computing keeps this card consistent with the detail screen, which still
-// prints the date itself.
-function daysLeft(expires: string) {
+// computing keeps the card and the detail screen telling the same story.
+// Shared with ChallengeScreen so both count down from one implementation.
+export function daysLeftLabel(expires: string) {
   const ms = new Date(expires).getTime() - Date.now()
-  return Math.max(0, Math.ceil(ms / DAY))
+  const left = Math.max(0, Math.ceil(ms / DAY))
+  return `${left} day${left === 1 ? '' : 's'} left`
 }
 
 export default function ChallengeCard({
@@ -36,7 +37,6 @@ export default function ChallengeCard({
   onOpen?: () => void
 }) {
   const pct = Math.max(0, Math.min(1, challenge.spent / challenge.goal))
-  const left = daysLeft(challenge.expires)
 
   return (
     <div className="bv-challenge" onClick={onOpen} role={onOpen ? 'button' : undefined}>
@@ -62,9 +62,7 @@ export default function ChallengeCard({
           <span>
             {money(challenge.spent)}/{money(challenge.goal)}
           </span>
-          <span>
-            {left} day{left === 1 ? '' : 's'} left
-          </span>
+          <span>{daysLeftLabel(challenge.expires)}</span>
         </div>
         <div className="bv-challenge-track">
           {/* width is derived, never authored — see money()/pct above */}
