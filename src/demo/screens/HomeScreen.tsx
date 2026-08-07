@@ -16,7 +16,7 @@ import PromptBox from '../components/PromptBox'
 import useSearchLauncher from '../components/SearchLauncher'
 import BottomNav, { type NavId } from '../components/BottomNav'
 import Coin from '../components/Coin'
-import mapBg from '../assets/map-home.jpg'
+import MapView, { type MapPlace } from '../components/MapView'
 import thumbDimsum from '../assets/thumb-dimsum.jpg'
 import thumbRestaurants from '../assets/thumb-restaurants.png'
 import offerVeras from '../assets/offer-veras.png'
@@ -38,6 +38,31 @@ const FILTERS = [
 const SUGGESTIONS = [
   { image: thumbDimsum, label: 'Best dim sum in Richmond' },
   { image: thumbRestaurants, label: 'New onboarded restaurants' },
+]
+
+// EDIT ME — the real map's opening view and restaurant pins.
+// [lng, lat]. This opens on the Bridgeport area of Richmond, BC (the same
+// neighbourhood the original mock showed). Replace the pin coordinates with
+// the real restaurant locations you want to demo.
+const MAP_CENTER: [number, number] = [-123.1255, 49.1928]
+const MAP_ZOOM = 12.9
+const MAP_PLACES: MapPlace[] = [
+  {
+    id: 't3',
+    name: 'T3 Boardgames',
+    meta: 'Entertainment · $$',
+    lng: -123.1365,
+    lat: 49.1952,
+    photo: thumbRestaurants,
+  },
+  {
+    id: 'typhoon',
+    name: 'Typhoon Bubble Tea',
+    meta: 'Taiwanese & HK Café · $$',
+    lng: -123.1128,
+    lat: 49.1908,
+    photo: thumbDimsum,
+  },
 ]
 // Shown only when the Home "promotion" state is on (Figma 19243:4646).
 // The activatable merchant offers at the top of the sheet.
@@ -83,6 +108,7 @@ export default function HomeScreen({
   onNavigate,
   hasPromotion = false,
   intro = false,
+  avatar,
 }: {
   active: NavId
   onNavigate: (id: NavId) => void
@@ -90,17 +116,17 @@ export default function HomeScreen({
   hasPromotion?: boolean
   /** Play the entrance animation. False on tab switches — see BravoApp. */
   intro?: boolean
+  /** The signed-in demo user's own face — the nav's last item. */
+  avatar?: string
 }) {
   const [spendableOpen, setSpendableOpen] = useState(false)
   const [promoOpen, setPromoOpen] = useState(false)
-  const { searchOpen, ask, promptProps, overlays } = useSearchLauncher()
+  const { searchOpen, ask, promptProps, overlays } = useSearchLauncher('map')
 
   return (
     <>
-      {/* map background */}
-      <div className="bv-map-bg">
-        <img src={mapBg} alt="Map of nearby restaurants" />
-      </div>
+      {/* real interactive map — pan/zoom, restaurant pins */}
+      <MapView center={MAP_CENTER} zoom={MAP_ZOOM} places={MAP_PLACES} />
 
       {/* top bar */}
       <motion.div
@@ -155,9 +181,9 @@ export default function HomeScreen({
           {/* Mic and voice act in place; tapping the placeholder opens the
               search sheet, where the real keyboard belongs. */}
           <div className="bv-dock-search-trigger">
-            <PromptBox placeholder="New onboarded restaurants..." {...promptProps} />
+            <PromptBox {...promptProps} />
           </div>
-          <BottomNav active={active} onSelect={onNavigate} />
+          <BottomNav active={active} onSelect={onNavigate} avatar={avatar} />
         </div>
       </motion.div>
 
