@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import PhoneFrame, { FRAME_WIDTH, FRAME_HEIGHT } from './PhoneFrame'
 import BravoApp from './BravoApp'
+import { DEMO_USERS, type DemoUser } from './data/profileDemo'
 import useStandalone from '../hooks/useStandalone'
 import useKeyboardInset from '../hooks/useKeyboardInset'
 
@@ -127,10 +128,12 @@ export default function PresentMode({
   open,
   onClose,
   hasPromotion = false,
+  user = DEMO_USERS[0],
 }: {
   open: boolean
   onClose: () => void
   hasPromotion?: boolean
+  user?: DemoUser
 }) {
   const compact = useIsCompact()
   const standalone = useStandalone()
@@ -243,11 +246,11 @@ export default function PresentMode({
                   ['--bv-kb-open' as string]: keyboardInset > 0 ? '1' : '0',
                 }}
               >
-                <BravoApp hasPromotion={hasPromotion} />
+                <BravoApp hasPromotion={hasPromotion} user={user} />
               </div>
             ) : (
               <PhoneFrame scale={scale}>
-                <BravoApp hasPromotion={hasPromotion} />
+                <BravoApp hasPromotion={hasPromotion} user={user} />
               </PhoneFrame>
             )}
           </motion.div>

@@ -55,9 +55,12 @@ const FASTER_FLIP = {
 export default function ChallengeScreen({
   challenge,
   onBack,
+  onAccept,
 }: {
   challenge: ChallengeDetail
   onBack: () => void
+  /** Tapping Accept on your own bubble, when you have a 'pending-you' seat. */
+  onAccept?: () => void
 }) {
   const playArea = useRef<HTMLDivElement>(null)
   const [merchantsOpen, setMerchantsOpen] = useState(false)
@@ -81,11 +84,24 @@ export default function ChallengeScreen({
   }, [])
 
   const pct = Math.max(0, Math.min(1, challenge.spent / challenge.goal))
-  // Biggest spender wears the crown.
-  const leaderId = challenge.participants.reduce((a, b) =>
-    b.share > a.share ? b : a,
-  ).id
-  const invited = challenge.participants.filter((p) => !p.isYou).length
+  // Biggest spender wears the crown — but only once someone has actually
+  // spent something. Before that everyone is tied at 0%, and `reduce` would
+  // just crown whoever happens to be first in the array.
+  const maxShare = Math.max(...challenge.participants.map((p) => p.share))
+  const leaderId =
+    maxShare > 0
+      ? challenge.participants.reduce((a, b) => (b.share > a.share ? b : a)).id
+      : null
+
+  // Invites accepted, counted from the avatars actually on screen so the
+  // two can never disagree. You are in the challenge, not invited to it, so
+  // your own bubble does not count — and neither does the host's: whoever
+  // created the challenge is always "in", not one of the invites being
+  // tracked here. A pending or empty seat hasn't accepted yet, so it
+  // doesn't count until it does.
+  const invited = challenge.participants.filter(
+    (p) => !p.isYou && !p.isHost && (p.status ?? 'accepted') === 'accepted',
+  ).length
 
   return (
     <div className="bv-challenge-screen">
@@ -125,6 +141,7 @@ export default function ChallengeScreen({
             areaW={area.w}
             areaH={area.h}
             index={i}
+            onAccept={p.status === 'pending-you' ? onAccept : undefined}
           />
         ))}
       </div>

@@ -7,11 +7,7 @@
 // stamps a person onto that template; ME_PROFILE is the signed-in user.
 import { type Post } from '../components/PostCard'
 import { type AchievementLevel } from '../components/AchievementLabel'
-import navAvatar from '../assets/avatar.png'
-import avatarHappy1 from '../assets/social/avatar-happy1.png'
-import avatarHappyman from '../assets/social/avatar-happyman.png'
-import avatarHappyg from '../assets/social/avatar-happyg.png'
-import avatarHappy0 from '../assets/social/avatar-happy0.png'
+import { BOBBY, HAPPY, pickPeople } from './people'
 import postPhoto from '../assets/social/post-photo.jpg'
 import venueThumb from '../assets/social/venue-amcafe.jpg'
 
@@ -29,7 +25,82 @@ export type ProfileData = ProfilePerson & {
   saved: number
   /** Faces in the dining-challenge avatar stack. */
   challengePartners: string[]
+  /**
+   * Which challenge card you see on YOUR OWN profile (mode="me" only —
+   * someone else's profile always shows the 'active' card). 'start' is the
+   * inviter's own view; 'invited' is what a receiver sees before joining.
+   */
+  challengeCardMode: 'start' | 'invited'
+  /** Who invited you — only set when challengeCardMode is 'invited'. */
+  challengeInviter?: ProfilePerson
   posts: Post[]
+  tasteIdentity: TasteIdentity
+}
+
+/** One axis of the Taste DNA radar (Figma 19689:50291) — a dining
+ *  "persona" tier and how strongly it shows up in the profile's history. */
+export type TasteRadarAxis = { label: string; value: number }
+
+/** One row of the cuisine breakdown list (Figma 19635:14218). */
+export type TasteDnaItem = {
+  icon: 'japanese' | 'cafe' | 'chinese' | 'bubbleTea' | 'michelin'
+  label: string
+  /** Share of visits, as a percentage. */
+  pct: number
+  count: number
+  /**
+   * Bar width in artboard px, straight from Figma (143 / 109 / 86 / 79 / 69).
+   * Carried as data rather than derived: the design's widths are not a linear
+   * function of `pct` — they fall off far more gently than the numbers do —
+   * so computing them would visibly redraw the chart the designer drew.
+   */
+  bar: number
+}
+
+export type TasteIdentity = {
+  periodLabel: string
+  /** "Top {percentile}% Diner" */
+  percentile: number
+  restaurants: number
+  cuisines: number
+  posts: number
+  /** "Ranked in the top {friendPercentile}% among your friends" */
+  friendPercentile: number
+  archetype: string
+  /** The AI read, minus the "{name} is an {archetype}." lead-in — that part
+   *  is assembled in TasteIdentityPanel so it always uses the live name. */
+  summary: string
+  radar: TasteRadarAxis[]
+  dna: TasteDnaItem[]
+}
+
+// One dataset, shared by every profile that flows through the template
+// below — same rationale as the rest of this file's demo content.
+const TASTE_IDENTITY: TasteIdentity = {
+  periodLabel: 'Past 30 Days',
+  percentile: 32,
+  restaurants: 5,
+  cuisines: 5,
+  posts: 5,
+  friendPercentile: 5,
+  archetype: 'Explorer',
+  summary:
+    'Loves discovering new restaurants, especially Japanese and cafés. Usually dines on weekends and prefers mid-range restaurants.',
+  radar: [
+    { label: 'Connoisseur', value: 42 },
+    { label: 'Regular', value: 30 },
+    { label: 'Regular', value: 35 },
+    { label: 'Connector', value: 42 },
+    { label: 'Loyalist', value: 58 },
+    { label: 'Explorer', value: 55 },
+  ],
+  dna: [
+    { icon: 'japanese', label: 'Japanese & Sushi', pct: 32.5, count: 12, bar: 143 },
+    { icon: 'cafe', label: 'Cafe', pct: 26.5, count: 8, bar: 109 },
+    { icon: 'chinese', label: 'Chinese', pct: 16.5, count: 6, bar: 86 },
+    { icon: 'bubbleTea', label: 'Bubble Tea', pct: 12.3, count: 4, bar: 79 },
+    { icon: 'michelin', label: 'Michelin', pct: 9.5, count: 3, bar: 69 },
+  ],
 }
 
 const VENUE = {
@@ -89,14 +160,70 @@ export function publicProfile(person: ProfilePerson): ProfileData {
     friends: 54,
     visited: 70,
     saved: 46,
-    challengePartners: [avatarHappy1, avatarHappyman, avatarHappyg, avatarHappy0],
+    // Three faces, and the profile's OWNER is always one of them — the card
+    // reads "{name} and 3+ are in a dining challenge", so the person whose
+    // profile you're on has to actually be in the stack. They lead it; the
+    // other two come from offset 2 into the shared shuffle (a different
+    // window from the other "pick some people" call sites, so several lists
+    // on one screen don't show the identical faces). Three are drawn and the
+    // owner filtered out before taking two, so they can't appear twice.
+    challengePartners: [
+      person.avatar,
+      ...pickPeople(3, 2)
+        .filter((p) => p.avatar !== person.avatar)
+        .slice(0, 2)
+        .map((p) => p.avatar),
+    ],
+    // Only meaningful on your own profile — someone else's always shows
+    // the 'active' card, decided in ProfileScreen, not from this field.
+    challengeCardMode: 'start',
     posts: templatePosts(person.name, person.avatar),
+    tasteIdentity: TASTE_IDENTITY,
   }
 }
 
-// The signed-in user — the nav avatar. Its name is a placeholder, like the
-// Figma's "Bobby".
-export const ME_PROFILE: ProfileData = publicProfile({
-  name: 'Bobby',
-  avatar: navAvatar,
-})
+// The demo can be "signed in" as either of two people, so a reviewer can play
+// both sides of a flow — Bobby sends a challenge, Happy receives it. The
+// tweaker on the review site switches between them; more roles can be added
+// here as flows need them.
+export type DemoUserId = 'bobby' | 'happy'
+
+export type DemoUser = ProfilePerson & {
+  id: DemoUserId
+  /** Their part in the challenge flow — shown as the tweaker hint. */
+  role: string
+  /** Which challenge card THEY see on their own profile. */
+  challengeCardMode: 'start' | 'invited'
+  /** Only set when challengeCardMode is 'invited'. */
+  challengeInviter?: ProfilePerson
+}
+
+export const DEMO_USERS: DemoUser[] = [
+  {
+    id: 'bobby',
+    name: BOBBY.name,
+    avatar: BOBBY.avatar,
+    role: 'Challenge inviter.',
+    challengeCardMode: 'start',
+  },
+  {
+    id: 'happy',
+    name: HAPPY.name,
+    avatar: HAPPY.avatar,
+    role: 'Challenge receiver.',
+    challengeCardMode: 'invited',
+    challengeInviter: { name: BOBBY.name, avatar: BOBBY.avatar },
+  },
+]
+
+/** The signed-in user's own profile, for whichever demo user is active. */
+export function meProfile(user: DemoUser): ProfileData {
+  return {
+    ...publicProfile(user),
+    challengeCardMode: user.challengeCardMode,
+    challengeInviter: user.challengeInviter,
+  }
+}
+
+// Default signed-in user — Bobby, the inviter.
+export const ME_PROFILE: ProfileData = meProfile(DEMO_USERS[0])

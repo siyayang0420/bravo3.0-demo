@@ -3,7 +3,7 @@
 // (all Lucide), plus the profile avatar.
 import { Map, UsersRound, ScanQrCode } from 'lucide-react'
 import CircleStar from './icons/CircleStar'
-import avatar from '../assets/avatar.png'
+import { BOBBY } from '../data/people'
 
 export type NavId = 'map' | 'friends' | 'scan' | 'rewards' | 'profile'
 
@@ -17,9 +17,15 @@ const ITEMS: { id: NavId; icon: React.ReactNode; label: string }[] = [
 export default function BottomNav({
   active,
   onSelect,
+  // Every real call site (Home, Friends, your own profile) passes the
+  // current demo user's avatar explicitly — this default only covers the
+  // Design System's standalone preview, which renders the nav on its own.
+  avatar = BOBBY.avatar,
 }: {
   active: NavId
   onSelect: (id: NavId) => void
+  /** The signed-in user's own face — the last nav item is always theirs. */
+  avatar?: string
 }) {
   return (
     <nav className="bv-bottom-nav">

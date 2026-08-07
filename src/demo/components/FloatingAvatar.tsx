@@ -1,4 +1,8 @@
-// Component — Figma challenge participant (19608:9156 and siblings)
+// Component — Figma challenge participant (19608:9156 and siblings), plus
+// the pre-accept moment both sides see before anyone has joined
+// (19743:54823 for the receiver, 19682:49684 for the sender): a floating
+// bubble can be a joined person, someone you're still waiting to hear back
+// from, or an open seat nobody has been invited to yet.
 //
 // The avatar scales with how much the person has spent; the name pill does
 // NOT — it stays 14px at every size. Everything else on the bubble is a
@@ -14,7 +18,10 @@
 // is computed rather than hardcoded — a fifth participant just works.
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Hourglass, Plus } from 'lucide-react'
 import crownArt from '../assets/social/crown.png'
+
+export type ParticipantStatus = 'accepted' | 'pending-you' | 'pending-other' | 'empty'
 
 export type Participant = {
   id: string
@@ -27,10 +34,28 @@ export type Participant = {
   y: number
   /** The signed-in user. Marks the one bubble that is not an invite. */
   isYou?: boolean
+  /** The challenge's creator — always shown joined, but excluded from the
+   *  nav's "Invited: n/N" the same way `isYou` is: Bobby sits outside the
+   *  count of friends HE invited, even on a screen where he isn't "you". */
+  isHost?: boolean
+  /**
+   * Defaults to 'accepted' — every bubble this component originally drew.
+   * The other three are the pre-accept moment: 'pending-you' is your own
+   * unanswered invite (an Accept pill takes the name pill's place),
+   * 'pending-other' is someone else's, 'empty' is a seat nobody has been
+   * invited to yet.
+   */
+  status?: ParticipantStatus
 }
 
 const SIZE_BASE = 40
 const SIZE_PER_SHARE = 2.07
+// Pending/empty bubbles never carry a share — nobody has spent anything
+// yet — so they use one fixed size straight off the node rather than the
+// share-driven formula. Deliberately bigger than the 40px an accepted $0
+// bubble would compute to, so an unanswered invite still reads as
+// person-sized, not shrunk to a dot.
+const PENDING_SIZE = 60
 
 export function avatarWidth(share: number) {
   return SIZE_BASE + SIZE_PER_SHARE * share
@@ -88,6 +113,7 @@ export default function FloatingAvatar({
   areaW,
   areaH,
   index,
+  onAccept,
 }: {
   participant: Participant
   isLeader: boolean
@@ -95,8 +121,11 @@ export default function FloatingAvatar({
   areaW: number
   areaH: number
   index: number
+  /** 'pending-you' only — tapping the Accept pill. */
+  onAccept?: () => void
 }) {
-  const w = avatarWidth(participant.share)
+  const status = participant.status ?? 'accepted'
+  const w = status === 'accepted' ? avatarWidth(participant.share) : PENDING_SIZE
   const self = useRef<HTMLDivElement>(null)
 
   // Numeric constraints, not a ref. Handing framer-motion the area ref makes
@@ -137,6 +166,8 @@ export default function FloatingAvatar({
   const dragged = useRef(false)
 
   function burst() {
+    // A bubble nobody has joined yet has nothing to celebrate.
+    if (status !== 'accepted') return
     if (dragged.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const next = makeBurst((seed.current += 100), w)
@@ -182,17 +213,36 @@ export default function FloatingAvatar({
         }}
       >
         <div className="bv-float-head">
-          <div
-            className="bv-float-avatar"
-            style={{
-              width: w,
-              height: w * (4 / 3),
-              backgroundImage: `url(${participant.avatar})`,
-              marginBottom: -w * 0.24,
-            }}
-          />
+          {status === 'empty' ? (
+            <div
+              className="bv-float-avatar bv-float-avatar-empty"
+              style={{ width: w, height: w * (4 / 3), marginBottom: -w * 0.24 }}
+            >
+              <Plus size={w * 0.5} strokeWidth={2} />
+            </div>
+          ) : (
+            <div
+              className="bv-float-avatar"
+              style={{
+                width: w,
+                height: w * (4 / 3),
+                backgroundImage: `url(${participant.avatar})`,
+                marginBottom: -w * 0.24,
+              }}
+            >
+              {/* Dimmed + hourglass until they answer — accepted bubbles
+                  never carry this. */}
+              {status !== 'accepted' && (
+                <div className="bv-float-avatar-dim">
+                  <Hourglass size={w * 0.5} strokeWidth={1.8} />
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Emitter sits at the centre of the avatar (h = w x 4/3), so the
-              ring is even top to bottom. Never eats a drag. */}
+              ring is even top to bottom. Never eats a drag. Only 'accepted'
+              bubbles ever populate it — see burst(). */}
           <div className="bv-float-burst" style={{ top: w * (2 / 3) }}>
             <AnimatePresence>
               {particles.map((p) => (
@@ -224,7 +274,7 @@ export default function FloatingAvatar({
               ))}
             </AnimatePresence>
           </div>
-          {isLeader && (
+          {isLeader && status === 'accepted' && (
             <img
               className="bv-float-crown"
               src={crownArt}
@@ -232,15 +282,39 @@ export default function FloatingAvatar({
               style={{ width: w * 0.321, left: w * 0.591, top: -w * 0.169 }}
             />
           )}
-          <span
-            className="bv-float-name"
-            style={{ padding: `${w * 0.096}px ${w * 0.192}px` }}
-          >
-            {participant.name}
-          </span>
+          {status === 'pending-you' ? (
+            // A real button, not the bubble's own tap — it must survive
+            // inside a draggable parent without starting a drag.
+            <button
+              type="button"
+              className="bv-float-name bv-float-accept"
+              style={{ padding: `${w * 0.096}px ${w * 0.192}px` }}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation()
+                onAccept?.()
+              }}
+            >
+              Accept
+            </button>
+          ) : (
+            <span
+              className="bv-float-name"
+              style={{ padding: `${w * 0.096}px ${w * 0.192}px` }}
+            >
+              {status === 'empty' ? '---' : participant.name}
+            </span>
+          )}
         </div>
         <span className="bv-float-share" style={{ fontSize: w / 3 }}>
-          {participant.share.toFixed(2)}%
+          {/* A fresh challenge (Figma 19743:54823 / 19682:49684) reads plain
+              "0%" even for the accepted host — the two-decimal format below
+              is for once someone has actually spent something. */}
+          {participant.share === 0
+            ? '0%'
+            : status === 'accepted'
+              ? `${participant.share.toFixed(2)}%`
+              : `${Math.round(participant.share)}%`}
         </span>
       </motion.div>
     </motion.div>

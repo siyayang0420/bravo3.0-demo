@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Signal, Wifi, BatteryFull } from 'lucide-react'
 import HomeScreen from './screens/HomeScreen'
 import SocialScreen from './screens/SocialScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import ProfileProvider from './components/ProfileLauncher'
-import { ME_PROFILE } from './data/profileDemo'
+import { DEMO_USERS, meProfile, type DemoUser } from './data/profileDemo'
 import type { NavId } from './components/BottomNav'
 import useStandalone from '../hooks/useStandalone'
 
@@ -22,11 +22,16 @@ const BUILT_TABS: NavId[] = ['map', 'friends', 'profile']
 
 export default function BravoApp({
   hasPromotion = false,
+  user = DEMO_USERS[0],
 }: {
   /** Demo state toggled from the review site — see LiveDemo. */
   hasPromotion?: boolean
+  /** Who you are signed in as — drives your own profile. */
+  user?: DemoUser
 }) {
   const [tab, setTab] = useState<NavId>('map')
+  // Your own profile, for whichever demo user is active.
+  const me = useMemo(() => meProfile(user), [user])
 
   // Installed to the home screen, the phone draws its OWN status bar over
   // the top of the app. Ours would sit under it, so it hides — the real
@@ -62,20 +67,21 @@ export default function BravoApp({
           // The nav avatar is your own profile — a full tab with the app's
           // top bar and bottom nav.
           <ProfileScreen
-            profile={ME_PROFILE}
+            profile={me}
             mode="me"
             active={tab}
             onNavigate={setTab}
             onBack={() => setTab('map')}
           />
         ) : tab === 'friends' ? (
-          <SocialScreen active={tab} onNavigate={setTab} intro={intro} />
+          <SocialScreen active={tab} onNavigate={setTab} intro={intro} avatar={user.avatar} />
         ) : (
           <HomeScreen
             active={tab}
             onNavigate={setTab}
             hasPromotion={hasPromotion}
             intro={intro}
+            avatar={user.avatar}
           />
         )}
 

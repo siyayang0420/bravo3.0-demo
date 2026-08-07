@@ -1,13 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import PhoneFrame, { FRAME_WIDTH } from '../demo/PhoneFrame'
 import BravoApp from '../demo/BravoApp'
 import PresentMode from '../demo/PresentMode'
 import { Maximize2 } from 'lucide-react'
 import useStandalone from '../hooks/useStandalone'
+import { DEMO_USERS, type DemoUserId } from '../demo/data/profileDemo'
 
-// Demo-state tweaker. Not product UI — it exists so the review can show
-// the states that have designs without needing a backend. Add an entry
-// here as new conditional states land in Figma.
+// Demo-state tweaker. Not product UI — a control panel so the review can
+// drive the demo into states that have designs, without a backend. It is
+// built to grow: every setting is one labelled row (see ControlRow), so as
+// more conditional states land on more pages for more users, they slot in as
+// new rows and new option lists rather than reworking the layout.
+
+// Who you are signed in as. Bobby sends a challenge, Happy receives it — a
+// reviewer can play both sides. Derived from the demo users so there is one
+// source of truth.
+const USER_OPTIONS = DEMO_USERS.map((u) => ({ id: u.id, label: u.name, hint: u.role }))
+
 const HOME_STATES = [
   { id: 'default', label: 'Default', hint: 'No promotion running.' },
   {
@@ -18,6 +27,56 @@ const HOME_STATES = [
 ] as const
 
 type HomeState = (typeof HOME_STATES)[number]['id']
+
+const rowLabelStyle: CSSProperties = {
+  fontSize: 11,
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+  color: 'var(--color-text-tertiary)',
+  whiteSpace: 'nowrap',
+}
+
+const rowHintStyle: CSSProperties = {
+  fontSize: 13,
+  color: 'var(--color-text-secondary)',
+  minWidth: 0,
+}
+
+// One setting: a label, a segmented control, and the active option's hint —
+// three cells that drop into the panel's shared 3-column grid so every row
+// lines up. Generic over the option id so each row keeps its own type.
+function ControlRow<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string
+  options: readonly { id: T; label: string; hint?: string }[]
+  value: T
+  onChange: (v: T) => void
+}) {
+  const active = options.find((o) => o.id === value)
+  return (
+    <>
+      <span style={rowLabelStyle}>{label}</span>
+      <div style={{ display: 'flex', gap: 6 }}>
+        {options.map((o) => (
+          <button
+            key={o.id}
+            className={`btn ${value === o.id ? 'btn-primary' : 'btn-secondary'}`}
+            aria-pressed={value === o.id}
+            onClick={() => onChange(o.id)}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <span style={rowHintStyle}>{active?.hint}</span>
+    </>
+  )
+}
 
 /** Shrink the device so it always fits the column it sits in. */
 function useFitScale() {
@@ -48,9 +107,10 @@ export default function LiveDemo() {
     () => standalone && window.matchMedia('(max-width: 820px), (pointer: coarse)').matches,
   )
   const [homeState, setHomeState] = useState<HomeState>('default')
+  const [userId, setUserId] = useState<DemoUserId>('bobby')
   const phoneScale = useFitScale()
 
-  const active = HOME_STATES.find((s) => s.id === homeState)!
+  const user = DEMO_USERS.find((u) => u.id === userId)!
   const hasPromotion = homeState === 'promotion'
 
   return (
@@ -63,49 +123,34 @@ export default function LiveDemo() {
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+        {/* The demo control panel — one row per setting, all sharing a
+            3-column grid (label · control · hint) so they line up. */}
         <div
           className="card"
           style={{
-            padding: '10px 14px',
-            display: 'flex',
+            padding: 16,
+            display: 'grid',
+            gridTemplateColumns: 'auto auto minmax(0, 1fr)',
             alignItems: 'center',
-            gap: 14,
-            flexWrap: 'wrap',
-            justifyContent: 'center',
+            columnGap: 16,
+            rowGap: 12,
+            width: '100%',
+            maxWidth: 640,
           }}
         >
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              color: 'var(--color-text-tertiary)',
-            }}
-          >
-            Home state
-          </span>
-          <div style={{ display: 'flex', gap: 6 }}>
-            {HOME_STATES.map((s) => (
-              <button
-                key={s.id}
-                className={`btn ${homeState === s.id ? 'btn-primary' : 'btn-secondary'}`}
-                aria-pressed={homeState === s.id}
-                onClick={() => setHomeState(s.id)}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-          <span style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>
-            {active.hint}
-          </span>
+          <ControlRow label="User" options={USER_OPTIONS} value={userId} onChange={setUserId} />
+          <ControlRow
+            label="Home state"
+            options={HOME_STATES}
+            value={homeState}
+            onChange={setHomeState}
+          />
         </div>
 
         {/* The phone surface stays free for the app's own taps —
             full screen is entered from the button below only. */}
         <PhoneFrame scale={phoneScale}>
-          <BravoApp hasPromotion={hasPromotion} />
+          <BravoApp hasPromotion={hasPromotion} user={user} />
         </PhoneFrame>
         <button className="btn btn-secondary" onClick={() => setPresenting(true)}>
           <Maximize2 size={14} />
@@ -117,6 +162,7 @@ export default function LiveDemo() {
         open={presenting}
         onClose={() => setPresenting(false)}
         hasPromotion={hasPromotion}
+        user={user}
       />
     </div>
   )
