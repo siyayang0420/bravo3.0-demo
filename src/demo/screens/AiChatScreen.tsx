@@ -5,11 +5,12 @@
 // thinking, so they are steps in one sequence here rather than three
 // screens. Opened when you submit a query from the search sheet.
 import { useEffect, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, Menu } from 'lucide-react'
 import PromptBox from '../components/PromptBox'
 import IosKeyboard from '../components/IosKeyboard'
 import AiThinking from '../components/AiThinking'
+import AiVoiceScreen from './AiVoiceScreen'
 import useStandalone from '../../hooks/useStandalone'
 import { AI_DISCLAIMER, THINKING_STEPS } from '../data/aiChatDemo'
 import wordmark from '../assets/bravo-ai-wordmark.svg'
@@ -26,6 +27,7 @@ export default function AiChatScreen({
 }) {
   const standalone = useStandalone()
   const reduce = useReducedMotion()
+  const [voiceOpen, setVoiceOpen] = useState(false)
 
   // Walks the thinking steps, then stops on the last one. Each step names
   // its own hold, so the pacing is content-driven rather than a fixed tick —
@@ -78,12 +80,30 @@ export default function AiChatScreen({
             <AiThinking step={THINKING_STEPS[step]} />
           </motion.div>
 
-          <PromptBox placeholder="Ask or search anything..." />
+          <PromptBox
+            placeholder="Ask or search anything..."
+            onVoiceMode={() => setVoiceOpen(true)}
+          />
         </div>
 
         {/* Same rule as the search sheet — the phone raises its own. */}
         {!standalone && <IosKeyboard suggestions={AUTOCORRECT} />}
       </div>
+
+      {/* Voice mode fades in over the thread; its X fades it back out. */}
+      <AnimatePresence>
+        {voiceOpen && (
+          <motion.div
+            className="bv-ai-voice-wrap"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.24, ease: EASE_OUT }}
+          >
+            <AiVoiceScreen onClose={() => setVoiceOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

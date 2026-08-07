@@ -45,10 +45,13 @@ const NEXT_FOLLOW: Record<FollowState, FollowState> = {
 export default function SearchSheet({
   onClose,
   onAsk,
+  onVoiceMode,
 }: {
   onClose?: () => void
   /** Submitting the query hands off to the bravo AI thread. */
   onAsk?: (query: string) => void
+  /** Tapping the voice-mode (audio-lines) button — opens the listening orb. */
+  onVoiceMode?: () => void
 }) {
   const [query, setQuery] = useState('')
   const [tab, setTab] = useState<SearchTabId>('all')
@@ -243,6 +246,10 @@ export default function SearchSheet({
             placeholder="Ask or search anything..."
             value={query}
             autoFocus
+            /* Recording "hears" this and hands it to the AI thread on Stop →
+               send, the same handoff a typed query makes. */
+            voiceTranscript="Happy"
+            onVoiceMode={onVoiceMode}
             onChange={setQuery}
             onSubmit={(v) => onAsk?.(v)}
           />

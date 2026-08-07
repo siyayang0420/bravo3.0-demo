@@ -2,7 +2,6 @@
 // Map-first discovery screen with balance pills, filter chips,
 // AI prompt dock, and bottom nav.
 import { useState } from 'react'
-import { flushSync } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ScanLine, Bell } from 'lucide-react'
 import BalancePill from '../components/BalancePill'
@@ -14,8 +13,7 @@ import PromoChip from '../components/PromoChip'
 import OffersSheet, { type Promotion } from '../components/OffersSheet'
 import { type Offer } from '../components/OfferCard'
 import PromptBox from '../components/PromptBox'
-import SearchSheet, { SEARCH_INPUT_ID } from '../components/SearchSheet'
-import AiChatScreen from './AiChatScreen'
+import useSearchLauncher from '../components/SearchLauncher'
 import BottomNav, { type NavId } from '../components/BottomNav'
 import Coin from '../components/Coin'
 import mapBg from '../assets/map-home.jpg'
@@ -95,13 +93,7 @@ export default function HomeScreen({
 }) {
   const [spendableOpen, setSpendableOpen] = useState(false)
   const [promoOpen, setPromoOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [askQuery, setAskQuery] = useState('')
-
-  const openSearch = () => {
-    flushSync(() => setSearchOpen(true))
-    document.getElementById(SEARCH_INPUT_ID)?.focus({ preventScroll: true })
-  }
+  const { searchOpen, ask, promptProps, overlays } = useSearchLauncher()
 
   return (
     <>
@@ -148,64 +140,29 @@ export default function HomeScreen({
         </div>
         <div className="bv-suggestion-row">
           {hasPromotion && <PromoChip onClick={() => setPromoOpen(true)} />}
+          {/* Each chip is a canned prompt — tapping it sends its own copy to
+              the AI thread, no typing. */}
           {SUGGESTIONS.map((s) => (
-            <SuggestionChip key={s.label} image={s.image} label={s.label} />
+            <SuggestionChip
+              key={s.label}
+              image={s.image}
+              label={s.label}
+              onClick={() => ask(s.label)}
+            />
           ))}
         </div>
         <div className="bv-dock">
-          {/* Tapping anywhere in the dock box opens the search sheet — the
-              real keyboard would come up here, so the sheet stands in. */}
-          <div
-            className="bv-dock-search-trigger"
-            role="button"
-            tabIndex={0}
-            onPointerDown={(e) => {
-              e.preventDefault()
-              openSearch()
-            }}
-            onClick={() => {
-              if (!searchOpen) openSearch()
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                openSearch()
-              }
-            }}
-          >
-            <PromptBox placeholder="New onboarded restaurants..." interactive={false} />
+          {/* Mic and voice act in place; tapping the placeholder opens the
+              search sheet, where the real keyboard belongs. */}
+          <div className="bv-dock-search-trigger">
+            <PromptBox placeholder="New onboarded restaurants..." {...promptProps} />
           </div>
           <BottomNav active={active} onSelect={onNavigate} />
         </div>
       </motion.div>
 
-      {/* Search — slides up over the dock, keyboard and all */}
-      <AnimatePresence>
-        {searchOpen && (
-          <SearchSheet
-            onClose={() => setSearchOpen(false)}
-            onAsk={(q) => {
-              setAskQuery(q)
-              setSearchOpen(false)
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* bravo AI thread — pushes in over everything once you send a query */}
-      <AnimatePresence>
-        {askQuery && (
-          <motion.div
-            className="bv-ai-screen-wrap"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <AiChatScreen query={askQuery} onBack={() => setAskQuery('')} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* search sheet + AI thread — the prompt dock's own layers */}
+      {overlays}
 
       {/* Combined Spendable sheet — opens from either balance pill */}
       <AnimatePresence>
@@ -239,16 +196,20 @@ export default function HomeScreen({
       </AnimatePresence>
 
       {/* Offers for you — slides up from the bottom edge, over the dock.
-          No scrim in the design, so the catcher is transparent and exists
-          only to make a tap on the map close the sheet. */}
+          `over-topbar` because nothing up there anchors this sheet, so the
+          pills dim with the rest of the screen. */}
       <AnimatePresence>
         {promoOpen && hasPromotion && (
           <>
-            <button
+            <motion.button
               type="button"
-              className="bv-sheet-catcher"
+              className="bv-scrim over-topbar"
               aria-label="Close offers"
               onClick={() => setPromoOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
             />
             <OffersSheet
               offers={OFFERS}
