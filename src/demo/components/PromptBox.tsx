@@ -14,11 +14,15 @@
 //                Input pill meters the audio next to the submit button
 import { useEffect, useRef, useState } from 'react'
 import { Plus, Mic, AudioLines, Search, ArrowUp } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import VoiceInput from './VoiceInput'
+
+/** How long each rotating placeholder holds before the next one turns up. */
+const ROTATE_MS = 3600
 
 export default function PromptBox({
   placeholder,
+  placeholders,
   variant = 'ai',
   value,
   autoFocus = false,
@@ -30,7 +34,16 @@ export default function PromptBox({
   onChange,
   onSubmit,
 }: {
-  placeholder: string
+  /** A single, static placeholder. Ignored when `placeholders` is given. */
+  placeholder?: string
+  /**
+   * Two or more placeholders to cycle through — the dock box uses this so
+   * each screen advertises what the assistant is good for there (see
+   * promptDemo.ts). With more than one, the native placeholder is dropped
+   * and an animated line is painted over the field instead: the attribute
+   * cannot be animated, and swapping its text would just snap.
+   */
+  placeholders?: string[]
   variant?: 'ai' | 'search'
   /** Controlled value. Omit to let the box hold its own. */
   value?: string
@@ -61,6 +74,7 @@ export default function PromptBox({
   const [internal, setInternal] = useState('')
   const [recording, setRecording] = useState(false)
   const input = useRef<HTMLInputElement>(null)
+  const reduce = useReducedMotion()
 
   // iOS standalone PWAs are touchy about focused inputs inside transformed
   // artboards. Prevent scroll jumps whenever focus is programmatic.
@@ -70,6 +84,21 @@ export default function PromptBox({
   const controlled = value !== undefined
   const text = controlled ? value : internal
   const isSearch = variant === 'search'
+
+  // One list either way, so everything below has a single thing to read.
+  const hints = placeholders?.length ? placeholders : placeholder ? [placeholder] : []
+  const rotates = hints.length > 1
+  const [hint, setHint] = useState(0)
+  // Only while there is nothing to read instead — a rotating line under
+  // someone's own typing would be noise, and during a take the field is
+  // hidden anyway.
+  const cycling = rotates && !text && !recording
+  useEffect(() => {
+    if (!cycling) return
+    const id = window.setInterval(() => setHint((i) => i + 1), ROTATE_MS)
+    return () => window.clearInterval(id)
+  }, [cycling])
+  const currentHint = hints.length ? hints[hint % hints.length] : ''
 
   const setText = (next: string) => {
     if (!controlled) setInternal(next)
@@ -106,11 +135,15 @@ export default function PromptBox({
         {/* Hidden rather than unmounted while recording (Figma hides the
             placeholder at opacity 0): the pill takes the width, and the
             field keeps its caret for when the take ends. */}
+        <span className="bv-prompt-field">
         <input
           id={inputId}
           ref={input}
           className={`bv-prompt-input${recording ? ' hidden' : ''}`}
-          placeholder={placeholder}
+          // With a rotating hint the attribute is dropped and the animated
+          // line below stands in for it — otherwise both would show.
+          placeholder={rotates ? '' : (placeholder ?? '')}
+          aria-label={currentHint || undefined}
           value={text}
           readOnly={!interactive}
           tabIndex={interactive && !recording ? undefined : -1}
@@ -132,6 +165,27 @@ export default function PromptBox({
             if (e.key === 'Enter') submit()
           }}
         />
+        {/* The outgoing line flips up and away; the next one rises from
+            below into its place. `mode="wait"` keeps them from overlapping
+            mid-turn, and the perspective on the track is what makes the
+            flip read as a turn rather than a slide. */}
+        {cycling && (
+          <span className="bv-prompt-rotator" aria-hidden="true">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={currentHint}
+                className="bv-prompt-rotator-line"
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: '65%', rotateX: -60 }}
+                animate={reduce ? { opacity: 1 } : { opacity: 1, y: '0%', rotateX: 0 }}
+                exit={reduce ? { opacity: 0 } : { opacity: 0, y: '-65%', rotateX: 60 }}
+                transition={{ duration: reduce ? 0.18 : 0.42, ease: [0.23, 1, 0.32, 1] }}
+              >
+                {currentHint}
+              </motion.span>
+            </AnimatePresence>
+          </span>
+        )}
+        </span>
         {!isSearch && (
           <div className="bv-prompt-end">
             {/* Scale from 0.9, never 0 — nothing in the real world appears

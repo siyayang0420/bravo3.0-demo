@@ -27,10 +27,13 @@ export default function LeaderboardRail({
           key={entry.id}
           type="button"
           className="bv-leaderboard-item"
-          onClick={() => {
-            // Tapping a face opens their profile; onSelect stays for callers
-            // that also want the id (none override the profile jump today).
-            openProfile({ name: entry.name, avatar: entry.avatar })
+          onClick={(e) => {
+            // Tapping a face opens their profile — flying from the avatar's
+            // own rect, not the whole button (which also covers the name
+            // label). onSelect stays for callers that also want the id (none
+            // override the profile jump today).
+            const avatarEl = e.currentTarget.querySelector<HTMLElement>('.bv-leaderboard-avatar')
+            openProfile({ name: entry.name, avatar: entry.avatar }, avatarEl)
             onSelect?.(entry.id)
           }}
         >

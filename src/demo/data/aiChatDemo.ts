@@ -10,13 +10,24 @@ export type ThinkingStep = {
   hold: number
 }
 
-export const THINKING_STEPS: ThinkingStep[] = [
-  // 19559:168018
-  { label: 'Let me think what do you need …', hold: 1600 },
-  // 19559:168156
-  { label: 'Looking for restaurants with “Happy” …', detail: 'Found 5 places …', hold: 2000 },
-  // 19560:168548
-  { label: 'Let me take a closer look …', detail: 'Found 5 places …', hold: 2400 },
-]
+// The steps depend on what you asked, so the middle line echoes the query
+// (the starter copy you tapped) instead of a fixed "Happy".
+//
+// Figma's own wording was "Looking for restaurants with “Happy” …" /
+// "Found 5 places …", written when every prompt was a restaurant search.
+// The dock now offers per-screen prompts that are not — "Who's my best
+// friend", "Total spend last week" — and "Found 5 places" under those read
+// as a bug, so the two lines are widened to fit any query. Deliberate
+// deviation from the node; the shape and pacing are unchanged.
+export function thinkingSteps(query: string): ThinkingStep[] {
+  return [
+    // 19559:168018
+    { label: 'Let me think what do you need …', hold: 1600 },
+    // 19559:168156
+    { label: `Looking for “${query}” …`, detail: 'Found 5 results …', hold: 2000 },
+    // 19560:168548
+    { label: 'Let me take a closer look …', detail: 'Found 5 results …', hold: 2400 },
+  ]
+}
 
 export const AI_DISCLAIMER = 'bravo AI may make mistakes, so please double check.'

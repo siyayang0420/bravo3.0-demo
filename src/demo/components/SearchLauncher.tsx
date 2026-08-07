@@ -12,8 +12,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import SearchSheet, { SEARCH_INPUT_ID } from './SearchSheet'
 import AiChatScreen from '../screens/AiChatScreen'
 import AiVoiceScreen from '../screens/AiVoiceScreen'
+import { PROMPTS, type PromptContext } from '../data/promptDemo'
 
-export default function useSearchLauncher() {
+/**
+ * @param context Which screen the dock is sitting on. Picks the rotating
+ *   placeholders and the sheet's starter chips — the assistant is useful for
+ *   different things on the map, in the feed, and on your own profile.
+ */
+export default function useSearchLauncher(context: PromptContext = 'map') {
+  const prompts = PROMPTS[context]
   const [searchOpen, setSearchOpen] = useState(false)
   const [askQuery, setAskQuery] = useState('')
   const [voiceOpen, setVoiceOpen] = useState(false)
@@ -36,6 +43,7 @@ export default function useSearchLauncher() {
   // (onVoiceMode). A completed recording sends straight to the AI thread.
   const promptProps = {
     interactive: false,
+    placeholders: prompts.placeholders,
     voiceTranscript: 'Happy',
     onVoiceMode: () => setVoiceOpen(true),
     onActivate: openSearch,
@@ -61,6 +69,7 @@ export default function useSearchLauncher() {
               transition={{ duration: 0.18 }}
             />
             <SearchSheet
+              starters={prompts.starters}
               onClose={() => setSearchOpen(false)}
               onAsk={(q) => {
                 setAskQuery(q)

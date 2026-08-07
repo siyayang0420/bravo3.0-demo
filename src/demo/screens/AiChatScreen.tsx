@@ -4,7 +4,7 @@
 // Those three nodes are the SAME screen at three moments of the assistant
 // thinking, so they are steps in one sequence here rather than three
 // screens. Opened when you submit a query from the search sheet.
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, Menu } from 'lucide-react'
 import PromptBox from '../components/PromptBox'
@@ -12,7 +12,7 @@ import IosKeyboard from '../components/IosKeyboard'
 import AiThinking from '../components/AiThinking'
 import AiVoiceScreen from './AiVoiceScreen'
 import useStandalone from '../../hooks/useStandalone'
-import { AI_DISCLAIMER, THINKING_STEPS } from '../data/aiChatDemo'
+import { AI_DISCLAIMER, thinkingSteps } from '../data/aiChatDemo'
 import wordmark from '../assets/bravo-ai-wordmark.svg'
 
 const AUTOCORRECT = ['“The”', 'the', 'to']
@@ -29,15 +29,18 @@ export default function AiChatScreen({
   const reduce = useReducedMotion()
   const [voiceOpen, setVoiceOpen] = useState(false)
 
+  // Built from the query so the middle line reads back what you asked.
+  const steps = useMemo(() => thinkingSteps(query), [query])
+
   // Walks the thinking steps, then stops on the last one. Each step names
   // its own hold, so the pacing is content-driven rather than a fixed tick —
   // "Looking for restaurants…" deserves longer on screen than "Let me think".
   const [step, setStep] = useState(0)
   useEffect(() => {
-    if (step >= THINKING_STEPS.length - 1) return
-    const t = window.setTimeout(() => setStep((s) => s + 1), THINKING_STEPS[step].hold)
+    if (step >= steps.length - 1) return
+    const t = window.setTimeout(() => setStep((s) => s + 1), steps[step].hold)
     return () => window.clearTimeout(t)
-  }, [step])
+  }, [step, steps])
 
   return (
     <div className="bv-ai-screen">
@@ -77,7 +80,7 @@ export default function AiChatScreen({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28, ease: EASE_OUT, delay: 0.12 }}
           >
-            <AiThinking step={THINKING_STEPS[step]} />
+            <AiThinking step={steps[step]} />
           </motion.div>
 
           <PromptBox

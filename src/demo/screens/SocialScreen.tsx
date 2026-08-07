@@ -14,14 +14,7 @@ import ChallengeScreen, { type ChallengeDetail } from './ChallengeScreen'
 import PromptBox from '../components/PromptBox'
 import useSearchLauncher from '../components/SearchLauncher'
 import BottomNav, { type NavId } from '../components/BottomNav'
-import avatarHappy1 from '../assets/social/avatar-happy1.png'
-import avatarHappy000 from '../assets/social/avatar-happy000.png'
-import avatarHappyman from '../assets/social/avatar-happyman.png'
-import avatarHappyg from '../assets/social/avatar-happyg.png'
-import avatarHappy0 from '../assets/social/avatar-happy0.png'
-import avatarEmma from '../assets/social/avatar-emma.png'
-import avatarCat from '../assets/social/avatar-cat.png'
-import avatarJoshua from '../assets/social/avatar-joshua.png'
+import { BOBBY, pickPeople } from '../data/people'
 import postPhoto from '../assets/social/post-photo.jpg'
 import venueThumb from '../assets/social/venue-amcafe.jpg'
 import merchantPhoto from '../assets/social/merchant-photo.png'
@@ -45,14 +38,24 @@ const PANE_VARIANTS = {
   exit: (d: number) => ({ x: d >= 0 ? '-100%' : '100%', opacity: 0 }),
 }
 
-// EDIT ME — demo content
-const LEADERBOARD: LeaderboardEntry[] = [
-  { id: '1', name: 'happy1', avatar: avatarHappy1 },
-  { id: '2', name: 'happy000', avatar: avatarHappy000 },
-  { id: '3', name: 'happyman', avatar: avatarHappyman },
-  { id: '4', name: 'Happyg', avatar: avatarHappyg },
-  { id: '5', name: 'happy0', avatar: avatarHappy0 },
-]
+// EDIT ME — demo content. People drawn from the shared 12-person cast
+// (people.ts), each section at a different offset so the same page doesn't
+// show identical faces in two places at once. Names come from the cast too,
+// so a face and the name under it always belong to the same person.
+const leaderboardFaces = pickPeople(5, 0)
+const postFaces = pickPeople(6, 5)
+// The challenge's fourth seat is Bobby ("You"), placed by hand below — so he
+// is excluded here, or he'd hold two of the four seats. The card's avatar
+// stack and the detail screen's bubbles are the SAME four people: one
+// challenge, one roster, whichever way you look at it.
+const challengeFaces = pickPeople(3, 9, ['bobby'])
+const friendPostFaces = pickPeople(5, 3)
+
+const LEADERBOARD: LeaderboardEntry[] = leaderboardFaces.map((p, i) => ({
+  id: String(i + 1),
+  name: p.name,
+  avatar: p.avatar,
+}))
 
 // Both entries render through the same PostCard — only content differs.
 const VENUE = {
@@ -69,8 +72,8 @@ const POSTS: Post[] = [
   // 1 — comment with images + text
   {
     id: 'p1',
-    author: 'Noooodle123',
-    avatar: avatarHappy1,
+    author: postFaces[0].name,
+    avatar: postFaces[0].avatar,
     streak: '2X',
     level: 'lv1',
     date: 'Jun 3, 2026',
@@ -81,8 +84,8 @@ const POSTS: Post[] = [
   // 2 — comment with text only
   {
     id: 'p2',
-    author: 'Emma',
-    avatar: avatarEmma,
+    author: postFaces[1].name,
+    avatar: postFaces[1].avatar,
     streak: '8X',
     level: 'lv6',
     date: 'Jun 3, 2026',
@@ -92,8 +95,8 @@ const POSTS: Post[] = [
   // 3 — comment with images only
   {
     id: 'p3',
-    author: 'catTheFood',
-    avatar: avatarCat,
+    author: postFaces[2].name,
+    avatar: postFaces[2].avatar,
     streak: '8X',
     level: 'lv6',
     date: 'Jun 3, 2026',
@@ -103,8 +106,8 @@ const POSTS: Post[] = [
   // 4 — achieved a spend badge
   {
     id: 'p4',
-    author: 'Alice',
-    avatar: avatarHappyg,
+    author: postFaces[3].name,
+    avatar: postFaces[3].avatar,
     streak: '8X',
     level: 'lv7',
     date: 'Jun 3, 2026',
@@ -114,8 +117,8 @@ const POSTS: Post[] = [
   // 5 — achieved a streak badge
   {
     id: 'p5',
-    author: 'Joshua',
-    avatar: avatarJoshua,
+    author: postFaces[4].name,
+    avatar: postFaces[4].avatar,
     streak: '8X',
     level: 'lv7',
     date: 'Jun 3, 2026',
@@ -129,8 +132,8 @@ const POSTS: Post[] = [
   // 6 — earned a bonus from a challenge; the coin is interactive
   {
     id: 'p6',
-    author: 'Ken',
-    avatar: avatarHappy0,
+    author: postFaces[5].name,
+    avatar: postFaces[5].avatar,
     streak: '8X',
     level: 'lv7',
     date: 'Jun 3, 2026',
@@ -146,8 +149,8 @@ const POSTS: Post[] = [
 // ---- Friends tab (Figma 19582:175875) ----
 const CHALLENGE: Challenge = {
   name: 'Summer Dining Challenge',
-  participantsLabel: 'Bonnie and 2+ are in this challenge with you',
-  participants: [avatarHappy000, avatarHappyman, avatarHappy1, avatarHappy0],
+  participantsLabel: `${challengeFaces[0].name} and 2+ are in this challenge with you`,
+  participants: [...challengeFaces.map((p) => p.avatar), BOBBY.avatar],
   reward: '$5',
   spent: 512.56,
   goal: 1000,
@@ -190,18 +193,21 @@ const CHALLENGE_DETAIL: ChallengeDetail = {
   inviteLimit: 3,
   merchants: ELIGIBLE_MERCHANTS,
   participants: [
-    { id: 'u1', name: 'Uuuuzili', avatar: avatarHappyman, share: 15.1, x: 79, y: 213 },
-    { id: 'u2', name: 'Relxxx123', avatar: avatarHappy1, share: 13.08, x: 252, y: 8 },
-    { id: 'u3', name: 'theFlex', avatar: avatarHappy0, share: 10.02, x: 258, y: 225 },
-    { id: 'u4', name: 'You', avatar: avatarHappy000, share: 8.58, x: 65, y: 65, isYou: true },
+    { id: 'u1', name: challengeFaces[0].name, avatar: challengeFaces[0].avatar, share: 15.1, x: 79, y: 213 },
+    { id: 'u2', name: challengeFaces[1].name, avatar: challengeFaces[1].avatar, share: 13.08, x: 252, y: 8 },
+    { id: 'u3', name: challengeFaces[2].name, avatar: challengeFaces[2].avatar, share: 10.02, x: 258, y: 225 },
+    // Always Bobby's own perspective in this hardcoded feed flow, so "You"
+    // is his real identity, not a random pool pick — which is also why
+    // `challengeFaces` excludes him: four seats, four different people.
+    { id: 'u4', name: 'You', avatar: BOBBY.avatar, share: 8.58, x: 65, y: 65, isYou: true },
   ],
 }
 
 const FRIEND_POSTS: Post[] = [
   {
     id: 'f1',
-    author: 'Noooodle123',
-    avatar: avatarHappyg,
+    author: friendPostFaces[0].name,
+    avatar: friendPostFaces[0].avatar,
     streak: '2X',
     level: 'lv1',
     date: 'Jun 3, 2026',
@@ -211,8 +217,8 @@ const FRIEND_POSTS: Post[] = [
   },
   {
     id: 'f2',
-    author: 'ChasiuBao',
-    avatar: avatarEmma,
+    author: friendPostFaces[1].name,
+    avatar: friendPostFaces[1].avatar,
     streak: '2X',
     level: 'lv1',
     date: 'Jun 3, 2026',
@@ -221,8 +227,8 @@ const FRIEND_POSTS: Post[] = [
   },
   {
     id: 'f3',
-    author: 'Ken',
-    avatar: avatarHappy0,
+    author: friendPostFaces[2].name,
+    avatar: friendPostFaces[2].avatar,
     streak: '8X',
     level: 'lv7',
     date: 'Jun 3, 2026',
@@ -235,8 +241,8 @@ const FRIEND_POSTS: Post[] = [
   },
   {
     id: 'f4',
-    author: 'Alice',
-    avatar: avatarCat,
+    author: friendPostFaces[3].name,
+    avatar: friendPostFaces[3].avatar,
     streak: '8X',
     level: 'lv7',
     date: 'Jun 3, 2026',
@@ -246,8 +252,8 @@ const FRIEND_POSTS: Post[] = [
   // 19582:177205 — streak badge
   {
     id: 'f5',
-    author: 'Joshua',
-    avatar: avatarJoshua,
+    author: friendPostFaces[4].name,
+    avatar: friendPostFaces[4].avatar,
     streak: '8X',
     level: 'lv7',
     date: 'Jun 3, 2026',
@@ -264,15 +270,18 @@ export default function SocialScreen({
   active,
   onNavigate,
   intro = false,
+  avatar,
 }: {
   active: NavId
   onNavigate: (id: NavId) => void
   /** Play the entrance animation. False on tab switches — see BravoApp. */
   intro?: boolean
+  /** The signed-in demo user's own face — the nav's last item. */
+  avatar?: string
 }) {
   const [tab, setTab] = useState<TabId>('foryou')
   const [navHidden, setNavHidden] = useState(false)
-  const { searchOpen, promptProps, overlays } = useSearchLauncher()
+  const { searchOpen, promptProps, overlays } = useSearchLauncher('social')
   const [detailOpen, setDetailOpen] = useState(false)
   // +1 when moving right through the tabs, -1 when moving left. Drives
   // which side each pane enters from and leaves toward.
@@ -397,14 +406,14 @@ export default function SocialScreen({
         <div className="bv-dock-row">
           {/* Same as Home — mic/voice in place, placeholder opens the sheet. */}
           <div className="bv-dock-search-trigger">
-            <PromptBox placeholder="New onboarded restaurants..." {...promptProps} />
+            <PromptBox {...promptProps} />
           </div>
           <button type="button" className="bv-compose-btn" aria-label="New post">
             <SquarePen size={24.96} strokeWidth={1.9} />
           </button>
         </div>
         <div className="bv-nav-slot">
-          <BottomNav active={active} onSelect={onNavigate} />
+          <BottomNav active={active} onSelect={onNavigate} avatar={avatar} />
         </div>
       </motion.div>
 

@@ -19,12 +19,7 @@ import SearchTabs, { type SearchTabId } from './SearchTabs'
 import SearchResultRow from './SearchResultRow'
 import PersonRow, { type FollowState } from './PersonRow'
 import LeaderboardRail from './LeaderboardRail'
-import {
-  PROMPT_STARTERS,
-  SEARCH_MERCHANTS,
-  SEARCH_PEOPLE,
-  type SearchPerson,
-} from '../data/searchDemo'
+import { SEARCH_MERCHANTS, SEARCH_PEOPLE, type SearchPerson } from '../data/searchDemo'
 import useStandalone from '../../hooks/useStandalone'
 
 // Emil's strong ease-out. The built-in curves are too weak to read as
@@ -43,10 +38,13 @@ const NEXT_FOLLOW: Record<FollowState, FollowState> = {
 }
 
 export default function SearchSheet({
+  starters = [],
   onClose,
   onAsk,
   onVoiceMode,
 }: {
+  /** The empty state's chips — per screen, see promptDemo.ts. */
+  starters?: string[]
   onClose?: () => void
   /** Submitting the query hands off to the bravo AI thread. */
   onAsk?: (query: string) => void
@@ -136,9 +134,13 @@ export default function SearchSheet({
         {!hasQuery ? (
           // ---- empty state (19380:5446) ----
           <div className="bv-prompt-starters">
-            {PROMPT_STARTERS.map((label, i) => (
+            {starters.map((label, i) => (
               <motion.div key={label} {...rise(i)}>
-                <PromptStarter label={label} onSelect={() => setQuery(label)} />
+                {/* A starter is a question for the assistant, not a search
+                    term — tapping one sends it, so the thinking line reads
+                    back the chip you chose. It used to only fill the field,
+                    which left the chip's own copy going nowhere. */}
+                <PromptStarter label={label} onSelect={() => onAsk?.(label)} />
               </motion.div>
             ))}
           </div>

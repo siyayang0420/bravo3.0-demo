@@ -62,7 +62,12 @@ export default function PostCard({
   const photos = useDragScroll<HTMLDivElement>()
   const isAchievement = !!post.achievement
   const openProfile = useOpenProfile()
-  const viewProfile = () => openProfile({ name: post.author, avatar: post.avatar })
+  // Always flies from the avatar's own rect, whether the avatar or the name
+  // text was the actual tap target.
+  const viewProfile = (e: { currentTarget: HTMLElement }) => {
+    const avatarEl = e.currentTarget.closest('.bv-post')?.querySelector<HTMLElement>('.bv-post-avatar')
+    openProfile({ name: post.author, avatar: post.avatar }, avatarEl)
+  }
 
   return (
     <article className="bv-post">
