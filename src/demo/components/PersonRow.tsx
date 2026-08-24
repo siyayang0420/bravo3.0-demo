@@ -3,6 +3,7 @@
 //
 // Avatar, name, "N visited · N posts", and a follow control whose state is
 // the only thing that varies between the two nodes.
+import { type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import Button from './Button'
 
@@ -28,6 +29,25 @@ const IS_ACTION: Record<FollowState, boolean> = {
   mutual: false,
 }
 
+type PersonRowBase = {
+  name: string
+  avatar: string
+  visited: number
+  posts: number
+}
+
+/**
+ * The trailing control is either the follow button this row was built for,
+ * or — for a caller with its own vocabulary, like the challenge invite
+ * picker — whatever it hands over in `action`. A union rather than two
+ * optional props, so it is impossible to pass both or neither.
+ */
+type PersonRowProps = PersonRowBase &
+  (
+    | { follow: FollowState; onToggleFollow?: () => void; action?: never }
+    | { action: ReactNode; follow?: never; onToggleFollow?: never }
+  )
+
 export default function PersonRow({
   name,
   avatar,
@@ -35,15 +55,9 @@ export default function PersonRow({
   posts,
   follow,
   onToggleFollow,
-}: {
-  name: string
-  avatar: string
-  visited: number
-  posts: number
-  follow: FollowState
-  onToggleFollow?: () => void
-}) {
-  const action = IS_ACTION[follow]
+  action,
+}: PersonRowProps) {
+  const isAction = follow ? IS_ACTION[follow] : false
 
   return (
     <article className="bv-person">
@@ -56,20 +70,24 @@ export default function PersonRow({
         </span>
       </div>
 
-      {/* The label changes width between states, so it crossfades through a
-          slight blur rather than swapping hard — the two words otherwise
-          read as two objects rather than one control changing. */}
-      <Button size="sm" variant={action ? 'primary' : 'quiet'} onClick={onToggleFollow}>
-        <motion.span
-          key={follow}
-          className="bv-person-follow-label"
-          initial={{ opacity: 0, filter: 'blur(2px)' }}
-          animate={{ opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
-        >
-          {LABELS[follow]}
-        </motion.span>
-      </Button>
+      {follow ? (
+        /* The label changes width between states, so it crossfades through a
+           slight blur rather than swapping hard — the two words otherwise
+           read as two objects rather than one control changing. */
+        <Button size="sm" variant={isAction ? 'primary' : 'quiet'} onClick={onToggleFollow}>
+          <motion.span
+            key={follow}
+            className="bv-person-follow-label"
+            initial={{ opacity: 0, filter: 'blur(2px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+          >
+            {LABELS[follow]}
+          </motion.span>
+        </Button>
+      ) : (
+        action
+      )}
     </article>
   )
 }

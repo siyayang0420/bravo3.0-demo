@@ -12,6 +12,7 @@ import FloatingAvatar, { type Participant } from '../components/FloatingAvatar'
 import ScreenNav from '../components/ScreenNav'
 import { daysLeftLabel } from '../components/ChallengeCard'
 import MerchantsScreen from './MerchantsScreen'
+import SelectFriendsScreen from './SelectFriendsScreen'
 import { type Merchant } from '../components/MerchantRow'
 import challengeBg from '../assets/social/challenge-bg.svg'
 import challengeBlob from '../assets/social/challenge-blob.svg'
@@ -64,6 +65,7 @@ export default function ChallengeScreen({
 }) {
   const playArea = useRef<HTMLDivElement>(null)
   const [merchantsOpen, setMerchantsOpen] = useState(false)
+  const [invitesOpen, setInvitesOpen] = useState(false)
 
   // Measured here, not in the bubbles: a child's layout effect runs before
   // this ref is attached, so the children would read null and pin themselves.
@@ -142,6 +144,7 @@ export default function ChallengeScreen({
             areaH={area.h}
             index={i}
             onAccept={p.status === 'pending-you' ? onAccept : undefined}
+            onInvite={p.status === 'empty' ? () => setInvitesOpen(true) : undefined}
           />
         ))}
       </div>
@@ -218,6 +221,26 @@ export default function ChallengeScreen({
             <MerchantsScreen
               merchants={challenge.merchants}
               onBack={() => setMerchantsOpen(false)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Invite picker — pushed in from an empty seat, the same way the
+          merchants list is pushed in from the merchant chip. The open seats
+          are the denominator: you can fill exactly as many as are free. */}
+      <AnimatePresence>
+        {invitesOpen && (
+          <motion.div
+            className="bv-friends-wrap"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 320, damping: 34, mass: 0.7 }}
+          >
+            <SelectFriendsScreen
+              limit={Math.max(1, challenge.participants.filter((p) => p.status === 'empty').length)}
+              onBack={() => setInvitesOpen(false)}
             />
           </motion.div>
         )}

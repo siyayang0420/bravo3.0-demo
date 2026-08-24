@@ -1787,6 +1787,76 @@ button.bv-balance-pill:active {
 }
 
 /* ==================================================================
+   Select friends — Figma 19686:49817. The invite picker, pushed in
+   from an empty seat on the challenge. Same shell as the merchants
+   list; the rows are the shared PersonRow with an Invite control.
+   ================================================================== */
+.bv-friends-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the challenge screen (12) and the merchants list (13) */
+  z-index: 14;
+}
+
+.bv-friends-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+/* Figma puts a 16 gap under the nav row, which ends at statusbar + 41. */
+.bv-friends-list {
+  position: absolute;
+  inset: calc(var(--bv-statusbar-h) + 57px) 0 0;
+  z-index: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  padding: 0 var(--bv-space-4) 90px;
+}
+
+.bv-friends-list::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-friends-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 12px var(--bv-space-4) 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--bv-white) 34.4%
+  );
+}
+
+/* Figma's invite chips are a step smaller than the shared Button and carry
+   the bubble inset. Scoped here rather than added as a Button variant —
+   it is this screen's treatment, not a new system-wide size. */
+.bv-friends-list .bv-button-sm {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.bv-friends-list .bv-button-primary {
+  box-shadow: var(--bv-inset-bubble);
+}
+
+/* The read-only states ("Pending", "In a challenge") are a flatter grey than
+   the shared quiet fill, with black text — they are labels, not controls. */
+.bv-friends-list .bv-button-quiet {
+  background: var(--bv-neutral-150);
+  color: var(--bv-black);
+  cursor: default;
+}
+
+/* ==================================================================
    Home search — Figma 19380:5446 / 19542:163494 / 19380:5586 /
    19380:5756 / 19559:167807. One sheet, five states.
    ================================================================== */

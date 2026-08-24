@@ -114,6 +114,7 @@ export default function FloatingAvatar({
   areaH,
   index,
   onAccept,
+  onInvite,
 }: {
   participant: Participant
   isLeader: boolean
@@ -123,6 +124,8 @@ export default function FloatingAvatar({
   index: number
   /** 'pending-you' only — tapping the Accept pill. */
   onAccept?: () => void
+  /** 'empty' only — tapping the open seat, to go pick someone. */
+  onInvite?: () => void
 }) {
   const status = participant.status ?? 'accepted'
   const w = status === 'accepted' ? avatarWidth(participant.share) : PENDING_SIZE
@@ -165,6 +168,18 @@ export default function FloatingAvatar({
   // plain click and this flag keeps a drag from ending in confetti.
   const dragged = useRef(false)
 
+  // One tap handler for the whole bubble: an open seat sends you off to pick
+  // someone, anyone already in gets confetti. A drag that happens to end in a
+  // click is neither.
+  function handleTap() {
+    if (dragged.current) return
+    if (status === 'empty') {
+      onInvite?.()
+      return
+    }
+    burst()
+  }
+
   function burst() {
     // A bubble nobody has joined yet has nothing to celebrate.
     if (status !== 'accepted') return
@@ -192,7 +207,7 @@ export default function FloatingAvatar({
         // Keep a bursting bubble's confetti above its neighbours.
         zIndex: particles.length ? 15 : undefined,
       }}
-      onClick={burst}
+      onClick={handleTap}
       onPointerDown={() => (dragged.current = false)}
       onDragStart={() => (dragged.current = true)}
       drag
