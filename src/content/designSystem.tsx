@@ -37,6 +37,9 @@ import LikeButton from '../demo/components/LikeButton'
 import ProfileChallengeCard from '../demo/components/ProfileChallengeCard'
 import TasteIdentityPanel from '../demo/components/TasteIdentityPanel'
 import TasteRadar from '../demo/components/TasteRadar'
+import SearchResultRow from '../demo/components/SearchResultRow'
+import FloatingAvatar from '../demo/components/FloatingAvatar'
+import OrbSphere from '../demo/components/OrbSphere'
 import VenueCard from '../demo/components/VenueCard'
 import AchievementPanel from '../demo/components/AchievementPanel'
 import ChallengeCard from '../demo/components/ChallengeCard'
@@ -128,7 +131,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/BalancePill.tsx',
     summary:
       'Displays a wallet balance as a floating pill. Two variants: plain cash, and coin (with a leading coin glyph).',
-    usedOn: ['Home'],
+    usedOn: ['Home', 'Profile'],
     props: [
       { name: 'children', type: 'ReactNode', required: true, description: 'The balance text, pre-formatted.' },
       { name: 'leading', type: 'ReactNode', required: false, description: 'Optional glyph before the text — the coin variant passes the coin SVG here.' },
@@ -153,7 +156,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/CircleIconButton.tsx',
     summary:
       'Floating circular action button used in the top bar. White surface, drop shadow, presses down 6% on tap.',
-    usedOn: ['Home'],
+    usedOn: ['Home', 'Social', 'Profile', 'Venue card'],
     props: [
       { name: 'icon', type: 'ReactNode', required: true, description: 'A Lucide icon element, size 20.' },
       { name: 'label', type: 'string', required: true, description: 'Accessible label (aria-label).' },
@@ -224,7 +227,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/PromptBox.tsx',
     summary:
       'The bravo ai input. Two variants of one Figma component: `ai` wears the gradient ring (cyan → orange) that identifies AI surfaces and carries add / mic / voice-mode; `search` is a plain neutral-400 hairline with a search icon and nothing at the end. The pill, padding and 14px input are shared. The ai ring turns — the same colours at the same stops, with only the gradient angle sweeping 90° → 450° over 6s, so a paused ring is the Figma node exactly. The `ai` end has three states: idle (mic + voice-mode), typed (a single dark submit arrow), and recording (19377:5090) — tapping the mic empties the field and drops in a VoiceInput pill of ten metering bars + Stop, with the submit arrow beside it. Tap the mic in the preview below to see it.',
-    usedOn: ['Home', 'Social', 'Eligible merchants'],
+    usedOn: ['Home', 'Social', 'Profile', 'Home search', 'bravo AI thread', 'Eligible merchants', 'Select friends'],
     props: [
       { name: 'placeholder', type: 'string', required: false, description: 'A single, static placeholder. Ignored when `placeholders` is given.' },
       { name: 'placeholders', type: 'string[]', required: false, description: 'Two or more hints to cycle, one every 3.6s — what the dock box uses so each screen advertises what the assistant is good for there (promptDemo.ts). With more than one the native placeholder is dropped and an animated line is painted over the field instead: the outgoing hint flips up and fades, the next rises from below. Pauses while there is text or a recording in progress; crossfades only under prefers-reduced-motion.' },
@@ -255,7 +258,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/BottomNav.tsx',
     summary:
       'Five-slot primary navigation inside the frosted dock. Four Lucide icons plus the profile avatar.',
-    usedOn: ['Home'],
+    usedOn: ['Home', 'Social', 'Profile'],
     props: [
       { name: 'active', type: "'map' | 'friends' | 'scan' | 'rewards' | 'profile'", required: true, description: 'Currently selected destination.' },
       { name: 'onSelect', type: '(id: NavId) => void', required: true, description: 'Fires with the tapped destination id.' },
@@ -278,7 +281,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/Button.tsx',
     summary:
       'Full-width dark CTA. `ButtonAccent` marks the highlighted run inside the label — Figma paints it primary-500 within the same text node. `lg` is 48px tall at radius 16; `sm` hugs its label at radius 8.',
-    usedOn: ['Combined Spendable sheet', 'Promotions'],
+    usedOn: ['Combined Spendable sheet', 'Promotions', 'Offers', 'Profile', 'Home search', 'Select friends'],
     props: [
       { name: 'children', type: 'ReactNode', required: true, description: 'Label content. Wrap the highlighted part in <ButtonAccent>.' },
       { name: 'size', type: "'lg' | 'sm'", required: false, description: "Defaults to 'lg' — full width, 48px, radius 16. 'sm' hugs its label at radius 8." },
@@ -310,8 +313,8 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     figmaNodes: ['19564:172059', '19564:172067'],
     file: 'src/demo/components/BalanceRow.tsx',
     summary:
-      'A single balance line: name and description on the left, amount and chevron on the right. Drills into that balance’s detail screen.',
-    usedOn: ['Combined Spendable sheet'],
+      'A single balance line: name and description on the left, amount and chevron on the right. NOT CURRENTLY ON ANY SCREEN — the Combined Spendable sheet used to stack two of these, and the two-tab redesign (19854:10237 / 19854:10385) replaced them with a per-tab hero. Kept because the balance detail screens it was built to drill into are still to come; delete it if they land in another shape.',
+    usedOn: [],
     props: [
       { name: 'label', type: 'string', required: true, description: 'Balance name, e.g. "Balance".' },
       { name: 'sublabel', type: 'string', required: true, description: 'Where the money comes from, e.g. "Earned from payments".' },
@@ -330,23 +333,25 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
   {
     id: 'spendable-sheet',
     name: 'SpendableSheet',
-    figmaNodes: ['19564:172054'],
+    figmaNodes: ['19854:10237', '19854:10385'],
     file: 'src/demo/components/SpendableSheet.tsx',
     summary:
-      'The Combined Spendable popup, opened from either balance pill. Shows the total, the two balances behind it, and the top-up CTA. The total is derived from the two amounts, never authored.',
+      'The Combined Spendable popup, opened from either balance pill — on the tab that matches the pill you tapped. Two tabs over two pots of money: Balance (topped-up funds, carries the top-up CTA) and Bonus (rewards earned, carries a "How to earn Bonus" link). Same layout either side — hero, recent activity, total footer — so it is one component switched by `tab`, not two sheets. The tabs are swipeable as well as tappable, and the total is always derived from the two amounts, never authored.',
     usedOn: ['Home'],
     props: [
       { name: 'balance', type: 'number', required: true, description: 'Top-up balance.' },
       { name: 'bonus', type: 'number', required: true, description: 'Bonus earned from payments.' },
-      { name: 'topUpBonus', type: 'string', required: true, description: 'The bonus the CTA advertises, e.g. "$80".' },
-      { name: 'onSelectBalance', type: '() => void', required: false, description: 'Tap on the Balance row.' },
-      { name: 'onSelectBonus', type: '() => void', required: false, description: 'Tap on the Bonus row.' },
-      { name: 'onTopUp', type: '() => void', required: false, description: 'Tap on the CTA.' },
+      { name: 'topUpBonus', type: 'string', required: true, description: 'The bonus the CTA advertises, e.g. "$80". Balance tab only.' },
+      { name: 'tab', type: "'balance' | 'bonus'", required: false, description: 'Which pot is showing. Omit and the sheet keeps its own state — that is what this preview does.' },
+      { name: 'onTabChange', type: '(tab) => void', required: false, description: 'Supply it to control `tab` from the screen, so the pill you tapped picks the opening tab.' },
+      { name: 'onTopUp', type: '() => void', required: false, description: 'Tap on the CTA. Balance tab only.' },
+      { name: 'onViewAll', type: '() => void', required: false, description: 'Tap "View all" beside Recent activity.' },
+      { name: 'onHowToEarn', type: '() => void', required: false, description: 'Tap "How to earn Bonus". Bonus tab only.' },
     ],
-    tokens: ['--bv-white', '--bv-space-4', '--bv-space-1-5', '--bv-border-subtle'],
-    icons: ['ChevronRight'],
+    tokens: ['--bv-white', '--bv-neutral-100', '--bv-neutral-400', '--bv-neutral-500', '--bv-success', '--bv-radius-2xl', '--bv-space-3', '--bv-space-4', '--bv-space-1-5'],
+    icons: ['Wallet', 'ChevronRight'],
     flutterNote:
-      'Two off-scale values here. The corner radius is 36 — Figma says 16, softened to 24 and then to 36 at Siya’s direction — and the radius scale stops at 24 (radius-3xl), so it is a literal. The 20px gap between the card’s three blocks is likewise off-scale (no spacing-5; the scale jumps 16 → 24). Either add both tokens in Figma or snap the design to the scale. The screen owns placement and the scrim, not this component.',
+      'With only two tabs the slide direction never needs remembering — Bonus is always to the right of Balance — so `direction` is derived, not tracked. The pane carries `drag="x"` with zero constraints and commits on offset + a slice of velocity, so a flick counts as much as a slow drag; the card itself is `layout` because the two panes are different heights (Balance has the CTA) and should settle between them rather than snap. Money is written two ways on purpose: formatMoney() abbreviates for the top-bar pills ($3057) while formatAmount() groups and always shows two decimals for the sheet ($2,916.12), which is what the two designs specify. Two off-scale values persist from the old sheet: radius 36 (the scale stops at 24) and the 20px block gap (no spacing-5). The screen owns placement and the scrim, not this component.',
     preview: (
       <div style={{ width: 340 }}>
         <SpendableSheet balance={2916.12} bonus={140.88} topUpBonus="$80" />
@@ -361,7 +366,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/Coin.tsx',
     summary:
       'The Bravo coin — gold disc plus white rosette. One component at every size: the rosette is placed in percentages, so 19px in a balance pill and 42px in a promotion card use the same rule.',
-    usedOn: ['Home', 'Combined Spendable sheet', 'Featured promotions'],
+    usedOn: ['Home', 'Profile', 'Combined Spendable sheet', 'Featured promotions', 'Challenge'],
     props: [
       { name: 'size', type: 'number', required: false, description: 'Edge length in px. Default 19 (balance pill).' },
     ],
@@ -428,7 +433,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/PersonRow.tsx',
     summary:
       'A person in the search results: avatar, name, visited/posts line, and a follow control. The four follow states are the only thing that varies between the two Figma nodes.',
-    usedOn: ['Home search'],
+    usedOn: ['Home search', 'Select friends'],
     props: [
       { name: 'name / avatar / visited / posts', type: 'string | number', required: true, description: 'The person.' },
       { name: 'follow', type: "'follow' | 'follow-back' | 'following' | 'mutual'", required: true, description: 'Drives the button colour and label.' },
@@ -497,7 +502,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/ExpiryPill.tsx',
     summary:
       'The neutral "Expired on …" pill. Extracted because the offer card and the promo card use an identical box, so there is one definition of it.',
-    usedOn: ['Offers for you'],
+    usedOn: ['Offers for you', 'Featured promotions'],
     props: [
       { name: 'children', type: 'string', required: true, description: 'Expiry copy, pre-formatted.' },
     ],
@@ -563,7 +568,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/SectionTabs.tsx',
     summary:
       'Feed switcher on the social page — "For you" / "Friends", with a 2px rule under the active tab. The only place in the app set in Boldonse.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Profile'],
     props: [
       { name: 'tabs', type: '{ id, label }[]', required: true, description: 'Tab definitions in order.' },
       { name: 'active', type: 'string', required: true, description: 'Selected tab id.' },
@@ -594,7 +599,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/AchievementLabel.tsx',
     summary:
       'Tiny status pills beside a username. The complete DS set: one streak variant plus levels 1–7. Every variant shares the same box — 12px DM Sans Bold, 2px/6px padding, radius-full — and differs only in tint pair and glyph.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Profile'],
     props: [
       { name: 'value', type: 'string', required: true, description: 'StreakLabel only — the multiplier, e.g. "8X".' },
       { name: 'level', type: "'lv1' … 'lv7'", required: true, description: 'LevelLabel only — picks the tint pair and laurel glyph; the caption is derived.' },
@@ -620,7 +625,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/VenueCard.tsx',
     summary:
       'The place tagged in a post: 79×58 thumbnail with the cashback badge overlaid, name and meta line, and a bookmark action. Sits in a neutral-150 hairline border, not a filled card. The bookmark is a live toggle — tap it.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Profile'],
     props: [
       { name: 'venue', type: 'Venue', required: true, description: 'name, meta, thumbnail, cashback.' },
       { name: 'onSave', type: '(saved: boolean) => void', required: false, description: 'Fires on each tap with the new saved state.' },
@@ -643,7 +648,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/LeaderboardRail.tsx',
     summary:
       'Horizontally scrolling row of 61×82 portrait avatars with a name under each, under the Leaderboard heading.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Home search'],
     props: [
       { name: 'entries', type: 'LeaderboardEntry[]', required: true, description: 'id, name and avatar per person.' },
       { name: 'onSelect', type: '(id: string) => void', required: false, description: 'Fires with the tapped person id.' },
@@ -670,7 +675,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/PostCard.tsx',
     summary:
       'A social feed post. One component covers all six variants in the design — the shell never changes, only what sits between the caption and the actions. The three comment variants (text+images / text only / images only) are not code paths; they fall out of which content fields are present.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Profile'],
     props: [
       { name: 'post', type: 'Post', required: true, description: 'author, avatar, streak, level, date, and then any of caption / venue / photos / achievement.' },
       { name: 'onComment', type: '() => void', required: false, description: 'Comment icon tap. Hidden on achievement posts.' },
@@ -731,7 +736,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/LikeButton.tsx',
     summary:
       'The heart action on a post, with its like burst and count. Comment and Like both sit at 20px in neutral-500 (not black). On tap the glyph fills red (#c51f1f) and pops 1 → 1.2 → 1, a count appears to its right (gray, 8px gap), and two small red hearts drift up out of the heart. The burst is one of five hand-tuned shapes chosen at random each like, so the path is never the same twice; every track eases in and out so the hearts lift and settle softly. Skipped under prefers-reduced-motion.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Profile'],
     props: [
       { name: 'likes', type: 'number', required: false, description: 'Existing likes the tap adds to. Defaults to 0, so liking reads "1".' },
       { name: 'onLike', type: '() => void', required: false, description: 'Fires on each tap (like and unlike).' },
@@ -867,7 +872,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/AchievementPanel.tsx',
     summary:
       'The 230px tinted panel inside an achievement post. Three kinds: a spend badge, a streak flame, and a bonus — where the panel carries the live Bravo coin.',
-    usedOn: ['Social'],
+    usedOn: ['Social', 'Profile'],
     props: [
       { name: 'achievement', type: "{ kind: 'spend' | 'streak', label } | { kind: 'bonus', amount }", required: true, description: 'Picks the tint and the artwork. `bonus` engraves its amount on the coin.' },
     ],
@@ -891,7 +896,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/SaveGlyph.tsx',
     summary:
       'The bookmark in its saved and unsaved states. Extracted so every save control animates identically — MerchantRow’s own 30px button and the 35px CircleIconButton on VenueCard both render this. Saved fills with #202020 over 0.22s and pops the glyph 1 → 1.28 → 1.',
-    usedOn: ['Social', 'Eligible merchants'],
+    usedOn: ['Social', 'Profile', 'Eligible merchants'],
     props: [
       { name: 'saved', type: 'boolean', required: true, description: 'Drives both the fill and the pop. The host owns the state.' },
       { name: 'size', type: 'number', required: false, description: 'Icon size in px. Defaults to 20 — both current hosts use it.' },
@@ -915,7 +920,7 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     file: 'src/demo/components/ScreenNav.tsx',
     summary:
       'The header every pushed screen wears: a borderless 32px back button, 6px gap, and a Boldonse 14px title. Identical on the challenge detail and the merchants list, so it is one component. An optional trailing label sits at the right edge in the same type as the title — the challenge detail uses it for "Invited: 3/3".',
-    usedOn: ['Challenge detail', 'Eligible merchants'],
+    usedOn: ['Challenge detail', 'Eligible merchants', 'Select friends'],
     props: [
       { name: 'title', type: 'string', required: true, description: 'Screen title, in the display face.' },
       { name: 'trailing', type: 'string', required: false, description: 'Right-aligned label, same type as the title. Omitted on screens that have no count to show.' },
@@ -964,6 +969,98 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     ),
     previewBg: 'light',
   },
+  {
+    id: 'search-result-row',
+    name: 'SearchResultRow',
+    figmaNodes: ['19542:163507'],
+    file: 'src/demo/components/SearchResultRow.tsx',
+    summary:
+      'A merchant hit in the search sheet — name on the left, distance on the right. The plainest row in the app: no photo, no control, because the sheet is a list of places to jump to, not to act on.',
+    usedOn: ['Home search'],
+    props: [
+      { name: 'name', type: 'string', required: true, description: 'Merchant name.' },
+      { name: 'distance', type: 'string', required: true, description: 'Pre-formatted, e.g. "15.13km".' },
+    ],
+    tokens: ['--bv-black', '--bv-neutral-400'],
+    icons: [],
+    preview: (
+      <div style={{ width: 340 }}>
+        <SearchResultRow name="AM Cafe" distance="15.13km" />
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
+    id: 'floating-avatar',
+    name: 'FloatingAvatar',
+    figmaNodes: ['19608:9156', '19743:54823', '19682:49684'],
+    file: 'src/demo/components/FloatingAvatar.tsx',
+    summary:
+      'A challenge participant, floating and draggable. Four states: `accepted` (a joined person — tap for an emoji burst), `pending-you` (your own unanswered invite, an Accept pill in place of the name), `pending-other` (someone else\'s, dimmed under an hourglass), and `empty` (an open seat — a + that opens the friend picker). The avatar SIZE encodes spend: w = 40 + 2.07 × share, fitted to Figma\'s four widths within ~1%, so a fifth participant just works.',
+    usedOn: ['Challenge detail'],
+    props: [
+      { name: 'participant', type: 'Participant', required: true, description: 'id, name, avatar, share, x/y, plus isYou / isHost / status.' },
+      { name: 'isLeader', type: 'boolean', required: true, description: 'Wears the crown. The screen picks the top spender, and only once someone has actually spent.' },
+      { name: 'areaW / areaH', type: 'number', required: true, description: 'Play-area size in LOCAL px, measured by the parent — see the Flutter note.' },
+      { name: 'index', type: 'number', required: true, description: 'Staggers the float loop so the bubbles never bob in unison.' },
+      { name: 'onAccept', type: '() => void', required: false, description: 'pending-you only — the Accept pill.' },
+      { name: 'onInvite', type: '() => void', required: false, description: 'empty only — opens the friend picker.' },
+    ],
+    tokens: ['--bv-white', '--bv-black', '--bv-radius-full', '--bv-inset-bubble'],
+    icons: ['Hourglass', 'Plus'],
+    flutterNote:
+      'Everything but the name pill is a ratio of the avatar width (height = w×4/3, share % = w/3, pill pad w×0.192/0.096, crown w×0.321) — the pill alone stays 14px at every size. Drag bounds are NUMERIC, not a ref: handing framer the area element makes it measure with getBoundingClientRect (screen px) while applying the transform in local px, and since the phone is CSS-scaled the two disagree and the bubble snaps to the edge on mousedown. The area size arrives as props because a child layout effect runs before the parent ref attaches. Pending and empty bubbles ignore `share` and take one fixed 60px size — deliberately bigger than the 40px an accepted $0 bubble would compute to, so an unanswered invite still reads as person-sized.',
+    preview: (
+      <div style={{ position: 'relative', width: 340, height: 150 }}>
+        <FloatingAvatar
+          participant={{ id: 'a', name: 'Uuuuzili', avatar: BOBBY.avatar, share: 15.1, x: 8, y: 8 }}
+          isLeader
+          areaW={340}
+          areaH={150}
+          index={0}
+        />
+        <FloatingAvatar
+          participant={{ id: 'b', name: 'You', avatar: previewFaces[0].avatar, share: 0, x: 130, y: 12, status: 'pending-other' }}
+          isLeader={false}
+          areaW={340}
+          areaH={150}
+          index={1}
+        />
+        <FloatingAvatar
+          participant={{ id: 'c', name: '---', avatar: '', share: 0, x: 240, y: 12, status: 'empty' }}
+          isLeader={false}
+          areaW={340}
+          areaH={150}
+          index={2}
+        />
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
+    id: 'orb-sphere',
+    name: 'OrbSphere',
+    figmaNodes: [],
+    file: 'src/demo/components/OrbSphere.tsx',
+    summary:
+      'The bravo AI orb — a live WebGL sphere, not the flat PNG Figma exports. Used small while the assistant thinks and large while it listens. Figma has no node for the motion, so this component IS the spec.',
+    usedOn: ['bravo AI thread', 'Voice mode'],
+    props: [
+      { name: 'size', type: 'number', required: false, description: 'Rendered diameter in px. 150 in voice mode; the thinking indicator takes the default.' },
+      { name: 'speed', type: 'number', required: false, description: 'Animation rate multiplier — voice mode runs at 4.' },
+    ],
+    tokens: [],
+    icons: [],
+    flutterNote:
+      'A real-time shader, so it cannot be an asset. There is a 1:1 Dart twin to keep in sync — mirror any tuning change there rather than eyeballing it. Because Figma exports the orb as a flat 120px image ("image 2"), the design file will always look wrong next to the build; trust this component, not the export.',
+    preview: (
+      <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+        <OrbSphere size={48} />
+        <OrbSphere size={96} speed={4} />
+      </div>
+    ),
+    previewBg: 'light',
+  },
 ]
 
 // ---- Token reference --------------------------------------------------
@@ -1005,6 +1102,9 @@ export const COLOR_GROUPS: { title: string; source: string; tokens: string[] }[]
     title: 'Semantic',
     source: 'semantic/*',
     tokens: [
+      // Figma's standalone `success` — money coming IN. Not success-400 (the
+      // button fill), which is several shades darker and reads as a state.
+      '--bv-success',
       '--bv-success-500', '--bv-success-300', '--bv-success-100',
       '--bv-warning-500', '--bv-warning-300', '--bv-warning-100',
       '--bv-info-500', '--bv-info-300', '--bv-info-100',

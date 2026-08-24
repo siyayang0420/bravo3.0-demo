@@ -45,7 +45,34 @@ This file is the running index. Keep it updated as screens land.
 | `19453:11130` | **BottomNav** | `components/BottomNav.tsx` | map · users-round · scan-qr-code · circle-star · avatar |
 | `19564:169322` | *inline* | `screens/HomeScreen.tsx` (`.bv-dock`) | Dock container — see below |
 | `19548:163729` | *inline* | `BravoApp.tsx` | Apple status bar — chrome, not product UI |
-| `19237:3738` | *inline* | `screens/HomeScreen.tsx` | Map background image, cropped per Figma |
+| `19237:3738` | **MapView** | `components/MapView.tsx` | **No longer the Figma crop** — a real, pannable/zoomable map (see below) |
+
+### MapView — a real map, not the exported image
+
+Figma node `19237:3738` is a flat screenshot of a map. The build renders an
+actual one: **MapLibre GL** (the open-source fork of Mapbox GL) over CARTO's
+*Positron* raster tiles — the clean, low-contrast basemap the mock was traced
+from. No account, no API key, no usage cap, which is what makes it safe to
+leave running in a review build.
+
+Three things worth knowing before touching it:
+
+- **Raster, not vector, on purpose.** The first attempt used OpenFreeMap's
+  vector style; its vector-tile worker stalls under Vite and the canvas stays
+  blank. Raster tiles have no worker, no glyphs and no sprites to hang on.
+  Swapping to Mapbox proper later is a one-line change to `STYLE` (plus a
+  token).
+- **Pan and zoom only.** `dragRotate`, `pitchWithRotate` and `touchPitch` are
+  all off, so the map can never tilt out of the flat street view the design
+  assumes.
+- **The pins are data.** `places[]` drives them; each is a white pill with a
+  round photo, name and category line. The blue "you are here" dot is drawn at
+  `center`. It is *not* a component — it is markup built inside MapView,
+  because a Marker has to be a detached DOM node MapLibre owns.
+
+Flutter: this is the one place the React build is not a straight port. Use
+`maplibre_gl` (or `mapbox_gl` with a token) and rebuild the markers natively —
+do not try to mirror the DOM-node approach.
 
 ### Bottom nav — cube-face hide
 
