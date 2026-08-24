@@ -66,6 +66,11 @@
   --bv-green-neo: #00ed7f;
 
   /* --- semantic --- */
+  /* Figma carries a standalone `success` alongside the numbered ramp below —
+     iOS system green, used for money coming IN (a credit in the Combined
+     Spendable activity). Deliberately not success-400: that is the button
+     fill, several shades darker, and reads as a state rather than an amount. */
+  --bv-success: #34c759;
   --bv-success-500: #1e4d3a;
   --bv-success-400: #2f7657;
   --bv-success-300: #53b483;
@@ -871,6 +876,9 @@ button.bv-balance-pill:active {
   z-index: 9;
 }
 
+/* Two tabs over two pots of money — Figma 19854:10237 / 19854:10385.
+   Overflow is hidden so a pane sliding in or out is clipped by the card's
+   own radius instead of escaping it. */
 .bv-spendable-sheet {
   display: flex;
   flex-direction: column;
@@ -882,42 +890,246 @@ button.bv-balance-pill:active {
      the radius scale stops at 24 (radius-3xl), so this is a literal. */
   border-radius: 36px;
   background: var(--bv-white);
+  overflow: hidden;
 }
 
-.bv-sheet-header {
+/* ---- tabs ---- */
+.bv-spendable-tabs {
   width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.bv-spendable-tab {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--bv-space-1-5);
-  text-align: center;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
 }
 
-.bv-sheet-title {
+.bv-spendable-tab-label {
   font-size: 14px;
   font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-spendable-tab.active .bv-spendable-tab-label {
+  font-weight: 700;
+  color: var(--bv-black);
+}
+
+.bv-spendable-tab-rule {
+  width: 60px;
+  height: 2px;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-black);
+}
+
+/* ---- the swapping pane ---- */
+.bv-spendable-pane {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* the carousel drags horizontally; let vertical gestures through */
+  touch-action: pan-y;
+}
+
+/* ---- hero ---- */
+.bv-spendable-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+}
+
+.bv-spendable-hero-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bv-black);
+}
+
+.bv-spendable-hero-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-spendable-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-spendable-hero-title {
+  font-size: 14px;
+  font-weight: 700;
   line-height: 1.2;
   color: var(--bv-black);
 }
 
-.bv-sheet-total {
+.bv-spendable-hero-amount {
   font-size: 24px;
   font-weight: 700;
   line-height: 1.2;
   color: var(--bv-black);
 }
 
-.bv-sheet-rows {
+.bv-spendable-hero-caption {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-spendable-link {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  text-decoration: underline;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---- recent activity ---- */
+.bv-spendable-activity {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--bv-space-4);
+  gap: 14px;
 }
 
-.bv-sheet-divider {
+.bv-spendable-activity-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-spendable-activity-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-spendable-viewall {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  cursor: pointer;
+}
+
+.bv-spendable-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-3);
+}
+
+/* Figma pins this column to 89px so the long merchant names wrap rather than
+   pushing the amount around. */
+.bv-spendable-row-copy {
+  width: 89px;
+  flex: 1 1 89px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bv-spendable-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-spendable-row-when {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-400);
+}
+
+.bv-spendable-row-amount {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-spendable-row-amount.credit {
+  color: var(--bv-success);
+}
+
+/* ---- total footer ---- */
+.bv-spendable-total {
   width: 100%;
-  height: 1px;
-  background: var(--bv-border-subtle);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+  padding: var(--bv-space-3);
+  border-radius: var(--bv-radius-2xl);
+  background: var(--bv-neutral-100);
+}
+
+.bv-spendable-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-spendable-total-label {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-spendable-total-aside,
+.bv-spendable-total-other {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-spendable-total-other {
+  color: var(--bv-black);
+}
+
+.bv-spendable-total-value {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
 }
 
 /* Component: Balance Row (Figma 19564:172059 / 19564:172067) */

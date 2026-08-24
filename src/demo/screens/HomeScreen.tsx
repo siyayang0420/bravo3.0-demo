@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ScanLine, Bell } from 'lucide-react'
 import BalancePill from '../components/BalancePill'
-import SpendableSheet, { formatMoney } from '../components/SpendableSheet'
+import SpendableSheet, { formatMoney, type SpendableTab } from '../components/SpendableSheet'
 import CircleIconButton from '../components/CircleIconButton'
 import FilterChip from '../components/FilterChip'
 import SuggestionChip from '../components/SuggestionChip'
@@ -120,8 +120,17 @@ export default function HomeScreen({
   avatar?: string
 }) {
   const [spendableOpen, setSpendableOpen] = useState(false)
+  const [spendableTab, setSpendableTab] = useState<SpendableTab>('balance')
   const [promoOpen, setPromoOpen] = useState(false)
   const { searchOpen, ask, promptProps, overlays } = useSearchLauncher('map')
+
+  // Each pill opens the sheet on its own tab. Tapping the pill you are
+  // already looking at closes it; tapping the other one switches across
+  // rather than shutting the sheet in your face.
+  const openSpendable = (tab: SpendableTab) => {
+    setSpendableOpen((open) => !(open && spendableTab === tab))
+    setSpendableTab(tab)
+  }
 
   return (
     <>
@@ -136,13 +145,10 @@ export default function HomeScreen({
         transition={{ duration: 0.35, ease: 'easeOut' }}
       >
         <div className="bv-topbar-group">
-          <BalancePill onClick={() => setSpendableOpen((open) => !open)}>
+          <BalancePill onClick={() => openSpendable('balance')}>
             {formatMoney(CASH_BALANCE)}
           </BalancePill>
-          <BalancePill
-            onClick={() => setSpendableOpen((open) => !open)}
-            leading={<Coin />}
-          >
+          <BalancePill onClick={() => openSpendable('bonus')} leading={<Coin />}>
             {formatMoney(COIN_BALANCE)}
           </BalancePill>
         </div>
@@ -215,6 +221,8 @@ export default function HomeScreen({
                 balance={CASH_BALANCE}
                 bonus={COIN_BALANCE}
                 topUpBonus={TOP_UP_BONUS}
+                tab={spendableTab}
+                onTabChange={setSpendableTab}
               />
             </motion.div>
           </>
