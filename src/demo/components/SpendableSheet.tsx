@@ -11,14 +11,16 @@
 // always travels right), so no previous-tab bookkeeping is needed.
 import { useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronRight, Wallet } from 'lucide-react'
+// ChevronRight is only used by the commented-out Recent activity block.
+import { Wallet } from 'lucide-react'
 import Coin from './Coin'
 import Button, { ButtonAccent } from './Button'
-import {
-  BALANCE_ACTIVITY,
-  BONUS_ACTIVITY,
-  type SpendableActivity,
-} from '../data/spendableDemo'
+// The two ledgers feed the commented-out Recent activity block.
+// import {
+//   BALANCE_ACTIVITY,
+//   BONUS_ACTIVITY,
+// } from '../data/spendableDemo'
+import { type SpendableActivity } from '../data/spendableDemo'
 
 export type SpendableTab = 'balance' | 'bonus'
 
@@ -60,7 +62,7 @@ export default function SpendableSheet({
   tab = 'balance',
   onTabChange,
   onTopUp,
-  onViewAll,
+  // onViewAll — only used by the commented-out Recent activity block.
   onHowToEarn,
 }: {
   balance: number
@@ -161,6 +163,13 @@ export default function SpendableSheet({
             </>
           )}
 
+          {/* ---- Recent activity — commented out ----
+              Both tabs' lists are off for now. Everything they need is still
+              here and still exported (ActivityRow below, the two ledgers in
+              data/spendableDemo.ts, the .bv-spendable-activity/-row CSS), so
+              restoring this is uncommenting these lines plus the ChevronRight
+              import, the two ledger imports, and the `onViewAll` prop.
+
           <div className="bv-spendable-activity">
             <div className="bv-spendable-activity-head">
               <span className="bv-spendable-activity-title">Recent activity</span>
@@ -173,6 +182,7 @@ export default function SpendableSheet({
               <ActivityRow key={item.id} item={item} />
             ))}
           </div>
+          */}
 
           <div className="bv-spendable-total">
             <div className="bv-spendable-total-row">
