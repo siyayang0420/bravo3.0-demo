@@ -113,8 +113,8 @@ export default function ProfileScreen({
               <BalancePill leading={<Coin />}>{formatMoney(COIN_BALANCE)}</BalancePill>
             </div>
             <div className="bv-topbar-group">
-              <CircleIconButton icon={<Bell size={20} strokeWidth={1.9} />} label="Notifications" />
               <CircleIconButton icon={<Settings size={20} strokeWidth={1.9} />} label="Settings" />
+              <CircleIconButton icon={<Bell size={20} strokeWidth={1.9} />} label="Notifications" />
             </div>
           </div>
         </div>
