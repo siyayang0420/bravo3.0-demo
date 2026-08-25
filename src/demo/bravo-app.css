@@ -655,7 +655,11 @@ button.bv-balance-pill:active {
   display: flex;
   flex-direction: column;
   gap: var(--bv-space-6);
-  padding: calc(var(--bv-statusbar-h) + 19px) 0 190px;
+  /* Clears the pinned header's CONTENT (statusbar + 94), plus the 4px that
+     used to separate the title row from the facts below it — so the page
+     opens looking exactly as it did when the header still scrolled. The
+     header's fade tail hangs past this on purpose: it is meant to overlap. */
+  padding: calc(var(--bv-statusbar-h) + 98px) 0 190px;
 }
 
 .bv-vd-scroll::-webkit-scrollbar {
@@ -670,7 +674,88 @@ button.bv-balance-pill:active {
   flex-shrink: 0;
 }
 
-/* ---- header ---- */
+/* ---- pinned header — Figma 19890:18100 ----
+   Lives outside the scroller and covers the status bar band, so the back
+   button and the venue's name are always reachable and nothing scrolls into
+   the clock. Same fade recipe as the social feed's header: the content is
+   19 + 32 (back) + 8 (gaps) + 35 (title row) = 94px under the status bar,
+   and Figma's white stop at 75.492% is what fixes the frame height — the
+   fade has to BEGIN where the title row ends, so 94 / 0.75492 sets it. */
+.bv-vd-topbar {
+  /* 0 at rest, 1 once the two rows have merged. VenueDetailScreen writes it
+     on every scroll frame; everything below reads it, so the collapse is
+     scroll-linked rather than a transition that can fall out of step. */
+  --vd-collapse: 0;
+  /* How far the identity row travels: back button (32) + the 8px under it. */
+  --vd-lift: 40px;
+  /* The two axes are STAGGERED, and the stagger is load-bearing: the logo has
+     to be clear of the arrow (past 32px) before it starts rising, or it clips
+     the arrow's corner on the way past. Sliding right finishes by the halfway
+     point; rising only starts at 0.3, by which time there is room. The two
+     windows overlap enough that it still reads as one curved move. */
+  --vd-slide-t: clamp(0, var(--vd-collapse) / 0.5, 1);
+  --vd-lift-t: clamp(0, (var(--vd-collapse) - 0.3) / 0.7, 1);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* over the scroller, under the status bar (30) */
+  z-index: 3;
+  /* Tracks the LIFT, not the raw scroll: the box has to end where the title
+     row ends, whatever point of the move that row is at. */
+  height: calc(
+    (var(--bv-statusbar-h) + 94px - var(--vd-lift-t) * var(--vd-lift)) / 0.75492
+  );
+  padding: calc(var(--bv-statusbar-h) + 19px) var(--bv-space-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  background: linear-gradient(
+    180deg,
+    var(--bv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* The fade tail is see-through, so it must not swallow taps meant for the
+     photos travelling underneath it. */
+  pointer-events: none;
+}
+
+/* Only the controls take input, never the rows holding them: once collapsed
+   the identity row sits ON TOP of the back button, and as a plain box it
+   would eat the arrow's taps. */
+.bv-vd-topbar button {
+  pointer-events: auto;
+}
+
+.bv-vd-topbar > * {
+  /* The box shrinks as it collapses; the rows must not be squeezed with it —
+     they are moved by transform instead. */
+  flex-shrink: 0;
+}
+
+/* The arrow is the one thing that holds still — it is the target you are
+   reaching for. It only drops the 1.5px that centres it in the 35px row once
+   the identity has come up alongside it. */
+.bv-vd-topbar .bv-screen-back {
+  transform: translateY(calc(var(--vd-lift-t) * 1.5px));
+}
+
+/* Right to clear the arrow, then up alongside it — the logo lands 6px off the
+   arrow, the same 6px it keeps from the name on its other side. */
+.bv-vd-topbar .bv-vd-title-row {
+  transform: translateY(calc(var(--vd-lift-t) * var(--vd-lift) * -1));
+  will-change: transform;
+}
+
+.bv-vd-topbar .bv-vd-identity {
+  /* 32 (arrow) + 6 (the identity's own gap). A MARGIN, not padding: padding
+     would keep the arrow inside the identity's own box, where it is covered
+     by it — the margin leaves that strip out of the box entirely. */
+  margin-left: calc(var(--vd-slide-t) * 38px);
+}
+
+/* ---- header facts (what is left in the scroll) ---- */
 .bv-vd-head {
   display: flex;
   flex-direction: column;
@@ -682,14 +767,20 @@ button.bv-balance-pill:active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--bv-space-2);
+  /* A floor, not a spacer: a long name runs out of room 16px short of the
+     save/share pair rather than crowding it. */
+  gap: var(--bv-space-4);
   margin-top: var(--bv-space-1);
 }
 
+/* Takes the leftover width and is allowed to shrink below its content, which
+   is what lets the name inside it ellipsize instead of shoving the buttons
+   off the right edge. */
 .bv-vd-identity {
   display: flex;
   align-items: center;
   gap: var(--bv-space-1-5);
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -710,6 +801,9 @@ button.bv-balance-pill:active {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* A flex item refuses to shrink past its text by default, so without this
+     the ellipsis above never gets the chance to fire. */
+  min-width: 0;
 }
 
 .bv-vd-actions {

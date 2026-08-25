@@ -40,6 +40,10 @@ export default function VenueDetailScreen({
   const [photoIndex, setPhotoIndex] = useState<Record<string, number>>({})
   const [viewing, setViewing] = useState<string | null>(null)
   const viewingPost = venue.posts.find((p) => p.id === viewing)
+  // Have you saved this place. The pinned header's bookmark is a toggle, and
+  // SaveGlyph is what draws it — the same glyph the badges on the "Saved by"
+  // faces use, so a filled bookmark means one thing everywhere.
+  const [saved, setSaved] = useState(false)
   const setIndexFor = (id: string) => (next: number) =>
     setPhotoIndex((m) => ({ ...m, [id]: next }))
 
@@ -95,27 +99,11 @@ export default function VenueDetailScreen({
   return (
     <div className="bv-vd-screen">
       <div className="bv-vd-scroll" ref={scrollRef}>
-        {/* ---- header ---- */}
+        {/* ---- header facts ----
+             The back button and the identity row are NOT here: they live in
+             the pinned bar below, which rides over this scroller. What is
+             left is the part that scrolls away. */}
         <header className="bv-vd-head">
-          <button type="button" className="bv-screen-back" aria-label="Back" onClick={onBack}>
-            <ArrowLeft size={20} strokeWidth={1.9} />
-          </button>
-
-          <div className="bv-vd-title-row">
-            <div className="bv-vd-identity">
-              <img className="bv-vd-logo" src={venue.logo} alt="" />
-              <span className="bv-vd-title">{venue.title}</span>
-            </div>
-            <div className="bv-vd-actions">
-              <button type="button" className="bv-vd-round" aria-label="Save">
-                <Bookmark size={20} strokeWidth={1.9} />
-              </button>
-              <button type="button" className="bv-vd-round" aria-label="Share">
-                <Share2 size={20} strokeWidth={1.9} />
-              </button>
-            </div>
-          </div>
-
           <p className="bv-vd-meta">{venue.meta}</p>
           <p className="bv-vd-meta">{venue.address}</p>
           <p className="bv-vd-desc">{venue.description}</p>
@@ -234,6 +222,38 @@ export default function VenueDetailScreen({
           </div>
         </section>
       </div>
+
+      {/* ---- pinned header (Figma 19890:18100) ----
+           Outside the scroller, so the back button and the venue's name stay
+           put while everything else travels under them. Its white-to-clear
+           fade is what keeps the collision readable: photos and posts
+           dissolve into the bar rather than butting up against it. */}
+      <header className="bv-vd-topbar" ref={topbarRef}>
+        <button type="button" className="bv-screen-back" aria-label="Back" onClick={onBack}>
+          <ArrowLeft size={20} strokeWidth={1.9} />
+        </button>
+
+        <div className="bv-vd-title-row">
+          <div className="bv-vd-identity">
+            <img className="bv-vd-logo" src={venue.logo} alt="" />
+            <span className="bv-vd-title">{venue.title}</span>
+          </div>
+          <div className="bv-vd-actions">
+            <button
+              type="button"
+              className="bv-vd-round"
+              aria-label={saved ? 'Saved' : 'Save'}
+              aria-pressed={saved}
+              onClick={() => setSaved((s) => !s)}
+            >
+              <SaveGlyph saved={saved} />
+            </button>
+            <button type="button" className="bv-vd-round" aria-label="Share">
+              <Share2 size={20} strokeWidth={1.9} />
+            </button>
+          </div>
+        </div>
+      </header>
 
       {/* ---- dock: assistant + the things you can do here ---- */}
       <div className="bv-vd-dock">
