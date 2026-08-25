@@ -133,15 +133,21 @@ export default function LikeButton({
         </motion.span>
       </span>
 
-      {/* Count appears with the like, gray regardless of the heart's colour. */}
+      {/* Count appears with the like, gray regardless of the heart's colour.
+          Keyed "count", NOT on the number: keying it on the value made every
+          tap mount the outgoing and incoming digits side by side for the
+          length of the crossfade. This row is pinned to the right edge of the
+          post footer, so the extra column shoved the whole control ~13px left
+          and snapped it back when the exit finished. One element that
+          re-renders its text stays one column wide, and nothing moves. */}
       <AnimatePresence initial={false}>
         {count > 0 && (
           <motion.span
-            key={count}
+            key="count"
             className="bv-like-count"
-            initial={reduce ? false : { opacity: 0, x: -4 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -4 }}
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
           >
             {count}

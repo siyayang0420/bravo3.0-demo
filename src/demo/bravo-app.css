@@ -4315,6 +4315,9 @@ button.bv-balance-pill:active {
   font-weight: 500;
   line-height: 20px;
   color: var(--bv-neutral-500);
+  /* Every digit the same width, so ticking 11 → 12 cannot resize the column
+     and nudge the heart sideways. */
+  font-variant-numeric: tabular-nums;
 }
 
 /* Zero-size origin dead-centre of the heart. */
