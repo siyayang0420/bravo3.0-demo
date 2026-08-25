@@ -19,6 +19,7 @@ import Coin from '../components/Coin'
 import MapView, { type MapPlace } from '../components/MapView'
 import MapVenueCard from '../components/MapVenueCard'
 import MapFriendComment from '../components/MapFriendComment'
+import { useDemoUser } from '../components/DemoIdentity'
 import VenueDetailScreen from './VenueDetailScreen'
 import { ELLIPSIS_FRIEND_COMMENT, FRIEND_POST_ID } from '../data/venueDetailDemo'
 import { pickPeople } from '../data/people'
@@ -30,9 +31,6 @@ import thumbRestaurants from '../assets/thumb-restaurants.png'
 import offerVeras from '../assets/offer-veras.png'
 import offerDawn from '../assets/offer-dawn.png'
 
-// EDIT ME — demo values shown on Home
-const CASH_BALANCE = 2916.12
-const COIN_BALANCE = 140.88
 // Figma 19564:172074 — the bonus the top-up CTA advertises
 const TOP_UP_BONUS = '$80'
 // Figma annotation (node 19453:11110): other than Cuisine and Price
@@ -160,6 +158,10 @@ export default function HomeScreen({
   const [spendableTab, setSpendableTab] = useState<SpendableTab>('balance')
   const [promoOpen, setPromoOpen] = useState(false)
   const { searchOpen, ask, promptProps, overlays } = useSearchLauncher('map')
+  // Your balances, and whether you have any history at all. The map itself is
+  // the world's, not yours — the pins and their savers stay — but what the
+  // map says about YOU empties out for a brand-new account.
+  const { cash, coin, isNew } = useDemoUser()
 
   // Tapping a pin opens its venue card. The friend's note follows a beat
   // later — it is a second thought, not part of the card — so it lands on
@@ -212,10 +214,10 @@ export default function HomeScreen({
       >
         <div className="bv-topbar-group">
           <BalancePill onClick={() => openSpendable('balance')}>
-            {formatMoney(CASH_BALANCE)}
+            {formatMoney(cash)}
           </BalancePill>
           <BalancePill onClick={() => openSpendable('bonus')} leading={<Coin />}>
-            {formatMoney(COIN_BALANCE)}
+            {formatMoney(coin)}
           </BalancePill>
         </div>
         <div className="bv-topbar-group">
@@ -275,7 +277,10 @@ export default function HomeScreen({
             transition={{ type: 'spring', stiffness: 300, damping: 32, mass: 0.8 }}
           >
             <AnimatePresence>
-              {commentShown && place.venue.friendComment && (
+              {/* A note from someone you follow — so there is none when you
+                  follow nobody. The card below it is unaffected: the venue
+                  exists whether or not you have friends. */}
+              {commentShown && place.venue.friendComment && !isNew && (
                 <motion.div
                   initial={{ opacity: 0, y: 18, scale: 0.94 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -339,8 +344,8 @@ export default function HomeScreen({
               transition={{ type: 'spring', stiffness: 420, damping: 32 }}
             >
               <SpendableSheet
-                balance={CASH_BALANCE}
-                bonus={COIN_BALANCE}
+                balance={cash}
+                bonus={coin}
                 topUpBonus={TOP_UP_BONUS}
                 tab={spendableTab}
                 onTabChange={setSpendableTab}

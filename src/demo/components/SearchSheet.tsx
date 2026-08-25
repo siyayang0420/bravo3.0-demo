@@ -19,6 +19,7 @@ import SearchTabs, { type SearchTabId } from './SearchTabs'
 import SearchResultRow from './SearchResultRow'
 import PersonRow, { type FollowState } from './PersonRow'
 import LeaderboardRail from './LeaderboardRail'
+import { useDemoUser } from './DemoIdentity'
 import { SEARCH_MERCHANTS, SEARCH_PEOPLE, type SearchPerson } from '../data/searchDemo'
 import useStandalone from '../../hooks/useStandalone'
 
@@ -28,6 +29,12 @@ const EASE_OUT = [0.23, 1, 0.32, 1] as const
 export const SEARCH_INPUT_ID = 'bv-search-sheet-input'
 
 const AUTOCORRECT = ['“Happy”', 'happy', 'happily']
+
+/** The cast, with the follow states that belong to the signed-in account. */
+function seedPeople(isNew: boolean | undefined): SearchPerson[] {
+  if (!isNew) return SEARCH_PEOPLE
+  return SEARCH_PEOPLE.map((p) => ({ ...p, follow: 'follow' as FollowState }))
+}
 
 // Cycle order when you tap a follow control.
 const NEXT_FOLLOW: Record<FollowState, FollowState> = {
@@ -51,9 +58,21 @@ export default function SearchSheet({
   /** Tapping the voice-mode (audio-lines) button — opens the listening orb. */
   onVoiceMode?: () => void
 }) {
+  const { isNew } = useDemoUser()
   const [query, setQuery] = useState('')
   const [tab, setTab] = useState<SearchTabId>('all')
-  const [people, setPeople] = useState<SearchPerson[]>(SEARCH_PEOPLE)
+  // Restaurants are the world's and stay put — a new account can search the
+  // whole map on day one. The FOLLOW STATES are yours, though, and "Following"
+  // or "Follow back" would both be claims about a relationship you have not
+  // had time to form. Everyone starts as someone you could follow.
+  const [people, setPeople] = useState<SearchPerson[]>(() => seedPeople(isNew))
+  // Re-seed when the reviewer switches identity in the tweaker. The sheet is
+  // not remounted by that switch, so without this it would keep showing the
+  // previous person's relationships — and any follows toggled by hand are
+  // meant to reset with the identity anyway.
+  useEffect(() => {
+    setPeople(seedPeople(isNew))
+  }, [isNew])
   const reduce = useReducedMotion()
   const standalone = useStandalone()
 

@@ -7,7 +7,7 @@
 // stamps a person onto that template; ME_PROFILE is the signed-in user.
 import { type Post } from '../components/PostCard'
 import { type AchievementLevel } from '../components/AchievementLabel'
-import { BOBBY, HAPPY, pickPeople } from './people'
+import { APPLE, BOBBY, HAPPY, pickPeople } from './people'
 import postPhoto from '../assets/social/post-photo.jpg'
 import venueThumb from '../assets/social/venue-amcafe.jpg'
 
@@ -15,6 +15,14 @@ import venueThumb from '../assets/social/venue-amcafe.jpg'
 export type ProfilePerson = { name: string; avatar: string }
 
 export type ProfileData = ProfilePerson & {
+  /**
+   * Signed up moments ago and has done nothing yet — Figma 19895:20914.
+   * Carried on the profile rather than checked per screen so every surface
+   * asks the same question, and so the empty states can never disagree about
+   * who is new. Suppresses the streak and level labels (you have neither),
+   * the dining-challenge card, and the Activity / Taste Identity content.
+   */
+  isNew?: boolean
   streak: string
   level: AchievementLevel
   joined: string
@@ -182,21 +190,76 @@ export function publicProfile(person: ProfilePerson): ProfileData {
   }
 }
 
-// The demo can be "signed in" as either of two people, so a reviewer can play
-// both sides of a flow — Bobby sends a challenge, Happy receives it. The
-// tweaker on the review site switches between them; more roles can be added
-// here as flows need them.
-export type DemoUserId = 'bobby' | 'happy'
+// A profile with nothing in it — the state Apple is in. Every number is zero
+// and every list is empty, which is what lets the screens stay dumb: they
+// render what they are given, and an empty list is what puts each surface
+// into its empty state. No screen asks "is this Apple".
+const EMPTY_TASTE_IDENTITY: TasteIdentity = {
+  periodLabel: 'Past 30 Days',
+  percentile: 0,
+  restaurants: 0,
+  cuisines: 0,
+  posts: 0,
+  friendPercentile: 0,
+  archetype: '',
+  summary: '',
+  radar: TASTE_IDENTITY.radar.map((a) => ({ ...a, value: 0 })),
+  dna: [],
+}
+
+/** Figma 19895:20914 — the brand-new account, before anything has happened. */
+export function newProfile(person: ProfilePerson): ProfileData {
+  return {
+    ...person,
+    isNew: true,
+    // Never rendered for a new account (isNew hides both labels), but the
+    // fields are required — these are the values you start at, not a fiction.
+    streak: '0X',
+    level: 'lv1',
+    joined: 'Joined since April 2024',
+    followers: 0,
+    following: 0,
+    friends: 0,
+    visited: 0,
+    saved: 0,
+    challengePartners: [],
+    challengeCardMode: 'start',
+    posts: [],
+    tasteIdentity: EMPTY_TASTE_IDENTITY,
+  }
+}
+
+// The demo can be "signed in" as any of three people, so a reviewer can play
+// both sides of a flow — Bobby sends a challenge, Happy receives it — and see
+// what the product looks like before it has anything to show, which is what
+// Apple is for. The tweaker on the review site switches between them; more
+// roles can be added here as flows need them.
+export type DemoUserId = 'bobby' | 'happy' | 'apple'
 
 export type DemoUser = ProfilePerson & {
   id: DemoUserId
-  /** Their part in the challenge flow — shown as the tweaker hint. */
+  /** Their part in the demo — shown as the tweaker hint. */
   role: string
   /** Which challenge card THEY see on their own profile. */
   challengeCardMode: 'start' | 'invited'
   /** Only set when challengeCardMode is 'invited'. */
   challengeInviter?: ProfilePerson
+  /**
+   * Brand new: no balance, no history, no friends. Read through
+   * useDemoUser() by the surfaces that hold no profile of their own (the
+   * map, the community feed, the search sheet), so all of them empty out
+   * together the moment you switch identity.
+   */
+  isNew?: boolean
+  /** The two top-bar balances. A new account has neither. */
+  cash: number
+  coin: number
 }
+
+// What an established account is carrying. Both existing users share it —
+// the number was previously duplicated as a constant in HomeScreen and
+// ProfileScreen, which left no way for a user to have a different one.
+const FUNDED = { cash: 2916.12, coin: 140.88 }
 
 export const DEMO_USERS: DemoUser[] = [
   {
@@ -205,6 +268,7 @@ export const DEMO_USERS: DemoUser[] = [
     avatar: BOBBY.avatar,
     role: 'Challenge inviter.',
     challengeCardMode: 'start',
+    ...FUNDED,
   },
   {
     id: 'happy',
@@ -213,11 +277,23 @@ export const DEMO_USERS: DemoUser[] = [
     role: 'Challenge receiver.',
     challengeCardMode: 'invited',
     challengeInviter: { name: BOBBY.name, avatar: BOBBY.avatar },
+    ...FUNDED,
+  },
+  {
+    id: 'apple',
+    name: APPLE.name,
+    avatar: APPLE.avatar,
+    role: 'Brand new — every page in its empty state.',
+    challengeCardMode: 'start',
+    isNew: true,
+    cash: 0,
+    coin: 0,
   },
 ]
 
 /** The signed-in user's own profile, for whichever demo user is active. */
 export function meProfile(user: DemoUser): ProfileData {
+  if (user.isNew) return newProfile(user)
   return {
     ...publicProfile(user),
     challengeCardMode: user.challengeCardMode,

@@ -5,6 +5,7 @@ import HomeScreen from './screens/HomeScreen'
 import SocialScreen from './screens/SocialScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import ProfileProvider from './components/ProfileLauncher'
+import DemoUserProvider from './components/DemoIdentity'
 import { DEMO_USERS, meProfile, type DemoUser } from './data/profileDemo'
 import type { NavId } from './components/BottomNav'
 import useStandalone from '../hooks/useStandalone'
@@ -50,63 +51,68 @@ export default function BravoApp({
   }, [])
 
   return (
-    <div className={`bravo-app${standalone ? ' standalone' : ''}`}>
-      <div className="bv-statusbar" aria-hidden={standalone}>
-        <span>9:41</span>
-        <span className="bv-statusbar-levels">
-          <Signal size={16} strokeWidth={2.4} />
-          <Wifi size={16} strokeWidth={2.4} />
-          <BatteryFull size={18} strokeWidth={1.8} />
-        </span>
-      </div>
+    // Who you are signed in as, for the surfaces that hold no profile of
+    // their own — the map, the feed, the search sheet — so they can empty
+    // out for a brand-new account without a `user` prop reaching them.
+    <DemoUserProvider user={user}>
+      <div className={`bravo-app${standalone ? ' standalone' : ''}`}>
+        <div className="bv-statusbar" aria-hidden={standalone}>
+          <span>9:41</span>
+          <span className="bv-statusbar-levels">
+            <Signal size={16} strokeWidth={2.4} />
+            <Wifi size={16} strokeWidth={2.4} />
+            <BatteryFull size={18} strokeWidth={1.8} />
+          </span>
+        </div>
 
-      {/* Any person tapped inside a screen opens their public profile over
-          the top — see ProfileProvider. */}
-      <ProfileProvider>
-        {tab === 'profile' ? (
-          // The nav avatar is your own profile — a full tab with the app's
-          // top bar and bottom nav.
-          <ProfileScreen
-            profile={me}
-            mode="me"
-            active={tab}
-            onNavigate={setTab}
-            onBack={() => setTab('map')}
-          />
-        ) : tab === 'friends' ? (
-          <SocialScreen active={tab} onNavigate={setTab} intro={intro} avatar={user.avatar} />
-        ) : (
-          <HomeScreen
-            active={tab}
-            onNavigate={setTab}
-            hasPromotion={hasPromotion}
-            intro={intro}
-            avatar={user.avatar}
-          />
-        )}
-
-        {/* Tabs without designs yet show a placeholder over the map.
-            Will be replaced as Figma screens land. */}
-        <AnimatePresence>
-          {!BUILT_TABS.includes(tab) && (
-            <motion.div
-              className="bv-coming-soon"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              onClick={() => setTab('map')}
-            >
-              <h3>{TAB_LABELS[tab]}</h3>
-              <p>
-                Design in progress — tap anywhere
-                <br />
-                to return to the map.
-              </p>
-            </motion.div>
+        {/* Any person tapped inside a screen opens their public profile over
+            the top — see ProfileProvider. */}
+        <ProfileProvider>
+          {tab === 'profile' ? (
+            // The nav avatar is your own profile — a full tab with the app's
+            // top bar and bottom nav.
+            <ProfileScreen
+              profile={me}
+              mode="me"
+              active={tab}
+              onNavigate={setTab}
+              onBack={() => setTab('map')}
+            />
+          ) : tab === 'friends' ? (
+            <SocialScreen active={tab} onNavigate={setTab} intro={intro} avatar={user.avatar} />
+          ) : (
+            <HomeScreen
+              active={tab}
+              onNavigate={setTab}
+              hasPromotion={hasPromotion}
+              intro={intro}
+              avatar={user.avatar}
+            />
           )}
-        </AnimatePresence>
-      </ProfileProvider>
-    </div>
+
+          {/* Tabs without designs yet show a placeholder over the map.
+              Will be replaced as Figma screens land. */}
+          <AnimatePresence>
+            {!BUILT_TABS.includes(tab) && (
+              <motion.div
+                className="bv-coming-soon"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                onClick={() => setTab('map')}
+              >
+                <h3>{TAB_LABELS[tab]}</h3>
+                <p>
+                  Design in progress — tap anywhere
+                  <br />
+                  to return to the map.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </ProfileProvider>
+      </div>
+    </DemoUserProvider>
   )
 }

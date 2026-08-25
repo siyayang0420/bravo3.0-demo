@@ -24,12 +24,9 @@ import ProfileChallengeCard from '../components/ProfileChallengeCard'
 import TasteIdentityPanel from '../components/TasteIdentityPanel'
 import PostCard from '../components/PostCard'
 import ChallengeScreen from './ChallengeScreen'
+import { useDemoUser } from '../components/DemoIdentity'
 import { RECEIVER_VIEW, SENDER_VIEW } from '../data/pendingChallengeDemo'
 import { type ProfileData } from '../data/profileDemo'
-
-// Your own balances, same as Home's top bar.
-const CASH_BALANCE = 2916.12
-const COIN_BALANCE = 140.88
 
 type ProfileTab = 'activity' | 'taste' | 'collectives'
 
@@ -78,6 +75,13 @@ export default function ProfileScreen({
   // overlays (used only when the dock is shown).
   const { searchOpen, promptProps, overlays } = useSearchLauncher('me')
   const isMe = mode === 'me'
+  // The top bar shows YOUR balances, not the balances of whoever's profile
+  // you are looking at — so they come from the signed-in identity, and a new
+  // account reads $0.00 twice.
+  const { cash, coin } = useDemoUser()
+  // A brand-new account, on any of its own surfaces: no streak, no level, no
+  // dining challenge, and both tab panels fall through to the empty card.
+  const isNew = profile.isNew === true
 
   // Same as the community feed: the bottom nav folds away scrolling down and
   // returns scrolling up. Reset on tab change so it never opens hidden.
@@ -109,8 +113,8 @@ export default function ProfileScreen({
         <div className="bv-profile-topbar">
           <div className="bv-profile-topbar-row">
             <div className="bv-topbar-group">
-              <BalancePill>{formatMoney(CASH_BALANCE)}</BalancePill>
-              <BalancePill leading={<Coin />}>{formatMoney(COIN_BALANCE)}</BalancePill>
+              <BalancePill>{formatMoney(cash)}</BalancePill>
+              <BalancePill leading={<Coin />}>{formatMoney(coin)}</BalancePill>
             </div>
             <div className="bv-topbar-group">
               <CircleIconButton icon={<Settings size={20} strokeWidth={1.9} />} label="Settings" />
@@ -150,8 +154,14 @@ export default function ProfileScreen({
           >
             <div className="bv-profile-name-row">
               <span className="bv-profile-name">{profile.name}</span>
-              <StreakLabel value={profile.streak} />
-              <LevelLabel level={profile.level} />
+              {/* Earned, not given — a new account has no streak to show and
+                  no level to have reached, so the name stands alone. */}
+              {!isNew && (
+                <>
+                  <StreakLabel value={profile.streak} />
+                  <LevelLabel level={profile.level} />
+                </>
+              )}
             </div>
             <p className="bv-profile-joined">{profile.joined}</p>
             <div className="bv-profile-counts">
@@ -189,7 +199,9 @@ export default function ProfileScreen({
             </div>
           </div>
 
-          {isMe && profile.challengeCardMode === 'invited' && profile.challengeInviter ? (
+          {/* No challenge card at all for a new account — you have no friends
+              to invite yet, so an invite card would be an empty gesture. */}
+          {isNew ? null : isMe && profile.challengeCardMode === 'invited' && profile.challengeInviter ? (
             <ProfileChallengeCard
               mode="invited"
               inviter={profile.challengeInviter}

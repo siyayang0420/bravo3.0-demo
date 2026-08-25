@@ -24,9 +24,17 @@ import { type SpendableActivity } from '../data/spendableDemo'
 
 export type SpendableTab = 'balance' | 'bonus'
 
-/** `$3057` when whole, `$140.88` otherwise — the top bar's pills. */
+/**
+ * `$3057` when whole, `$140.88` otherwise — the top bar's pills.
+ *
+ * Zero is the exception, and keeps its cents: `$0.00` reads as a balance that
+ * happens to be empty, where `$0` reads as a value that failed to load. Figma
+ * writes the new account's pills as `$0.00` for the same reason
+ * (19895:20914).
+ */
 export function formatMoney(value: number) {
   const rounded = Math.round(value * 100) / 100
+  if (rounded === 0) return '$0.00'
   return `$${rounded % 1 === 0 ? rounded : rounded.toFixed(2)}`
 }
 

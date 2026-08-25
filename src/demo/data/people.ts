@@ -54,9 +54,11 @@ export const PERSON: Record<PersonId, Person> = Object.fromEntries(
   PEOPLE.map((p) => [p.id, p]),
 ) as Record<PersonId, Person>
 
-/** Bobby (the challenge inviter) and Happy (the receiver) — see DEMO_USERS. */
+/** The three switchable identities — see DEMO_USERS. Bobby invites, Happy
+ *  receives, Apple signed up moments ago and has nothing yet. */
 export const BOBBY = PERSON.bobby
 export const HAPPY = PERSON.happy
+export const APPLE = PERSON.apple
 
 // Shuffled once, when this module first loads — so the cast is in a
 // different order every time the demo is opened (a fresh page load), but
