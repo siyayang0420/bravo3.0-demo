@@ -535,7 +535,7 @@ button.bv-balance-pill:active {
 }
 
 .bv-venue-saver-count {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.2;
 }
 
@@ -563,7 +563,7 @@ button.bv-balance-pill:active {
 
 /* 24px type on a 20px line — Figma's own values, deliberately tight. */
 .bv-venue-title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 20px;
   color: var(--bv-black);
