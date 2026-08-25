@@ -589,6 +589,9 @@ button.bv-balance-pill:active {
 /* ---- the friend's note ---- */
 .bv-venue-comment {
   max-width: 100%;
+  /* Tapping the note opens the venue detail scrolled to it. */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .bv-venue-comment-inner {
@@ -1015,6 +1018,32 @@ button.bv-balance-pill:active {
   flex-direction: column;
   gap: var(--bv-space-1);
   padding: 0 var(--bv-space-4);
+}
+
+/* Arriving here by tapping the note on the map scrolls to that note and
+   flashes it, so it is obvious which of several posts you were sent to.
+   A tint that swells and drains — no border, nothing that shifts layout. */
+.bv-vd-post.is-flash {
+  animation: bv-post-flash 1.9s ease-out;
+}
+
+@keyframes bv-post-flash {
+  0% {
+    background: rgba(255, 190, 60, 0);
+  }
+  18% {
+    background: rgba(255, 190, 60, 0.22);
+  }
+  100% {
+    background: rgba(255, 190, 60, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-vd-post.is-flash {
+    animation-duration: 0.01ms;
+    background: rgba(255, 190, 60, 0.18);
+  }
 }
 
 .bv-vd-post-row {

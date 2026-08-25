@@ -52,6 +52,14 @@ export type VenueDetail = {
 
 const savers = ['bobby', 'emma', 'ken', 'yvon', 'joshua', 'tom'] as const
 
+/**
+ * The note that floats over the venue card on the map is the same note that
+ * sits at the top of this venue's posts — one comment, shown in two places.
+ * Defined once here so the face and the words can never drift apart, and
+ * given a stable id so tapping it on the map can scroll straight to it.
+ */
+export const FRIEND_POST_ID = 'vp-friend'
+
 export const ELLIPSIS_DETAIL: VenueDetail = {
   title: 'Ellipsis',
   logo: ellipsisLogo,
@@ -67,6 +75,22 @@ export const ELLIPSIS_DETAIL: VenueDetail = {
   savedCount: 15,
   savedBy: savers.map((id) => ({ name: PERSON[id].name, avatar: PERSON[id].avatar })),
   posts: [
+    {
+      id: FRIEND_POST_ID,
+      author: PERSON.joshua.name,
+      avatar: PERSON.joshua.avatar,
+      streak: '4X',
+      level: 'lv4',
+      when: 'Just now',
+      // Written out in full here. The map bubble shows the same string clipped
+      // to a single line — see .bv-venue-comment-bubble — so the copy lives in
+      // one place and the map's constraint stays a layout rule.
+      text: 'ngl, great vibe here, check out their matcha and the egg tarts, genuinely the best I have had this side of the bridge.',
+      // No photos — it is an offhand note, not a write-up, which is exactly
+      // why it is the one that floats over the map card.
+      photos: [],
+      likes: 3,
+    },
     {
       id: 'vp1',
       author: PERSON.ken.name,
@@ -101,3 +125,11 @@ export const ELLIPSIS_DETAIL: VenueDetail = {
 
 /** The person writing — their face sits beside the "write a post" prompt. */
 export const POST_PROMPT_AUTHOR = pickPeople(1, 0)[0]
+
+/** What the map's floating bubble shows — read straight off the post above,
+ *  so editing the post edits both. */
+const friendPost = ELLIPSIS_DETAIL.posts.find((p) => p.id === FRIEND_POST_ID)!
+export const ELLIPSIS_FRIEND_COMMENT = {
+  avatar: friendPost.avatar,
+  text: friendPost.text,
+}

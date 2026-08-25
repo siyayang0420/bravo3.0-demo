@@ -4,7 +4,7 @@
 // facts and photos, the cashback offer, who saved it, what people wrote, and
 // three places with the same vibe — then the assistant dock and the action
 // row pinned to the bottom.
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, Bookmark, Share2, ChevronDown, ChevronRight, MessageSquare, Navigation, Phone, Instagram, Globe } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import PromptBox from '../components/PromptBox'
@@ -19,9 +19,16 @@ import { ELLIPSIS_DETAIL, POST_PROMPT_AUTHOR, type VenueDetail, type VenuePost }
 
 export default function VenueDetailScreen({
   venue = ELLIPSIS_DETAIL,
+  anchorPostId,
   onBack,
 }: {
   venue?: VenueDetail
+  /**
+   * Open scrolled to this post instead of at the top — set when you arrived
+   * by tapping the friend's note floating over the map card, so you land on
+   * the thing you tapped rather than having to go looking for it.
+   */
+  anchorPostId?: string
   onBack: () => void
 }) {
   const { promptProps, overlays } = useSearchLauncher('map')
@@ -36,9 +43,58 @@ export default function VenueDetailScreen({
   const setIndexFor = (id: string) => (next: number) =>
     setPhotoIndex((m) => ({ ...m, [id]: next }))
 
+  // Land on the anchored post and give it a brief highlight, so it is obvious
+  // which of several posts you were sent to.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [flash, setFlash] = useState<string | null>(null)
+  useEffect(() => {
+    if (!anchorPostId) return
+    // Scroll manually rather than with scrollIntoView: this list lives in its
+    // own absolutely-positioned scroller, and scrollIntoView would walk up and
+    // move the page behind the phone too.
+    const settle = window.setTimeout(() => {
+      const scroller = scrollRef.current
+      const el = scroller?.querySelector<HTMLElement>(`[data-post="${anchorPostId}"]`)
+      if (!scroller || !el) return
+      const top = el.offsetTop - (scroller.clientHeight - el.offsetHeight) / 2
+      scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      setFlash(anchorPostId)
+    }, 380) // after the screen has finished pushing in
+    return () => window.clearTimeout(settle)
+  }, [anchorPostId])
+  useEffect(() => {
+    if (!flash) return
+    const t = window.setTimeout(() => setFlash(null), 1900)
+    return () => window.clearTimeout(t)
+  }, [flash])
+
+  // Collapse the pinned header's two rows into one as you scroll: the identity
+  // rises the 40px that separated it from the back button and slides right to
+  // clear it, so the arrow ends up sitting to the left of the logo.
+  //
+  // Driven by writing a 0→1 number onto the header as a custom property rather
+  // than through React state: this fires on every scroll frame, and a setState
+  // per frame would re-render the whole (long) page to move two boxes. The CSS
+  // does the rest, so the motion is scroll-linked — it tracks the finger and
+  // unwinds exactly when you scroll back up.
+  const topbarRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const scroller = scrollRef.current
+    if (!scroller) return
+    const onScroll = () => {
+      // Over COLLAPSE_RANGE, which is the same 40px the row travels — so the
+      // identity lands in place just as the header finishes shrinking.
+      const t = Math.min(1, Math.max(0, scroller.scrollTop / 40))
+      topbarRef.current?.style.setProperty('--vd-collapse', String(t))
+    }
+    onScroll() // in case we opened already scrolled to an anchored post
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    return () => scroller.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <div className="bv-vd-screen">
-      <div className="bv-vd-scroll">
+      <div className="bv-vd-scroll" ref={scrollRef}>
         {/* ---- header ---- */}
         <header className="bv-vd-head">
           <button type="button" className="bv-screen-back" aria-label="Back" onClick={onBack}>
@@ -160,6 +216,7 @@ export default function VenueDetailScreen({
             photoIndex={photoIndex[post.id] ?? 0}
             onPhotoIndex={setIndexFor(post.id)}
             onOpenPhotos={() => setViewing(post.id)}
+            flash={flash === post.id}
           />
         ))}
 
@@ -231,11 +288,14 @@ function VenuePostBlock({
   photoIndex,
   onPhotoIndex,
   onOpenPhotos,
+  flash = false,
 }: {
   post: VenuePost
   photoIndex: number
   onPhotoIndex: (next: number) => void
   onOpenPhotos: () => void
+  /** Briefly highlight this post — it is the one you were sent here to read. */
+  flash?: boolean
 }) {
   const openProfile = useOpenProfile()
   // Always flies from the face's own rect, whether the face or the name in
@@ -248,7 +308,7 @@ function VenuePostBlock({
   }
 
   return (
-    <article className="bv-vd-post">
+    <article className={`bv-vd-post${flash ? ' is-flash' : ''}`} data-post={post.id}>
       <div className="bv-vd-post-row">
         <span
           className="bv-vd-post-face bv-vd-person"
@@ -267,13 +327,17 @@ function VenuePostBlock({
         <div className="bv-vd-post-body">
           {/* The stack leans: one photo rotated behind the front one, which is
               how the design suggests "there are more" without a carousel.
-              Swipe it to deal through the deck, tap it to go full screen. */}
-          <PhotoStack
-            photos={post.photos}
-            index={photoIndex}
-            onIndex={onPhotoIndex}
-            onOpen={onOpenPhotos}
-          />
+              Swipe it to deal through the deck, tap it to go full screen.
+              Skipped entirely for a note with no photos — the bubble on its
+              own is the whole post. */}
+          {post.photos.length > 0 && (
+            <PhotoStack
+              photos={post.photos}
+              index={photoIndex}
+              onIndex={onPhotoIndex}
+              onOpen={onOpenPhotos}
+            />
+          )}
 
           <div className="bv-vd-bubble">
             <div className="bv-vd-bubble-head">

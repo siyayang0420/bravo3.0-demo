@@ -14,14 +14,30 @@ import { motion, useReducedMotion } from 'framer-motion'
 export default function MapFriendComment({
   avatar,
   text,
+  onOpen,
 }: {
   avatar: string
   text: string
+  /** Tapping the note — opens the venue detail scrolled to this same note. */
+  onOpen?: () => void
 }) {
   const reduce = useReducedMotion()
 
   return (
-    <div className="bv-venue-comment">
+    <div
+      className="bv-venue-comment"
+      role={onOpen ? 'button' : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      aria-label={onOpen ? `Read ${text}` : undefined}
+      onClick={onOpen}
+      onKeyDown={(e) => {
+        if (!onOpen) return
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onOpen()
+        }
+      }}
+    >
       <motion.div
         className="bv-venue-comment-inner"
         animate={reduce ? undefined : { y: [0, -4.5, 0], rotate: [0, -0.6, 0] }}

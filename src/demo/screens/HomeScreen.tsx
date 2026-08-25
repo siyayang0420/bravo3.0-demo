@@ -20,6 +20,7 @@ import MapView, { type MapPlace } from '../components/MapView'
 import MapVenueCard from '../components/MapVenueCard'
 import MapFriendComment from '../components/MapFriendComment'
 import VenueDetailScreen from './VenueDetailScreen'
+import { ELLIPSIS_FRIEND_COMMENT, FRIEND_POST_ID } from '../data/venueDetailDemo'
 import { pickPeople } from '../data/people'
 import ellipsisInterior from '../assets/venue/ellipsis-interior.png'
 import ellipsisDrinks from '../assets/venue/ellipsis-drinks.png'
@@ -81,8 +82,8 @@ const MAP_PLACES: MapPlace[] = [
   },
   {
     id: 'typhoon',
-    name: 'Typhoon Bubble Tea',
-    meta: 'Taiwanese & HK Café · $$',
+    name: 'Ellipsis',
+    meta: 'Cafe • $$',
     lng: -123.1128,
     lat: 49.1908,
     photo: thumbDimsum,
@@ -95,10 +96,8 @@ const MAP_PLACES: MapPlace[] = [
       savedLabel: '14+',
       meta: 'Cafe • Vancouver • $$',
       distance: '13.5km',
-      friendComment: {
-        avatar: venueFaces[3].avatar,
-        text: 'ngl, great vibe here, check out their matcha ...',
-      },
+      // The same note that heads this venue's posts — see venueDetailDemo.
+      friendComment: ELLIPSIS_FRIEND_COMMENT,
     },
   },
 ]
@@ -168,6 +167,13 @@ export default function HomeScreen({
   const [place, setPlace] = useState<MapPlace | null>(null)
   const [commentShown, setCommentShown] = useState(false)
   const [venueOpen, setVenueOpen] = useState(false)
+  // Set when the detail screen was opened by tapping the friend's note, so it
+  // knows to scroll to that note rather than opening at the top.
+  const [venueAnchor, setVenueAnchor] = useState<string | undefined>(undefined)
+  const openVenue = (anchor?: string) => {
+    setVenueAnchor(anchor)
+    setVenueOpen(true)
+  }
   useEffect(() => {
     if (!place?.venue?.friendComment) {
       setCommentShown(false)
@@ -279,11 +285,12 @@ export default function HomeScreen({
                   <MapFriendComment
                     avatar={place.venue.friendComment.avatar}
                     text={place.venue.friendComment.text}
+                    onOpen={() => openVenue(FRIEND_POST_ID)}
                   />
                 </motion.div>
               )}
             </AnimatePresence>
-            <MapVenueCard venue={place.venue} onOpen={() => setVenueOpen(true)} />
+            <MapVenueCard venue={place.venue} onOpen={() => openVenue()} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -299,7 +306,10 @@ export default function HomeScreen({
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 320, damping: 34, mass: 0.7 }}
           >
-            <VenueDetailScreen onBack={() => setVenueOpen(false)} />
+            <VenueDetailScreen
+              anchorPostId={venueAnchor}
+              onBack={() => setVenueOpen(false)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
