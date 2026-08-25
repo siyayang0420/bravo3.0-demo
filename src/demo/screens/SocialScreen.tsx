@@ -14,6 +14,9 @@ import ChallengeScreen, { type ChallengeDetail } from './ChallengeScreen'
 import PromptBox from '../components/PromptBox'
 import useSearchLauncher from '../components/SearchLauncher'
 import BottomNav, { type NavId } from '../components/BottomNav'
+import EmptyState from '../components/EmptyState'
+import { useDemoUser } from '../components/DemoIdentity'
+import { EMPTY_COPY, EMPTY_PHOTOS } from '../data/emptyStateDemo'
 import { BOBBY, pickPeople } from '../data/people'
 import postPhoto from '../assets/social/post-photo.jpg'
 import venueThumb from '../assets/social/venue-amcafe.jpg'
@@ -281,6 +284,7 @@ export default function SocialScreen({
 }) {
   const [tab, setTab] = useState<TabId>('foryou')
   const [navHidden, setNavHidden] = useState(false)
+  const { isNew } = useDemoUser()
   const { searchOpen, promptProps, overlays } = useSearchLauncher('social')
   const [detailOpen, setDetailOpen] = useState(false)
   // +1 when moving right through the tabs, -1 when moving left. Drives
@@ -358,6 +362,11 @@ export default function SocialScreen({
             exit="exit"
             transition={{ type: 'spring', stiffness: 320, damping: 34, mass: 0.7 }}
           >
+            {/* For you is discovery, not a follow graph — it is what the app
+                picks FOR you, so it has plenty to show on day one and stays
+                exactly as it is for a brand-new account. Friends is the pane
+                built out of people you know, and that one is empty until you
+                know some. */}
             {tab === 'foryou' ? (
               <>
                 <section className="bv-leaderboard">
@@ -376,6 +385,16 @@ export default function SocialScreen({
                   ))}
                 </div>
               </>
+            ) : isNew ? (
+              // No friends, so no challenge and no posts: the whole pane is
+              // the one card rather than two empty sections stacked.
+              <div className="bv-social-feed">
+                <EmptyState
+                  lines={[...EMPTY_COPY.friends.lines]}
+                  cta={EMPTY_COPY.friends.cta}
+                  photos={EMPTY_PHOTOS}
+                />
+              </div>
             ) : (
               <>
                 <section className="bv-challenge-section">

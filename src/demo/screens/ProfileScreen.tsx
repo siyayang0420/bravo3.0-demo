@@ -23,9 +23,11 @@ import SectionTabs from '../components/SectionTabs'
 import ProfileChallengeCard from '../components/ProfileChallengeCard'
 import TasteIdentityPanel from '../components/TasteIdentityPanel'
 import PostCard from '../components/PostCard'
-import ChallengeScreen from './ChallengeScreen'
+import EmptyState from '../components/EmptyState'
 import { useDemoUser } from '../components/DemoIdentity'
+import ChallengeScreen from './ChallengeScreen'
 import { RECEIVER_VIEW, SENDER_VIEW } from '../data/pendingChallengeDemo'
+import { EMPTY_COPY, EMPTY_PHOTOS } from '../data/emptyStateDemo'
 import { type ProfileData } from '../data/profileDemo'
 
 type ProfileTab = 'activity' | 'taste' | 'collectives'
@@ -230,9 +232,17 @@ export default function ProfileScreen({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, ease: EASE_OUT }}
             >
-              {profile.posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
+              {/* Driven by the list, not by a flag: an empty feed is an
+                  empty feed, whoever it belongs to. */}
+              {profile.posts.length === 0 ? (
+                <EmptyState
+                  lines={[...EMPTY_COPY.activity.lines]}
+                  cta={EMPTY_COPY.activity.cta}
+                  photos={EMPTY_PHOTOS}
+                />
+              ) : (
+                profile.posts.map((post) => <PostCard key={post.id} post={post} />)
+              )}
             </motion.div>
           ) : tab === 'taste' ? (
             <motion.div
@@ -241,7 +251,18 @@ export default function ProfileScreen({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, ease: EASE_OUT }}
             >
-              <TasteIdentityPanel profile={profile} />
+              {/* The radar and the cuisine breakdown are read FROM your
+                  history — with none, there is nothing to draw, so the panel
+                  is replaced rather than rendered at zero. */}
+              {isNew ? (
+                <EmptyState
+                  lines={[...EMPTY_COPY.taste.lines]}
+                  cta={EMPTY_COPY.taste.cta}
+                  photos={EMPTY_PHOTOS}
+                />
+              ) : (
+                <TasteIdentityPanel profile={profile} />
+              )}
             </motion.div>
           ) : (
             <motion.div

@@ -7,6 +7,8 @@
 import ScreenNav from '../components/ScreenNav'
 import MerchantRow, { type Merchant } from '../components/MerchantRow'
 import PromptBox from '../components/PromptBox'
+import EmptyState from '../components/EmptyState'
+import { EMPTY_COPY } from '../data/emptyStateDemo'
 
 export default function MerchantsScreen({
   merchants,
@@ -20,9 +22,15 @@ export default function MerchantsScreen({
       <ScreenNav title="Eligible merchants" onBack={onBack} />
 
       <div className="bv-merchants-list">
-        {merchants.map((m) => (
-          <MerchantRow key={m.id} merchant={m} />
-        ))}
+        {/* Reached only through a challenge, so a new account cannot get here
+            today — but a list screen that renders nothing at all when handed
+            an empty list is a bug waiting for the first challenge with no
+            merchants signed up. No photo fan: there is nothing to preview. */}
+        {merchants.length === 0 ? (
+          <EmptyState lines={[...EMPTY_COPY.merchants.lines]} />
+        ) : (
+          merchants.map((m) => <MerchantRow key={m.id} merchant={m} />)
+        )}
       </div>
 
       {/* Same fade the dock uses — transparent to solid white at 34.4%. */}

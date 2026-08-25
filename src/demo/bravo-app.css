@@ -5302,6 +5302,77 @@ button.bv-balance-pill:active {
   color: var(--bv-neutral-400);
 }
 
+/* ==================================================================
+   Component: Empty State (Figma 19895:20914) — the dashed card a
+   brand-new account sees on every surface. See EmptyState.tsx.
+   ================================================================== */
+.bv-empty-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 17px;
+  /* No bottom padding, by design: the photo fan runs off the bottom edge and
+     is cut by the overflow below — that half-hidden stack is the point. */
+  padding: var(--bv-space-6) 57px 0;
+  /* neutral-300, not the neutral-200 Figma names: the two ramps disagree at
+     that step (Figma's 200 is #d1d1d6, ours is #e5e5e5) and #e5e5e5 leaves
+     the dashes nearly invisible on white. neutral-300 (#d4d4d4) is within a
+     hair of the colour the design actually draws. */
+  border: 1px dashed var(--bv-neutral-300);
+  border-radius: var(--bv-radius-lg);
+  overflow: hidden;
+}
+
+.bv-empty-copy {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-600);
+  text-align: center;
+}
+
+/* The fan reserves only 52px, far less than the cards inside it are tall.
+   That difference IS the crop — the card's overflow does the cutting. */
+.bv-empty-fan {
+  position: relative;
+  width: 162px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.bv-empty-fan-card {
+  position: absolute;
+  width: 70.5px;
+  height: 68.46px;
+  border: 1px solid var(--bv-white);
+  border-radius: 11px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Three hand-set positions and angles, straight from Figma. Each card is
+   placed by its unrotated top-left — Figma reports the rotated bounding box,
+   so these are those boxes with the card re-centred inside them. */
+.bv-empty-fan-card.i0 {
+  left: 5.59px;
+  top: 5.79px;
+  transform: rotate(-10.39deg);
+}
+
+.bv-empty-fan-card.i1 {
+  left: 46.66px;
+  top: 11.96px;
+  transform: rotate(15deg);
+}
+
+.bv-empty-fan-card.i2 {
+  left: 89.83px;
+  top: 9.88px;
+  transform: rotate(-3.15deg);
+}
+
 /* ---------- Taste Identity tab (Figma 19677:16435) ----------
    Three stacked cards: the dark "Top N% Diner" summary, the AI read over the
    Taste DNA radar, then the cuisine breakdown. See TasteIdentityPanel. */
