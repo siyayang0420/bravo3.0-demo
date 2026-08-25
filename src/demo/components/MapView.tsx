@@ -43,6 +43,30 @@ export type MapPlace = {
   lat: number
   /** Thumbnail shown in the pin. */
   photo?: string
+  /** Everything the card that opens on tap needs — see MapVenueCard. */
+  venue?: MapVenue
+}
+
+/** The detail card a pin opens (Figma 19868:16231). */
+export type MapVenue = {
+  /** Display name on the card, which can differ from the pin's label. */
+  title: string
+  /** Small rounded logo beside the title. */
+  logo: string
+  /** Exactly two photos in the design — cashback burns onto the first. */
+  photos: [string, string]
+  cashback: string
+  /** Faces of people who saved it, plus the "14+" overflow label. */
+  savers: string[]
+  savedLabel: string
+  meta: string
+  distance: string
+  /**
+   * A friend's note about this place. Optional on purpose: a place none of
+   * your friends has written about simply shows the card, which is the
+   * difference between the two pins on Home.
+   */
+  friendComment?: { avatar: string; text: string }
 }
 
 export default function MapView({
@@ -50,6 +74,8 @@ export default function MapView({
   zoom = 13.5,
   places = [],
   showUser = true,
+  onSelectPlace,
+  onDeselect,
 }: {
   /** [lng, lat] the map opens on. */
   center: [number, number]
@@ -57,10 +83,19 @@ export default function MapView({
   places?: MapPlace[]
   /** Draw the blue "you are here" dot at the center. */
   showUser?: boolean
+  /** Tapping a pin. */
+  onSelectPlace?: (place: MapPlace) => void
+  /** Tapping the map itself — dismisses whatever a pin opened. */
+  onDeselect?: () => void
 }) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const markers = useRef<maplibregl.Marker[]>([])
+  // The marker effect rebuilds on every `places` change; reading the handlers
+  // through a ref keeps a new callback identity from tearing down and
+  // recreating every marker (which would flicker the pins).
+  const handlers = useRef({ onSelectPlace, onDeselect })
+  handlers.current = { onSelectPlace, onDeselect }
 
   // One-time map setup. Center/zoom changes are handled by the effect below so
   // the map instance survives re-renders (rebuilding it would flash the tiles).
@@ -79,6 +114,7 @@ export default function MapView({
       touchPitch: false,
     })
     m.touchZoomRotate.disableRotation()
+    m.on('click', () => handlers.current.onDeselect?.())
     map.current = m
     return () => {
       m.remove()
@@ -123,6 +159,12 @@ export default function MapView({
       // textContent, not innerHTML, so a name can never inject markup.
       el.querySelector('.bv-map-pin-name')!.textContent = p.name
       if (p.meta) el.querySelector('.bv-map-pin-meta')!.textContent = p.meta
+      // stopPropagation, or the map's own click fires straight after and
+      // deselects the place this tap just chose.
+      el.addEventListener('click', (e) => {
+        e.stopPropagation()
+        handlers.current.onSelectPlace?.(p)
+      })
       markers.current.push(
         new maplibregl.Marker({ element: el, anchor: 'left' })
           .setLngLat([p.lng, p.lat])

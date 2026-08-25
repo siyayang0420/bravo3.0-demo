@@ -1,7 +1,7 @@
 // Home — implements Figma node 19237:3737 (Home-Default)
 // Map-first discovery screen with balance pills, filter chips,
 // AI prompt dock, and bottom nav.
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ScanLine, Bell } from 'lucide-react'
 import BalancePill from '../components/BalancePill'
@@ -17,6 +17,13 @@ import useSearchLauncher from '../components/SearchLauncher'
 import BottomNav, { type NavId } from '../components/BottomNav'
 import Coin from '../components/Coin'
 import MapView, { type MapPlace } from '../components/MapView'
+import MapVenueCard from '../components/MapVenueCard'
+import MapFriendComment from '../components/MapFriendComment'
+import VenueDetailScreen from './VenueDetailScreen'
+import { pickPeople } from '../data/people'
+import ellipsisInterior from '../assets/venue/ellipsis-interior.png'
+import ellipsisDrinks from '../assets/venue/ellipsis-drinks.png'
+import ellipsisLogo from '../assets/venue/ellipsis-logo.png'
 import thumbDimsum from '../assets/thumb-dimsum.jpg'
 import thumbRestaurants from '../assets/thumb-restaurants.png'
 import offerVeras from '../assets/offer-veras.png'
@@ -46,6 +53,10 @@ const SUGGESTIONS = [
 // the real restaurant locations you want to demo.
 const MAP_CENTER: [number, number] = [-123.1255, 49.1928]
 const MAP_ZOOM = 12.9
+// Savers and the commenting friend come from the shared cast, so the faces
+// here are people you actually see elsewhere in the demo.
+const venueFaces = pickPeople(4, 6)
+
 const MAP_PLACES: MapPlace[] = [
   {
     id: 't3',
@@ -54,6 +65,19 @@ const MAP_PLACES: MapPlace[] = [
     lng: -123.1365,
     lat: 49.1952,
     photo: thumbRestaurants,
+    // No friendComment — nobody you follow has written about this one, which
+    // is the whole difference between the two pins: tapping T3 shows the
+    // card and nothing follows it.
+    venue: {
+      title: 'T3 Boardgames',
+      logo: thumbRestaurants,
+      photos: [ellipsisInterior, ellipsisDrinks],
+      cashback: '5%',
+      savers: venueFaces.slice(0, 3).map((p) => p.avatar),
+      savedLabel: '8+',
+      meta: 'Entertainment • Richmond • $$',
+      distance: '9.2km',
+    },
   },
   {
     id: 'typhoon',
@@ -62,6 +86,20 @@ const MAP_PLACES: MapPlace[] = [
     lng: -123.1128,
     lat: 49.1908,
     photo: thumbDimsum,
+    venue: {
+      title: 'Ellipsis',
+      logo: ellipsisLogo,
+      photos: [ellipsisInterior, ellipsisDrinks],
+      cashback: '3%',
+      savers: venueFaces.slice(0, 3).map((p) => p.avatar),
+      savedLabel: '14+',
+      meta: 'Cafe • Vancouver • $$',
+      distance: '13.5km',
+      friendComment: {
+        avatar: venueFaces[3].avatar,
+        text: 'ngl, great vibe here, check out their matcha ...',
+      },
+    },
   },
 ]
 // Shown only when the Home "promotion" state is on (Figma 19243:4646).
@@ -124,6 +162,22 @@ export default function HomeScreen({
   const [promoOpen, setPromoOpen] = useState(false)
   const { searchOpen, ask, promptProps, overlays } = useSearchLauncher('map')
 
+  // Tapping a pin opens its venue card. The friend's note follows a beat
+  // later — it is a second thought, not part of the card — so it lands on
+  // its own timer rather than animating in alongside.
+  const [place, setPlace] = useState<MapPlace | null>(null)
+  const [commentShown, setCommentShown] = useState(false)
+  const [venueOpen, setVenueOpen] = useState(false)
+  useEffect(() => {
+    if (!place?.venue?.friendComment) {
+      setCommentShown(false)
+      return
+    }
+    setCommentShown(false)
+    const t = window.setTimeout(() => setCommentShown(true), 1000)
+    return () => window.clearTimeout(t)
+  }, [place])
+
   // Each pill opens the sheet on its own tab. Tapping the pill you are
   // already looking at closes it; tapping the other one switches across
   // rather than shutting the sheet in your face.
@@ -135,7 +189,13 @@ export default function HomeScreen({
   return (
     <>
       {/* real interactive map — pan/zoom, restaurant pins */}
-      <MapView center={MAP_CENTER} zoom={MAP_ZOOM} places={MAP_PLACES} />
+      <MapView
+        center={MAP_CENTER}
+        zoom={MAP_ZOOM}
+        places={MAP_PLACES}
+        onSelectPlace={setPlace}
+        onDeselect={() => setPlace(null)}
+      />
 
       {/* top bar */}
       <motion.div
@@ -162,8 +222,10 @@ export default function HomeScreen({
       <motion.div
         className={`bv-bottom-stack${searchOpen ? ' search-hidden' : ''}`}
         initial={intro ? { y: 40, opacity: 0 } : false}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 320, damping: 32, delay: 0.1 }}
+        // The venue card takes the bottom of the screen, so the chips and the
+        // dock give it up and drop out of frame rather than stacking above it.
+        animate={{ y: place ? 260 : 0, opacity: place ? 0 : 1 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 32, delay: place ? 0 : 0.1 }}
       >
         <div className="bv-filter-row">
           {FILTERS.map((f) => (
@@ -192,6 +254,55 @@ export default function HomeScreen({
           <BottomNav active={active} onSelect={onNavigate} avatar={avatar} />
         </div>
       </motion.div>
+
+      {/* Venue card — rises from the bottom when a pin is tapped, taking the
+          place the dock just vacated. The friend's note is a sibling, not a
+          child, so its own delayed entrance never moves the card. */}
+      <AnimatePresence>
+        {place?.venue && (
+          <motion.div
+            key={place.id}
+            className="bv-venue-layer"
+            initial={{ y: '110%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '110%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 32, mass: 0.8 }}
+          >
+            <AnimatePresence>
+              {commentShown && place.venue.friendComment && (
+                <motion.div
+                  initial={{ opacity: 0, y: 18, scale: 0.94 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.96 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 26, mass: 0.6 }}
+                >
+                  <MapFriendComment
+                    avatar={place.venue.friendComment.avatar}
+                    text={place.venue.friendComment.text}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <MapVenueCard venue={place.venue} onOpen={() => setVenueOpen(true)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Venue detail — pushes in over the map, same as every other detail
+          screen in the app. */}
+      <AnimatePresence>
+        {venueOpen && (
+          <motion.div
+            className="bv-vd-wrap"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 320, damping: 34, mass: 0.7 }}
+          >
+            <VenueDetailScreen onBack={() => setVenueOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* search sheet + AI thread — the prompt dock's own layers */}
       {overlays}

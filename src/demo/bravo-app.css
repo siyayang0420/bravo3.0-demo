@@ -427,6 +427,991 @@ button.bv-balance-pill:active {
   filter: none;
 }
 
+/* ==================================================================
+   Map venue card — Figma 19868:16231, with the friend's note at
+   19869:16905. Opened by tapping a pin; the bottom stack drops out
+   of frame to make room (see HomeScreen).
+   ================================================================== */
+.bv-venue-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* above the bottom stack (6) and the top bar (8), below the scrims (10) */
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  /* 16px sides puts the card at Figma's 370 on the 402 artboard; the 32px
+     foot is the same clearance the dock keeps, so it never crowds the home
+     indicator. */
+  padding: 0 var(--bv-space-4) 32px;
+}
+
+/* Frosted, not solid — it sits on the map and the streets should still
+   read through it. */
+.bv-venue-card {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: var(--bv-space-3);
+  border-radius: var(--bv-radius-2xl);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8.5px);
+  -webkit-backdrop-filter: blur(8.5px);
+}
+
+.bv-venue-photos {
+  display: flex;
+  gap: var(--bv-space-3);
+}
+
+.bv-venue-photo {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 178px;
+  border-radius: var(--bv-radius-xl);
+  overflow: hidden;
+}
+
+.bv-venue-photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Figma's radius here is a literal 1563px — i.e. "as round as it goes". */
+.bv-venue-rate {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 6.25px 12.5px;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-black);
+  color: var(--bv-white);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bv-venue-savers {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  padding: 0 var(--bv-space-3);
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  box-shadow: var(--bv-shadow-float);
+  color: var(--bv-black);
+}
+
+.bv-venue-saver-stack {
+  display: flex;
+  align-items: center;
+}
+
+.bv-venue-saver-stack > span {
+  width: 15.19px;
+  height: 20.25px;
+  border-radius: var(--bv-radius-full);
+  border: 0.581px solid var(--bv-white);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.553px 2.212px 0 #ffffff,
+    inset 0 -1.106px 2.765px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bv-venue-saver-stack > span + span {
+  margin-left: -5.9px;
+}
+
+.bv-venue-saver-count {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.bv-venue-copy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-venue-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-venue-logo {
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-lg);
+  object-fit: cover;
+  display: block;
+}
+
+/* 24px type on a 20px line — Figma's own values, deliberately tight. */
+.bv-venue-title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--bv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* width:100% explicitly — a broader rule resolves the column's align-items to
+   flex-start, so this row would otherwise shrink to its text and the distance
+   would sit next to the meta instead of out at the right edge. */
+.bv-venue-meta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+/* ---- the friend's note ---- */
+.bv-venue-comment {
+  max-width: 100%;
+}
+
+.bv-venue-comment-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-venue-comment-avatar {
+  flex-shrink: 0;
+  width: 29px;
+  height: 38px;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Three round corners and a square bottom-left — the tail, pointing back at
+   the friend's face beside it. Same rule as the post bubbles. */
+.bv-venue-comment-bubble {
+  max-width: 320px;
+  padding: var(--bv-space-3);
+  border-radius: var(--bv-radius-2xl);
+  border-bottom-left-radius: 0;
+  background: var(--bv-neutral-600);
+  box-shadow: var(--bv-inset-bubble);
+  color: var(--bv-white);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==================================================================
+   Venue detail — Figma 19867:16050. Pushed in from the map's venue
+   card: one long scroll, with the assistant and the action row
+   pinned at the bottom.
+   ================================================================== */
+.bv-vd-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the venue card layer (9) and the top bar (8) */
+  z-index: 12;
+}
+
+.bv-vd-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+.bv-vd-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+  padding: calc(var(--bv-statusbar-h) + 19px) 0 190px;
+}
+
+.bv-vd-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* A flex column that scrolls will SHRINK its children to fit rather than
+   overflow — which collapsed the photo rail (no intrinsic height of its own)
+   to zero while its images kept their size and got clipped. Every section
+   keeps its natural height and the column scrolls instead. */
+.bv-vd-scroll > * {
+  flex-shrink: 0;
+}
+
+/* ---- header ---- */
+.bv-vd-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-vd-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+  margin-top: var(--bv-space-1);
+}
+
+.bv-vd-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+.bv-vd-logo {
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-lg);
+  object-fit: cover;
+  display: block;
+}
+
+.bv-vd-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-vd-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  flex-shrink: 0;
+}
+
+.bv-vd-round {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  box-shadow: var(--bv-shadow-float);
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+.bv-vd-meta {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-vd-desc {
+  margin-top: var(--bv-space-3);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-vd-hours {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-4);
+  margin-top: var(--bv-space-3);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.bv-vd-open {
+  font-weight: 700;
+  color: var(--bv-green-bright);
+}
+
+.bv-vd-day {
+  font-weight: 700;
+  color: var(--bv-black);
+}
+
+.bv-vd-hours-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+/* ---- photo rail ----
+   Figma lays two 258px photos side by side, which is wider than the 402
+   artboard — so they scroll rather than being squeezed to fit. */
+.bv-vd-photos {
+  display: flex;
+  gap: 18.66px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-vd-photos::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-vd-photos > img {
+  width: 258.85px;
+  height: 285.67px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-2xl);
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- offer ---- */
+.bv-vd-offer {
+  margin: 0 var(--bv-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+  padding: var(--bv-space-4);
+  border-radius: 15px;
+  background: var(--bv-white);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.bv-vd-offer-top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+}
+
+.bv-vd-offer-rate {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #282828;
+  color: var(--bv-white);
+}
+
+.bv-vd-offer-rate b {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+}
+
+.bv-vd-offer-rate span {
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.bv-vd-offer-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+}
+
+.bv-vd-offer-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  color: var(--bv-black);
+}
+
+.bv-vd-offer-detail {
+  font-size: 14px;
+  line-height: 19px;
+  color: var(--bv-black);
+}
+
+.bv-vd-offer-more {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--bv-zinc-500);
+  cursor: pointer;
+}
+
+/* ---- sections ---- */
+.bv-vd-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-2);
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-vd-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-vd-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-vd-saved-count {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* ---- saved by ---- */
+.bv-vd-savers {
+  display: flex;
+  gap: 13.99px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* room for the bookmark badge that hangs off each face */
+  padding-bottom: 2px;
+}
+
+.bv-vd-savers::-webkit-scrollbar {
+  display: none;
+}
+
+/* A <button>, because tapping a saver opens their profile — reset back to
+   the plain column it looks like. */
+.bv-vd-saver {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bv-vd-saver-face {
+  position: relative;
+  width: 58.27px;
+  height: 77.69px;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bv-vd-saver-badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 19px;
+  height: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  color: var(--bv-black);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+.bv-vd-saver-name {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* ---- write a post ----
+   A dashed outline, not a filled bubble — it is an invitation, not a
+   message somebody already sent. */
+.bv-vd-write {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bv-space-2);
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-vd-write-bubble {
+  flex: 1;
+  max-width: 280px;
+  min-height: 37px;
+  padding: 10px var(--bv-space-3);
+  border: 1px dashed var(--bv-zinc-500);
+  /* Your own face sits to the RIGHT of this one, so the tail squares off
+     that way — the mirror of the post bubbles below. */
+  border-radius: var(--bv-radius-2xl);
+  border-bottom-right-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: left;
+  color: var(--bv-zinc-500);
+  cursor: pointer;
+}
+
+.bv-vd-write-face {
+  flex-shrink: 0;
+  width: 32px;
+  height: 43px;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ---- posts ---- */
+.bv-vd-post {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-vd-post-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--bv-space-2);
+}
+
+.bv-vd-post-face {
+  flex-shrink: 0;
+  width: 32px;
+  height: 43px;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bv-vd-post-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-2);
+}
+
+/* Photo stack (PhotoStack.tsx) — the back photo leans out from behind the
+   front one, so "there are more" reads without spending a carousel on it.
+   Swipe deals the front card under the deck; tap opens the lightbox.
+   The count pill's offsets are measured against the 160x175 box below, so
+   these rules have to travel together. */
+.bv-photostack {
+  position: relative;
+  /* Its own stacking context, so the card layers below stay INSIDE the deck.
+     Without this, `position: relative; z-index: auto` creates no context and
+     the cards compete with the dock — the photo paints over the prompt bar. */
+  isolation: isolate;
+  width: 160px;
+  height: 175px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bv-photostack-back,
+.bv-photostack-front {
+  position: absolute;
+  border-radius: var(--bv-radius-xl);
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Layered so a swiped card can be dealt UNDER the deck: a card leaving (or
+   not yet pulled back out) drops to z-index 0, this leaning card sits at 1,
+   and the cards in play are at 2-3 — set by PhotoStack's motion targets. */
+.bv-photostack-back {
+  z-index: 1;
+  left: 22px;
+  top: 8px;
+  width: 126.62px;
+  height: 155.84px;
+  transform: rotate(6.51deg);
+}
+
+/* No transform here: framer-motion owns this card's transform while it is
+   being dragged and while it swaps places with the next one. */
+.bv-photostack-front {
+  left: 0;
+  top: 0;
+  width: 141.81px;
+  height: 175px;
+  cursor: grab;
+}
+
+.bv-photostack-front:active {
+  cursor: grabbing;
+}
+
+.bv-photostack-count {
+  position: absolute;
+  /* Above every card layer (see PhotoStack's slot table). */
+  z-index: 4;
+  left: 96.85px;
+  top: 134px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--bv-white);
+  font-size: 14px;
+  line-height: 19px;
+  /* Sits above the cards, but must never eat the swipe. */
+  pointer-events: none;
+}
+
+/* Full-screen photo viewer (PhotoLightbox.tsx). Fills the phone, not the
+   window — it is a child of .bv-vd-screen, which is the containing block. */
+.bv-lightbox {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  /* Opaque: the page behind is a bright white scroll, and any bleed-through
+     reads as a rendering glitch rather than depth. */
+  background: #0a0a0a;
+  outline: none;
+}
+
+.bv-lightbox-close {
+  position: absolute;
+  top: calc(var(--bv-statusbar-h) + 12px);
+  right: 16px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--bv-white);
+  cursor: pointer;
+}
+
+/* Top padding clears the status bar and the close button, so a tall photo
+   never slides underneath either of them. */
+/* Grid, not flex: the outgoing and incoming photos share one cell so they can
+   cross over each other, and padding still keeps them clear of the status bar
+   and the close button. */
+.bv-lightbox-stage {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--bv-statusbar-h) + 60px) 16px 0;
+  overflow: hidden;
+}
+
+.bv-lightbox-photo {
+  grid-area: 1 / 1;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--bv-radius-xl);
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: grab;
+}
+
+.bv-lightbox-photo:active {
+  cursor: grabbing;
+}
+
+.bv-lightbox-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-3);
+  padding: 20px 0 40px;
+}
+
+.bv-lightbox-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bv-lightbox-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.bv-lightbox-dot.is-on {
+  width: 18px;
+  background: var(--bv-white);
+}
+
+.bv-lightbox-count {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* The square corner is the tail, and it points at whoever is speaking. Their
+   face sits to the LEFT of this bubble, so the bottom-left corner squares
+   off toward them. */
+.bv-vd-bubble {
+  max-width: 320px;
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  padding: var(--bv-space-3);
+  border-radius: var(--bv-radius-2xl);
+  border-bottom-left-radius: 0;
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-vd-bubble-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-vd-bubble-who {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  min-width: 0;
+}
+
+/* The author's name is a button (it opens their profile) but must read as
+   the same bold text it was before. */
+.bv-vd-bubble-who b,
+.bv-vd-bubble-name {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* Anything in the venue detail that opens a person's profile. */
+.bv-vd-person {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bv-vd-bubble-when {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+}
+
+.bv-vd-bubble-text {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-vd-post-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 40px;
+}
+
+.bv-vd-post-detail {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+  cursor: pointer;
+}
+
+.bv-vd-post-engage {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+.bv-vd-post-action {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+/* ---- same vibe ---- */
+.bv-vd-vibe {
+  display: flex;
+  gap: var(--bv-space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-vd-vibe::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-vd-vibe-card {
+  flex-shrink: 0;
+  width: 123px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bv-vd-vibe-card > img {
+  width: 123px;
+  height: 141px;
+  margin-bottom: var(--bv-space-1-5);
+  border-radius: var(--bv-radius-lg);
+  object-fit: cover;
+  display: block;
+}
+
+.bv-vd-vibe-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-vd-vibe-cat {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- dock ---- */
+.bv-vd-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+  padding: var(--bv-space-3) var(--bv-space-4) 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--bv-white) 34.4%
+  );
+}
+
+.bv-vd-chips {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-vd-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-vd-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  padding: var(--bv-space-1-5) var(--bv-space-3);
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-100);
+  box-shadow: var(--bv-inset-bubble);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+  color: var(--bv-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Pay is the one thing you came here to do, so it takes the accent. */
+.bv-vd-chip.pay {
+  background: var(--bv-black);
+  box-shadow: var(--bv-inset-accent);
+  color: var(--bv-text-on-inverse);
+}
+
 /* ---------- bottom stack ---------- */
 .bv-bottom-stack {
   position: absolute;
