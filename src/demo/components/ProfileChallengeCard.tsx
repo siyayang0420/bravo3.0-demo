@@ -12,7 +12,7 @@
 //             invited you to a challenge, accept now to join {reward} extra
 //             Bonus!", the title + reward, the SAME progress the 'active'
 //             card shows (joining doesn't start a fresh count), then
-//             Decline / Accept. What Happy (the receiver) sees on her own
+//             "Not for me" / "I'm in". What Happy (the receiver) sees on her own
 //             profile, in place of the 'start' card Bobby sees.
 //
 // 'start' and 'invited' both open onto the pre-accept ChallengeScreen
@@ -71,7 +71,7 @@ type Props =
       mode: 'invited'
       /** Who sent the invite — their face and name in the copy. */
       inviter: ProfilePerson
-      /** Tapping the card body (not Decline/Accept) — the pre-accept detail. */
+      /** Tapping the card body (not either answer) — the pre-accept detail. */
       onOpen?: () => void
       onAccept?: () => void
       onDecline?: () => void
@@ -122,10 +122,10 @@ export default function ProfileChallengeCard(props: Props) {
 
         <div className="bv-profile-challenge-actions">
           <Button size="sm" variant="outline" onClick={onDecline}>
-            Decline
+            Not for me
           </Button>
           <Button size="sm" variant="solid" onClick={onAccept}>
-            Accept
+            I'm in
           </Button>
         </div>
       </section>

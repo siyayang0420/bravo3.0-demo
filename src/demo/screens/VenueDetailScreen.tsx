@@ -41,8 +41,8 @@ export default function VenueDetailScreen({
   const [viewing, setViewing] = useState<string | null>(null)
   const viewingPost = venue.posts.find((p) => p.id === viewing)
   // Have you saved this place. The pinned header's bookmark is a toggle, and
-  // SaveGlyph is what draws it — the same glyph the badges on the "Saved by"
-  // faces use, so a filled bookmark means one thing everywhere.
+  // SaveGlyph is what draws it — the same glyph every save control in the app
+  // uses, so a filled bookmark means one thing everywhere.
   const [saved, setSaved] = useState(false)
   const setIndexFor = (id: string) => (next: number) =>
     setPhotoIndex((m) => ({ ...m, [id]: next }))
@@ -166,19 +166,14 @@ export default function VenueDetailScreen({
                   openProfile(p, e.currentTarget.querySelector<HTMLElement>('.bv-vd-saver-face'))
                 }
               >
+                {/* No per-face bookmark badge: every face in this rail has
+                    saved the place by definition, so the badge repeated the
+                    section's own heading six times. The count above carries
+                    it. */}
                 <span
                   className="bv-vd-saver-face"
                   style={{ backgroundImage: `url(${p.avatar})` }}
-                >
-                  {/* Filled, not outline: everyone in this list HAS saved the
-                      place — that is why they are in it. SaveGlyph is the one
-                      definition of what "saved" looks like, so this badge and
-                      the save buttons elsewhere can never drift apart. The
-                      counter above stays outline; it is a tally, not a state. */}
-                  <span className="bv-vd-saver-badge">
-                    <SaveGlyph saved size={11} />
-                  </span>
-                </span>
+                />
                 <span className="bv-vd-saver-name">{p.name}</span>
               </button>
             ))}
