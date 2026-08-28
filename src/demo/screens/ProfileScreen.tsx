@@ -19,6 +19,8 @@ import PromptBox from '../components/PromptBox'
 import useSearchLauncher from '../components/SearchLauncher'
 import { formatMoney } from '../components/SpendableSheet'
 import { StreakLabel, LevelLabel } from '../components/AchievementLabel'
+import AchievementStats from '../components/AchievementStats'
+import SpendLevelsScreen from './SpendLevelsScreen'
 import SectionTabs from '../components/SectionTabs'
 import ProfileChallengeCard from '../components/ProfileChallengeCard'
 import TasteIdentityPanel from '../components/TasteIdentityPanel'
@@ -73,6 +75,32 @@ export default function ProfileScreen({
   // 'invited' card. Which dataset depends on which side of the invite
   // you're on, not on anything the tap itself carries.
   const [challengeOpen, setChallengeOpen] = useState(false)
+  // The streak and level chips explain themselves: tapping them opens the
+  // two meters, the same popover the Rewards header uses.
+  //
+  // On Rewards the chips are in a pinned header, so the popover can hang off
+  // a fixed offset. Here they live INSIDE the scroller and travel with it, so
+  // the anchor is measured from the chips at open time — and the popover
+  // closes if you scroll, rather than floating away from what it explains.
+  const [statsOpen, setStatsOpen] = useState(false)
+  const [levelsOpen, setLevelsOpen] = useState(false)
+  const [statsTop, setStatsTop] = useState(0)
+  const labelsRef = useRef<HTMLButtonElement>(null)
+
+  const openStats = () => {
+    const el = labelsRef.current
+    const app = el?.closest('.bravo-app') as HTMLElement | null
+    if (el && app) {
+      // Into the phone's own 402-wide space, so the offset survives whatever
+      // scale the review site is rendering the device at — same conversion
+      // ProfileLauncher uses for the hero flight.
+      const appRect = app.getBoundingClientRect()
+      const rect = el.getBoundingClientRect()
+      const scale = appRect.width / 402
+      setStatsTop((rect.bottom - appRect.top) / scale + 12)
+    }
+    setStatsOpen(true)
+  }
   // me mode wears the shared dock; the hook also renders its search / AI
   // overlays (used only when the dock is shown).
   const { searchOpen, promptProps, overlays } = useSearchLauncher('me')
@@ -98,6 +126,9 @@ export default function ProfileScreen({
     let last = el.scrollTop
     const onScroll = () => {
       const now = el.scrollTop
+      // The popover is pinned to where the chips WERE — scrolling carries
+      // them out from under it, so it closes rather than hanging in mid-air.
+      setStatsOpen(false)
       const delta = now - last
       if (Math.abs(delta) < 6) return
       last = now
@@ -159,10 +190,20 @@ export default function ProfileScreen({
               {/* Earned, not given — a new account has no streak to show and
                   no level to have reached, so the name stands alone. */}
               {!isNew && (
-                <>
+                // One button around both chips, same as the Rewards header:
+                // the popover explains the pair together, so tapping either
+                // half asks the same question.
+                <button
+                  type="button"
+                  className="bv-rewards-labels"
+                  ref={labelsRef}
+                  aria-expanded={statsOpen}
+                  aria-label="What these mean"
+                  onClick={() => (statsOpen ? setStatsOpen(false) : openStats())}
+                >
                   <StreakLabel value={profile.streak} />
                   <LevelLabel level={profile.level} />
-                </>
+                </button>
               )}
             </div>
             <p className="bv-profile-joined">{profile.joined}</p>
@@ -303,6 +344,56 @@ export default function ProfileScreen({
           {overlays}
         </>
       )}
+
+      {/* Stats popover — the same two meters the Rewards header opens, hung
+          off the chips that were tapped here instead. */}
+      <AnimatePresence>
+        {statsOpen && (
+          <>
+            <motion.button
+              type="button"
+              className="bv-scrim"
+              aria-label="Close"
+              onClick={() => setStatsOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+            />
+            <motion.div
+              className="bv-profile-stats-anchor"
+              style={{ top: statsTop }}
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+            >
+              <AchievementStats
+                streak={profile.streak}
+                level={profile.level}
+                onOpenLevels={() => setLevelsOpen(true)}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Spend Levels — the full ramp, same as from the Rewards header. The
+          popover stays mounted underneath, so closing this puts you back on
+          the card you tapped. */}
+      <AnimatePresence>
+        {levelsOpen && (
+          <motion.div
+            className="bv-levels-wrap"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 320, damping: 34, mass: 0.7 }}
+          >
+            <SpendLevelsScreen level={profile.level} onBack={() => setLevelsOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Pre-accept detail — pushes in over this screen, same as it does
           from the feed. Which side of the invite you're on picks the

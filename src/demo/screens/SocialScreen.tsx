@@ -150,7 +150,11 @@ const POSTS: Post[] = [
 ]
 
 // ---- Friends tab (Figma 19582:175875) ----
-const CHALLENGE: Challenge = {
+// Exported because the Rewards tab heads its own "In Progress Challenge"
+// section with the same card. One challenge, one roster, whichever tab you
+// are looking at — the same rule the card and the detail screen already
+// follow between them.
+export const CHALLENGE: Challenge = {
   name: 'Summer Dining Challenge',
   participantsLabel: `${challengeFaces[0].name} and 2+ are in this challenge with you`,
   participants: [...challengeFaces.map((p) => p.avatar), BOBBY.avatar],
@@ -184,7 +188,7 @@ const ELIGIBLE_MERCHANTS: Merchant[] = MERCHANT_NAMES.map((name, i) => ({
 
 // Detail screen (Figma 19608:9122). Positions are the artboard coordinates
 // from the node; sizes are derived from `share` — see FloatingAvatar.
-const CHALLENGE_DETAIL: ChallengeDetail = {
+export const CHALLENGE_DETAIL: ChallengeDetail = {
   name: 'Summer Dining Challenge',
   blurb:
     'Spend $1,000 together. Everyone earns an extra $5. Stackable with merchant bonuses. Invite up to 4 friends.',

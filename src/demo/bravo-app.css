@@ -5694,3 +5694,723 @@ button.bv-balance-pill:active {
   line-height: 1.2;
   color: var(--bv-black);
 }
+
+/* ==================================================================
+   Rewards tab — Figma 19457:11305 ("Home"). Who you are, the daily
+   check-in, the challenge you are in, and the badges rail.
+   ================================================================== */
+.bv-rewards-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+/* Same fade as the community header: the page runs under it and dissolves
+   rather than sliding behind a hard edge. Content is statusbar + 6 + 37,
+   and the 75.492% white stop is what fixes the frame height — the fade has
+   to begin where the identity row ends. */
+.bv-rewards-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: calc((var(--bv-statusbar-h) + 43px) / 0.75492);
+  padding: calc(var(--bv-statusbar-h) + 6px) var(--bv-space-4) 0;
+  background: linear-gradient(
+    180deg,
+    var(--bv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.bv-rewards-topbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 37px;
+  pointer-events: auto;
+}
+
+.bv-rewards-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+/* 45:60 in Figma — a tall pill, not a circle. */
+.bv-rewards-face {
+  width: 27.75px;
+  height: 37px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-rewards-who {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 37px;
+  min-width: 0;
+}
+
+.bv-rewards-name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #303030;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* A <button>: the two chips together open the stats popover that explains
+   what they are counting. Reset back to the plain row they look like. */
+.bv-rewards-labels {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hangs off the header chips: status bar + 6 (bar margin) + 37 (identity
+   row) + 12 (gap). Above the scrim, which dims the header along with
+   everything else — the popover is the whole story, not an annotation. */
+.bv-rewards-stats-anchor {
+  position: absolute;
+  top: calc(var(--bv-statusbar-h) + 55px);
+  left: var(--bv-space-4);
+  right: var(--bv-space-4);
+  z-index: 9;
+}
+
+/* ---- stats popover — Figma 19982:31109 ----
+   Two meters side by side. 36px radius, like the Combined Spendable sheet;
+   the radius scale stops at 24, so both are deliberate literals. */
+.bv-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--bv-space-3);
+  border-radius: 36px;
+  background: var(--bv-white);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+}
+
+.bv-stats-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+  width: 100%;
+}
+
+/* Equal halves that may shrink below their content — min-width:0 is what
+   lets a long caption ellipsize instead of shoving its neighbour over. */
+.bv-stats-card {
+  flex: 1 0 0;
+  min-width: 0;
+  height: 161px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--bv-space-4);
+  padding: 0 var(--bv-space-3);
+  border-radius: var(--bv-radius-3xl);
+  background: var(--bv-neutral-150);
+}
+
+/* The card that leads somewhere — the chevron in its label says so. */
+.bv-stats-card.is-link {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bv-stats-head,
+.bv-stats-foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  width: 100%;
+}
+
+.bv-stats-label {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+/* The label plus its chevron. inline-flex, not a gap on the head: the head
+   is a column, so the chevron has to ride WITH the text rather than become
+   a third row under it. */
+.bv-stats-label-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+}
+
+.bv-stats-value {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* The sparks sit tighter in their box than the flame does, so they need the
+   wider gap to read as the same distance from the number. */
+.bv-stats-value-spark {
+  gap: var(--bv-space-1-5);
+}
+
+.bv-stats-value b {
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-stats-glyph {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.bv-stats-glyph img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Figma crops the flame to 117% inside its box — same correction as the
+   11px chip, for the same transparent margin. */
+.bv-stats-glyph-zoom {
+  overflow: hidden;
+}
+
+.bv-stats-glyph-zoom img {
+  transform: scale(1.17);
+}
+
+/* Same bar recipe as the challenge cards: 9px, fully round, and the Figma
+   "accent-default" inset on the fill. */
+.bv-stats-track {
+  width: 100%;
+  height: 9px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.bv-stats-fill {
+  height: 100%;
+  border-radius: 1000px;
+  background: #343434;
+  box-shadow: var(--bv-inset-accent);
+}
+
+.bv-stats-caption {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The caption and the spark you are heading towards, pushed apart. */
+.bv-stats-caption-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-1);
+  width: 100%;
+}
+
+.bv-stats-next-spark {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+
+.bv-rewards-scroll {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+  /* puts the Daily Check-in heading at y=126 per Figma */
+  padding-top: calc(var(--bv-statusbar-h) + 67px);
+  padding-bottom: 140px;
+}
+
+.bv-rewards-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-rewards-scroll > * {
+  flex-shrink: 0;
+}
+
+.bv-rewards-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  padding: 0 var(--bv-space-4);
+}
+
+/* The rail bleeds to the screen edge, so it undoes the section's padding
+   and re-applies it as its own — the cards scroll off, they do not stop. */
+.bv-rewards-section:has(.bv-ach-rail) {
+  padding: 0;
+}
+
+.bv-rewards-section:has(.bv-ach-rail) .bv-rewards-section-title {
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-rewards-section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* ---------- Daily Check-in (Figma 19905:21350) ---------- */
+.bv-checkin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  padding: 0 var(--bv-space-4);
+}
+
+/* stretch, not center: both sides are two-line stacks, and each pushes its
+   lines to the top and bottom so the count sits level with the title and the
+   best with the "ends" line. */
+.bv-checkin-head {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-checkin-score {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--bv-space-1-5);
+}
+
+.bv-checkin-titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+.bv-checkin-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-checkin-ends {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-info-300);
+}
+
+.bv-checkin-streak {
+  flex-shrink: 0;
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* The record under the current run — a quieter line, matching the "ends"
+   line it sits level with. */
+.bv-checkin-best {
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+}
+
+.bv-checkin-week {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.bv-checkin-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+.bv-checkin-dow {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-checkin-mark {
+  width: 23.556px;
+  height: 23.556px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11.778px;
+  /* Overridden per state below; the border is declared here so the dashed
+     "today" square is the same size as the filled ones rather than 2px
+     bigger — border-box would still shift the icon. */
+  border: 1px solid transparent;
+}
+
+.bv-checkin-amount {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+}
+
+/* Claimed: filled, and the amount is coloured to match — the row of blue is
+   the streak, read before any number is. */
+.bv-checkin-day.is-collected .bv-checkin-mark {
+  background: var(--bv-info-300);
+  color: var(--bv-white);
+}
+
+.bv-checkin-day.is-collected .bv-checkin-amount {
+  color: var(--bv-info-300);
+}
+
+/* Today: an outline waiting to be filled, not a state of its own colour. */
+.bv-checkin-day.is-today .bv-checkin-mark {
+  border: 1px dashed var(--bv-neutral-300);
+  color: var(--bv-neutral-300);
+}
+
+.bv-checkin-day.is-today .bv-checkin-amount {
+  color: var(--bv-neutral-300);
+}
+
+.bv-checkin-day.is-upcoming .bv-checkin-mark {
+  background: var(--bv-neutral-300);
+  color: var(--bv-white);
+}
+
+.bv-checkin-day.is-upcoming .bv-checkin-amount {
+  color: var(--bv-neutral-300);
+}
+
+.bv-checkin-collect {
+  height: 44px;
+  border: none;
+  border-radius: var(--bv-radius-lg);
+  background: var(--bv-black);
+  box-shadow: var(--bv-inset-accent);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+  color: var(--bv-white);
+  cursor: pointer;
+}
+
+/* ---------- Achievements rail (Figma 19970:30547) ---------- */
+
+/* Holds the fade. The rail itself scrolls, so a fade painted on IT would
+   travel with the content instead of staying pinned to the edge. */
+.bv-ach-rail-wrap {
+  position: relative;
+}
+
+/* Says "there is more" without a scrollbar: seven cards in a 402 phone, and
+   only two and a bit fit, so the cut has to look deliberate. */
+.bv-ach-rail-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--bv-white));
+}
+
+.bv-ach-rail {
+  display: flex;
+  gap: var(--bv-space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 var(--bv-space-4);
+  /* A finger swipes this; a mouse grabs it — see useDragScroll. */
+  cursor: grab;
+}
+
+.bv-ach-rail.is-grabbing {
+  cursor: grabbing;
+  /* Dragging a rail must not paint a text selection across the labels. */
+  user-select: none;
+}
+
+.bv-ach-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-ach-card {
+  width: 179px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-2);
+  padding: var(--bv-space-3);
+  border: 1px solid var(--bv-neutral-200);
+  border-radius: 13px;
+  background: var(--bv-white);
+}
+
+.bv-ach-art {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  display: block;
+}
+
+.bv-ach-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--bv-black);
+  text-align: center;
+}
+
+/* The date sits in the same 32px the CTA occupies, so an earned card and an
+   unearned one are exactly the same height in the rail. */
+.bv-ach-earned {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  font-size: 12px;
+  line-height: var(--bv-line-20);
+  color: var(--bv-neutral-400);
+  text-align: center;
+}
+
+.bv-ach-cta {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-black);
+  box-shadow: var(--bv-inset-accent);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--bv-line-20);
+  color: var(--bv-white);
+  cursor: pointer;
+}
+
+/* The Rewards header's popover, anchored on the profile instead. Its `top`
+   is set inline from the chips' measured position — they sit in the scroll,
+   not in a pinned bar, so there is no fixed offset to hard-code. */
+.bv-profile-stats-anchor {
+  position: absolute;
+  left: var(--bv-space-4);
+  right: var(--bv-space-4);
+  z-index: 9;
+}
+
+/* ==================================================================
+   Spend Levels — Figma 19988:31193. The whole ramp as one arc, your
+   spark large in the middle and the tiers either side falling away
+   off both edges. Pushed in from the Rewards stats popover.
+   ================================================================== */
+.bv-levels-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the stats popover (9) and its scrim (7) */
+  z-index: 12;
+}
+
+.bv-levels-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bv-white);
+  overflow: hidden;
+}
+
+/* Three blurred colour fields, exported from the frame rather than rebuilt:
+   they are 200px-and-175px Gaussian blurs, which no CSS gradient reproduces
+   exactly. Both sit far outside the artboard and are clipped by it. */
+.bv-levels-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Figma nests these as percentage insets on a percentage-inset box; resolved,
+   the purple/cyan pair is a 1429x1256 sheet hanging off the top-left. */
+.bv-levels-glow {
+  position: absolute;
+  left: -462px;
+  top: -517px;
+  width: 1429px;
+  height: 1256px;
+  display: block;
+}
+
+/* The warm one is rotated on its own axis, so it is placed by its CENTRE
+   (33.8, 360.8) and turned about that point. */
+.bv-levels-wash {
+  position: absolute;
+  left: 33.79px;
+  top: 360.8px;
+  width: 992.689px;
+  height: 896.258px;
+  display: block;
+  transform: translate(-50%, -50%) rotate(43.33deg);
+}
+
+.bv-levels-head {
+  position: absolute;
+  top: calc(var(--bv-statusbar-h) + 6px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  padding: 0 var(--bv-space-4);
+}
+
+.bv-levels-title {
+  margin: 0;
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* The arc is positioned, not laid out: every spark is placed from the frame's
+   own measurements (see SLOTS in SpendLevelsScreen), and the ones at the ends
+   are MEANT to run off the edges. */
+.bv-levels-arc {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bv-levels-ribbon {
+  position: absolute;
+  left: calc(50% - 0.55px);
+  top: 419.15px;
+  width: 457.539px;
+  height: 61.308px;
+  display: block;
+  transform: translateX(-50%);
+}
+
+.bv-levels-spark {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+}
+
+/* Yours carries a soft ground shadow the smaller ones do not — it is the one
+   sitting on the ribbon rather than travelling along it. */
+.bv-levels-spark.is-current {
+  filter: drop-shadow(0 10px 18px rgba(32, 32, 32, 0.16));
+}
+
+.bv-levels-copy {
+  position: absolute;
+  top: 687px;
+  left: var(--bv-space-4);
+  right: var(--bv-space-4);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-8);
+}
+
+.bv-levels-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+.bv-levels-lv {
+  font-family: var(--bv-font-display);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-levels-name {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+  text-align: center;
+}
+
+.bv-levels-tagline {
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+  text-align: center;
+}
+
+.bv-levels-spent {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  text-align: center;
+}

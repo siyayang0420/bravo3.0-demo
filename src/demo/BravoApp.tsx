@@ -4,6 +4,7 @@ import { Signal, Wifi, BatteryFull } from 'lucide-react'
 import HomeScreen from './screens/HomeScreen'
 import SocialScreen from './screens/SocialScreen'
 import ProfileScreen from './screens/ProfileScreen'
+import RewardsScreen from './screens/RewardsScreen'
 import ProfileProvider from './components/ProfileLauncher'
 import DemoUserProvider from './components/DemoIdentity'
 import { DEMO_USERS, meProfile, type DemoUser } from './data/profileDemo'
@@ -19,7 +20,7 @@ const TAB_LABELS: Record<NavId, string> = {
 }
 
 /** Tabs with an implemented design — the rest show the placeholder. */
-const BUILT_TABS: NavId[] = ['map', 'friends', 'profile']
+const BUILT_TABS: NavId[] = ['map', 'friends', 'rewards', 'profile']
 
 export default function BravoApp({
   hasPromotion = false,
@@ -80,6 +81,8 @@ export default function BravoApp({
             />
           ) : tab === 'friends' ? (
             <SocialScreen active={tab} onNavigate={setTab} intro={intro} avatar={user.avatar} />
+          ) : tab === 'rewards' ? (
+            <RewardsScreen profile={me} active={tab} onNavigate={setTab} intro={intro} />
           ) : (
             <HomeScreen
               active={tab}
