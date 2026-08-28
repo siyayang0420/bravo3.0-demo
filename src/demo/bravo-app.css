@@ -4191,23 +4191,36 @@ button.bv-balance-pill:active {
 .bv-achievement-icon {
   display: block;
   flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  object-fit: contain;
 }
 
-/* The full variant set (Figma DS 306:8847). Every tint is a one-off
-   value from the design system, deliberately not a palette token. */
-.bv-achievement-streak { background: #fff2de; color: #cc7700; }
-.bv-achievement-lv1    { background: #ffe5d9; color: #c56d40; }
-.bv-achievement-lv2    { background: #f3f5f8; color: #81848a; }
-.bv-achievement-lv3    { background: #ffefc6; color: #93783a; }
-.bv-achievement-lv4    { background: #fbe5ff; color: #9e53c0; }
-.bv-achievement-lv5    { background: #d4dff7; color: #4a66a1; }
-.bv-achievement-lv6 {
-  background: linear-gradient(180deg, #757678 0%, #2c2c2e 100%);
-  color: var(--bv-white);
+/* The flame render carries transparent margin the sparks do not, so it is
+   scaled up inside a clipped box to land at the same optical size — Figma
+   crops it the same way (117% inside the 11px frame). */
+.bv-achievement-icon-zoom {
+  overflow: hidden;
+  object-fit: initial;
 }
-.bv-achievement-lv7 {
-  background: linear-gradient(0deg, #8489f5 11.111%, #cdf1ff 108.17%);
-  color: #262955;
+
+.bv-achievement-icon-zoom img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.17);
+}
+
+/* One chip, every level (Figma 19895:20504). This replaces the seven tinted
+   variants the labels used to carry: the pill is now neutral-150 with
+   neutral-600 text, and the LEVEL is told entirely by its spark. Colouring
+   the pill as well was saying the same thing twice, and it made a row of
+   labels read as seven different kinds of badge rather than one badge at
+   seven levels. */
+.bv-achievement {
+  background: var(--bv-neutral-150);
+  color: var(--bv-neutral-600);
 }
 
 .bv-post-caption {

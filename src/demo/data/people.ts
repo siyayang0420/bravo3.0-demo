@@ -4,6 +4,7 @@
 // them (Bobby, Happy) are also the two switchable demo identities — see
 // `DEMO_USERS` in profileDemo.ts — but nothing stops them from also showing
 // up in a leaderboard or a post; they're real friends, not reserved slots.
+import type { AchievementLevel } from '../components/AchievementLabel'
 import apple from '../assets/social/apple.jpg'
 import bobby from '../assets/social/bobby.jpg'
 import cathy from '../assets/social/cathy.jpg'
@@ -75,6 +76,42 @@ function shuffled<T>(arr: T[]): T[] {
 }
 
 export const PEOPLE_SHUFFLED: Person[] = shuffled(PEOPLE)
+
+const LEVELS: AchievementLevel[] = ['lv1', 'lv2', 'lv3', 'lv4', 'lv5', 'lv6', 'lv7']
+
+/**
+ * A level per person, drawn once when this module loads — the same lifetime
+ * as the shuffle above.
+ *
+ * A level belongs to the PERSON, not to the post: the same face has to carry
+ * the same spark in the feed, on a venue page and in their own profile, or
+ * one person shows three different levels on one screen. The posts used to
+ * hardcode a level each, which did exactly that — and clustered on lv1, lv6
+ * and lv7, so four of the seven sparks never appeared at all.
+ *
+ * Walking the list with a random START rather than drawing each person
+ * independently: twelve independent draws can easily land nine people on the
+ * same level, and the point of this is to SHOW the set.
+ */
+const levelStart = Math.floor(Math.random() * LEVELS.length)
+
+export const LEVEL_BY_PERSON: Record<PersonId, AchievementLevel> = Object.fromEntries(
+  PEOPLE.map((p, i) => [p.id, LEVELS[(levelStart + i) % LEVELS.length]]),
+) as Record<PersonId, AchievementLevel>
+
+/** The level this person is at — see LEVEL_BY_PERSON. */
+export const levelFor = (id: PersonId): AchievementLevel => LEVEL_BY_PERSON[id]
+
+/**
+ * The same, for the call sites that only ever carry a face. Profiles and
+ * venue posts are threaded as `{ name, avatar }` — no id — so the avatar is
+ * the identity there. Falls back to lv1 for the handful of stock faces
+ * (savers, merchant photos) that are not cast members.
+ */
+export function levelForAvatar(avatar: string): AchievementLevel {
+  const person = PEOPLE.find((p) => p.avatar === avatar)
+  return person ? LEVEL_BY_PERSON[person.id] : 'lv1'
+}
 
 /**
  * `n` people starting at `offset` into the one shared shuffle, wrapping

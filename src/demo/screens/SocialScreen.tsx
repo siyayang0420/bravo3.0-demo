@@ -17,7 +17,7 @@ import BottomNav, { type NavId } from '../components/BottomNav'
 import EmptyState from '../components/EmptyState'
 import { useDemoUser } from '../components/DemoIdentity'
 import { EMPTY_COPY, EMPTY_PHOTOS } from '../data/emptyStateDemo'
-import { BOBBY, pickPeople } from '../data/people'
+import { BOBBY, levelFor, pickPeople } from '../data/people'
 import postPhoto from '../assets/social/post-photo.jpg'
 import venueThumb from '../assets/social/venue-amcafe.jpg'
 import merchantPhoto from '../assets/social/merchant-photo.png'
@@ -78,7 +78,7 @@ const POSTS: Post[] = [
     author: postFaces[0].name,
     avatar: postFaces[0].avatar,
     streak: '2X',
-    level: 'lv1',
+    level: levelFor(postFaces[0].id),
     date: 'Jun 3, 2026',
     caption: CAPTION,
     venue: VENUE,
@@ -90,7 +90,7 @@ const POSTS: Post[] = [
     author: postFaces[1].name,
     avatar: postFaces[1].avatar,
     streak: '8X',
-    level: 'lv6',
+    level: levelFor(postFaces[1].id),
     date: 'Jun 3, 2026',
     caption: CAPTION,
     venue: VENUE,
@@ -101,7 +101,7 @@ const POSTS: Post[] = [
     author: postFaces[2].name,
     avatar: postFaces[2].avatar,
     streak: '8X',
-    level: 'lv6',
+    level: levelFor(postFaces[2].id),
     date: 'Jun 3, 2026',
     venue: VENUE,
     photos: [postPhoto, postPhoto],
@@ -112,7 +112,7 @@ const POSTS: Post[] = [
     author: postFaces[3].name,
     avatar: postFaces[3].avatar,
     streak: '8X',
-    level: 'lv7',
+    level: levelFor(postFaces[3].id),
     date: 'Jun 3, 2026',
     caption: '$2k deep into the year. too elite to be ordinary. 🍷',
     achievement: { kind: 'spend', label: 'Unlocked Master!' },
@@ -123,7 +123,7 @@ const POSTS: Post[] = [
     author: postFaces[4].name,
     avatar: postFaces[4].avatar,
     streak: '8X',
-    level: 'lv7',
+    level: levelFor(postFaces[4].id),
     date: 'Jun 3, 2026',
     caption: [
       { text: 'the dedication! just hit a ' },
@@ -138,7 +138,7 @@ const POSTS: Post[] = [
     author: postFaces[5].name,
     avatar: postFaces[5].avatar,
     streak: '8X',
-    level: 'lv7',
+    level: levelFor(postFaces[5].id),
     date: 'Jun 3, 2026',
     caption: [
       { text: 'Earn extra ' },
@@ -212,7 +212,7 @@ const FRIEND_POSTS: Post[] = [
     author: friendPostFaces[0].name,
     avatar: friendPostFaces[0].avatar,
     streak: '2X',
-    level: 'lv1',
+    level: levelFor(friendPostFaces[0].id),
     date: 'Jun 3, 2026',
     caption: CAPTION,
     venue: VENUE,
@@ -223,7 +223,7 @@ const FRIEND_POSTS: Post[] = [
     author: friendPostFaces[1].name,
     avatar: friendPostFaces[1].avatar,
     streak: '2X',
-    level: 'lv1',
+    level: levelFor(friendPostFaces[1].id),
     date: 'Jun 3, 2026',
     caption: 'Saved to my list',
     venue: VENUE,
@@ -233,7 +233,7 @@ const FRIEND_POSTS: Post[] = [
     author: friendPostFaces[2].name,
     avatar: friendPostFaces[2].avatar,
     streak: '8X',
-    level: 'lv7',
+    level: levelFor(friendPostFaces[2].id),
     date: 'Jun 3, 2026',
     caption: [
       { text: 'Earn extra ' },
@@ -247,7 +247,7 @@ const FRIEND_POSTS: Post[] = [
     author: friendPostFaces[3].name,
     avatar: friendPostFaces[3].avatar,
     streak: '8X',
-    level: 'lv7',
+    level: levelFor(friendPostFaces[3].id),
     date: 'Jun 3, 2026',
     caption: '$2k deep into the year. too elite to be ordinary. 🍷',
     achievement: { kind: 'spend', label: 'Unlocked Master!' },
@@ -258,7 +258,7 @@ const FRIEND_POSTS: Post[] = [
     author: friendPostFaces[4].name,
     avatar: friendPostFaces[4].avatar,
     streak: '8X',
-    level: 'lv7',
+    level: levelFor(friendPostFaces[4].id),
     date: 'Jun 3, 2026',
     caption: [
       { text: 'the dedication! just hit a ' },

@@ -7,7 +7,7 @@
 // stamps a person onto that template; ME_PROFILE is the signed-in user.
 import { type Post } from '../components/PostCard'
 import { type AchievementLevel } from '../components/AchievementLabel'
-import { APPLE, BOBBY, HAPPY, pickPeople } from './people'
+import { APPLE, BOBBY, HAPPY, levelForAvatar, pickPeople } from './people'
 import postPhoto from '../assets/social/post-photo.jpg'
 import venueThumb from '../assets/social/venue-amcafe.jpg'
 
@@ -122,13 +122,16 @@ const VENUE = {
 // lists them. Author and avatar are the profile's, so the feed reads as
 // theirs.
 function templatePosts(author: string, avatar: string): Post[] {
+  // One level for all three: they are the same person's posts. Looked up from
+  // the avatar, which is the only identity threaded this far down.
+  const level = levelForAvatar(avatar)
   return [
     {
       id: 'pr-1',
       author,
       avatar,
       streak: '2X',
-      level: 'lv1',
+      level,
       date: 'Jun 3, 2026',
       caption: 'Best Cantonese cafe, will come again soon next time when my fam visit',
       venue: VENUE,
@@ -139,7 +142,7 @@ function templatePosts(author: string, avatar: string): Post[] {
       author,
       avatar,
       streak: '8X',
-      level: 'lv7',
+      level,
       date: 'Jun 3, 2026',
       caption: 'Earn extra $5 bonus from completing a challenge.',
       achievement: { kind: 'streak', label: '5-month streak!' },
@@ -149,7 +152,7 @@ function templatePosts(author: string, avatar: string): Post[] {
       author,
       avatar,
       streak: '8X',
-      level: 'lv7',
+      level,
       date: 'Jun 3, 2026',
       caption: 'Earn extra $5 bonus from completing a challenge.',
       achievement: { kind: 'spend', label: 'Unlocked Master!' },
@@ -161,7 +164,7 @@ export function publicProfile(person: ProfilePerson): ProfileData {
   return {
     ...person,
     streak: '8X',
-    level: 'lv7',
+    level: levelForAvatar(person.avatar),
     joined: 'Joined since April 2024',
     followers: 152,
     following: 54,

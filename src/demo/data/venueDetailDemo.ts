@@ -5,7 +5,7 @@
 // Faces come from the shared cast (people.ts) so the same friends show up
 // here as on the map card that got you in.
 import { type AchievementLevel } from '../components/AchievementLabel'
-import { PERSON, pickPeople } from './people'
+import { levelFor, PERSON, pickPeople } from './people'
 import postPhoto from '../assets/social/post-photo.jpg'
 // Same-vibe cards want PHOTOGRAPHS. The merchant-1..4 files are brand logos —
 // circular marks on their own backgrounds — so three of them side by side
@@ -80,7 +80,7 @@ export const ELLIPSIS_DETAIL: VenueDetail = {
       author: PERSON.joshua.name,
       avatar: PERSON.joshua.avatar,
       streak: '4X',
-      level: 'lv4',
+      level: levelFor('joshua'),
       when: 'Just now',
       // Written out in full here. The map bubble shows the same string clipped
       // to a single line — see .bv-venue-comment-bubble — so the copy lives in
@@ -96,7 +96,7 @@ export const ELLIPSIS_DETAIL: VenueDetail = {
       author: PERSON.ken.name,
       avatar: PERSON.ken.avatar,
       streak: '2X',
-      level: 'lv3',
+      level: levelFor('ken'),
       when: '1 min ago',
       text: 'Best place in town — the matcha is genuinely the reason I keep coming back.',
       // Three different shots, so swiping the stack visibly moves.
@@ -108,7 +108,7 @@ export const ELLIPSIS_DETAIL: VenueDetail = {
       author: PERSON.emma.name,
       avatar: PERSON.emma.avatar,
       streak: '8X',
-      level: 'lv6',
+      level: levelFor('emma'),
       when: '2 hr ago',
       text: 'Went for the coffee, stayed three hours. Great light in the afternoon.',
       photos: [ellipsisInterior, venueThumb, postPhoto],
