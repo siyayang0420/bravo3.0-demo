@@ -189,22 +189,33 @@ export default function ProfileScreen({
               <span className="bv-profile-name">{profile.name}</span>
               {/* Earned, not given — a new account has no streak to show and
                   no level to have reached, so the name stands alone. */}
-              {!isNew && (
-                // One button around both chips, same as the Rewards header:
-                // the popover explains the pair together, so tapping either
-                // half asks the same question.
-                <button
-                  type="button"
-                  className="bv-rewards-labels"
-                  ref={labelsRef}
-                  aria-expanded={statsOpen}
-                  aria-label="What these mean"
-                  onClick={() => (statsOpen ? setStatsOpen(false) : openStats())}
-                >
-                  <StreakLabel value={profile.streak} />
-                  <LevelLabel level={profile.level} />
-                </button>
-              )}
+              {/* The chips are public — everyone sees the streak and the
+                  level. What they OPEN is not: the meters break out how much
+                  has been spent and what is left to the next tier, which is
+                  yours alone. On someone else's profile the pair stays a
+                  plain label with nothing behind it. */}
+              {!isNew &&
+                (isMe ? (
+                  // One button around both chips, same as the Rewards header:
+                  // the popover explains the pair together, so tapping either
+                  // half asks the same question.
+                  <button
+                    type="button"
+                    className="bv-rewards-labels"
+                    ref={labelsRef}
+                    aria-expanded={statsOpen}
+                    aria-label="What these mean"
+                    onClick={() => (statsOpen ? setStatsOpen(false) : openStats())}
+                  >
+                    <StreakLabel value={profile.streak} />
+                    <LevelLabel level={profile.level} />
+                  </button>
+                ) : (
+                  <span className="bv-rewards-labels is-static">
+                    <StreakLabel value={profile.streak} />
+                    <LevelLabel level={profile.level} />
+                  </span>
+                ))}
             </div>
             <p className="bv-profile-joined">{profile.joined}</p>
             <div className="bv-profile-counts">

@@ -5784,6 +5784,12 @@ button.bv-balance-pill:active {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The same pair on someone else's profile: a label, not a control — there is
+   no popover behind it, so it must not offer one. */
+.bv-rewards-labels.is-static {
+  cursor: default;
+}
+
 /* Hangs off the header chips: status bar + 6 (bar margin) + 37 (identity
    row) + 12 (gap). Above the scrim, which dims the header along with
    everything else — the popover is the whole story, not an annotation. */
