@@ -6368,12 +6368,29 @@ button.bv-balance-pill:active {
 
 /* The arc is positioned, not laid out: every spark is placed from the frame's
    own measurements (see SLOTS in SpendLevelsScreen), and the ones at the ends
-   are MEANT to run off the edges. */
+   are MEANT to run off the edges.
+   It is also the swipe surface, so it takes pointer events — the header and
+   the copy sit above it at z-2 and keep their own taps. */
 .bv-levels-arc {
   position: absolute;
   inset: 0;
   z-index: 1;
+  cursor: grab;
+  outline: none;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bv-levels-arc:active {
+  cursor: grabbing;
+}
+
+/* The sparks ride the drag; they must not start one of their own. */
+.bv-levels-spark,
+.bv-levels-ribbon {
   pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .bv-levels-ribbon {
