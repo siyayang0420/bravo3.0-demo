@@ -6415,9 +6415,16 @@ button.bv-balance-pill:active {
   filter: drop-shadow(0 10px 18px rgba(32, 32, 32, 0.16));
 }
 
+/* Anchored to the BOTTOM, not the top. Figma pins it at top:687 because that
+   frame's caption is a fixed four lines; here the tagline wraps to two on
+   Lv.6 and the "next glow-up" line only shows at your own level, so a
+   top-anchored block grows downward and crowds the bottom edge by different
+   amounts on different tiers. Growing UP from a fixed 24px instead keeps that
+   margin the same on every level — 24px is where Figma's own block ends
+   (687 + 163 of content in an 874 frame). */
 .bv-levels-copy {
   position: absolute;
-  top: 687px;
+  bottom: 24px;
   left: var(--bv-space-4);
   right: var(--bv-space-4);
   z-index: 2;
@@ -6425,6 +6432,16 @@ button.bv-balance-pill:active {
   flex-direction: column;
   align-items: center;
   gap: var(--bv-space-8);
+}
+
+/* The caption is one unit — the tier's name and what it took change together
+   or not at all. Carries the 32px the copy column used to. */
+.bv-levels-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bv-space-8);
+  width: 100%;
 }
 
 .bv-levels-identity {

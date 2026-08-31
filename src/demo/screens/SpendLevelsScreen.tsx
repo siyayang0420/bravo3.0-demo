@@ -172,36 +172,48 @@ export default function SpendLevelsScreen({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut', delay: 0.18 }}
       >
-        {/* Crossfades with the arc: swipe and the whole caption is replaced,
-            rather than three lines re-rendering out of step with each other. */}
-        <AnimatePresence mode="wait" initial={false}>
+        {/* ONE keyed block for the whole caption. Keying it remounts it on
+            every swipe, so framer replays the fade — and because the name and
+            the spend line change together, the two can never sit a frame apart
+            describing different tiers.
+            Deliberately not AnimatePresence: an exit animation would either
+            hold the old tier on screen while the new one is already current,
+            or collapse the block's height mid-swap. */}
+        <div className="bv-levels-caption" key={tier.level}>
           <motion.div
-            key={tier.level}
             className="bv-levels-identity"
             initial={reduce ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
-            transition={{ duration: 0.16, ease: 'easeOut' }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
           >
             <span className="bv-levels-lv">Lv.{tier.level.slice(2)}</span>
             <span className="bv-levels-name">{tier.name}</span>
             <span className="bv-levels-tagline">{tier.tagline}</span>
           </motion.div>
-        </AnimatePresence>
-        <p className="bv-levels-spent">
-          You’ve spent more than {tier.threshold} on Bravo.
-          {/* Only where you actually stand. Looking back at a tier you have
-              already passed, there is no "next" to count towards from here —
-              the gap is measured from your real level, not the one on screen. */}
-          {focus === reached && !atTop && (
-            <>
-              <br />
-              {/* The same figure the stats popover quotes — one number, so the
-                  card you tapped and the screen it opened cannot disagree. */}
-              {ACHIEVEMENT_STATS.toNextLevel} until your next glow-up.
-            </>
-          )}
-        </p>
+          {/* Every tier you can bring to the middle is one you have already
+              reached, so this line is always a record of an event that
+              happened: what it took, and when you crossed. */}
+          <motion.p
+            className="bv-levels-spent"
+            initial={reduce ? false : { opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: 'easeOut', delay: 0.04 }}
+          >
+            {tier.threshold} spent • {tier.achievedOn}
+            {/* Only where you actually stand. Looking back at a tier you have
+                already passed, there is no "next" to count towards from here —
+                the gap is measured from your real level, not the one on screen. */}
+            {focus === reached && !atTop && (
+              <>
+                <br />
+                {/* The same figure the stats popover quotes — one number, so
+                    the card you tapped and the screen it opened cannot
+                    disagree. */}
+                {ACHIEVEMENT_STATS.toNextLevel} until your next glow-up.
+              </>
+            )}
+          </motion.p>
+        </div>
       </motion.div>
     </div>
   )
