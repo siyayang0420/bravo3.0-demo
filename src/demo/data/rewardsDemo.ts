@@ -1,11 +1,16 @@
 // EDIT ME — demo content for the Rewards tab (Figma 19457:11305).
-import linkCard from '../assets/achievements/link-card.webp'
-import inviteFriend from '../assets/achievements/invite-friend.webp'
-import earnBonus from '../assets/achievements/earn-bonus.webp'
-import visitRestaurant from '../assets/achievements/visit-restaurant.webp'
-import makePost from '../assets/achievements/make-post.webp'
-import dailyCheckin from '../assets/achievements/daily-checkin.webp'
-import sendMoney from '../assets/achievements/send-money.webp'
+// Badge art, Figma 20012:12716 — the chrome set. The dark medallions these
+// replaced are still in the same folder under their plain names
+// (link-card.webp and friends), unused but kept.
+//
+// Delivered at 1024px for an 88px slot; committed at 264px (3x) WebP, the
+// same treatment the medallions had.
+import linkCard from '../assets/achievements/link-card-chrome.webp'
+import inviteFriend from '../assets/achievements/invite-friend-chrome.webp'
+import earnBonus from '../assets/achievements/earn-bonus-chrome.webp'
+import visitRestaurant from '../assets/achievements/visit-restaurant-chrome.webp'
+import makePost from '../assets/achievements/make-post-chrome.webp'
+import sendMoney from '../assets/achievements/send-money-chrome.webp'
 
 /**
  * One square of the check-in week.
@@ -91,7 +96,10 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'earn-bonus', title: 'Earn a Bonus', image: earnBonus, cta: 'Top up now' },
   { id: 'visit-restaurant', title: 'Visit a restaurant', image: visitRestaurant, cta: 'Explore now' },
   { id: 'make-post', title: 'Make a post', image: makePost, cta: 'Post now' },
-  { id: 'daily-checkin', title: 'Daily checked In', image: dailyCheckin, cta: 'Check in now' },
+  // Figma gives this one the SAME art as "Visit a restaurant" (both point at
+  // Rectangle3753 in 20012:12716) — reproduced rather than substituted, but
+  // it looks like an oversight and probably wants its own badge.
+  { id: 'daily-checkin', title: 'Daily checked In', image: visitRestaurant, cta: 'Check in now' },
   { id: 'send-money', title: 'Send Bravo Money', image: sendMoney, cta: 'Send now' },
 ]
 

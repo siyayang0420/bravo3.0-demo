@@ -5985,7 +5985,9 @@ button.bv-balance-pill:active {
   padding: 0;
 }
 
-.bv-rewards-section:has(.bv-ach-rail) .bv-rewards-section-title {
+/* The head row carries the padding the section gave up, so the title and its
+   count sit on the same margins the cards below them scroll past. */
+.bv-rewards-section:has(.bv-ach-rail) .bv-rewards-section-head {
   padding: 0 var(--bv-space-4);
 }
 
@@ -5995,6 +5997,21 @@ button.bv-balance-pill:active {
   font-weight: 700;
   line-height: 1.2;
   color: var(--bv-black);
+}
+
+/* Title on the left, "1/7" pushed to the right edge. */
+.bv-rewards-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-rewards-section-count {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
 }
 
 /* ---------- Daily Check-in (Figma 19905:21350) ---------- */

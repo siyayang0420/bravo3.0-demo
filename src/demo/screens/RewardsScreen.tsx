@@ -131,7 +131,15 @@ export default function RewardsScreen({
         </section>
 
         <section className="bv-rewards-section">
-          <h2 className="bv-rewards-section-title">Achievements</h2>
+          <div className="bv-rewards-section-head">
+            <h2 className="bv-rewards-section-title">Achievements</h2>
+            {/* Counted off the badges themselves, not carried as a number:
+                a badge is earned exactly when it has an earnedOn date, so a
+                new account reads 0/7 without anything else being told. */}
+            <span className="bv-rewards-section-count">
+              {achievements.filter((a) => a.earnedOn).length}/{achievements.length}
+            </span>
+          </div>
           {/* A rail, because Figma lays seven 179px cards in a row far wider
               than the phone — two and a bit are visible, the rest are pulled
               in. The right edge fades so it is visibly cut off rather than
