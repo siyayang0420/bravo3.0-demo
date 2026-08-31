@@ -6062,7 +6062,7 @@ button.bv-balance-pill:active {
    line it sits level with. */
 .bv-checkin-best {
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.2;
   color: var(--bv-neutral-500);
   white-space: nowrap;
@@ -6109,9 +6109,25 @@ button.bv-balance-pill:active {
 
 /* Claimed: filled, and the amount is coloured to match — the row of blue is
    the streak, read before any number is. */
+/* The filled hand, exported from Figma and painted through a mask: one
+   silhouette, tinted by whatever `color` the state below sets. An <img>
+   would bake the colour in and need three copies of the same glyph. */
+.bv-checkin-glyph {
+  width: 16px;
+  height: 16px;
+  display: block;
+  background: currentColor;
+  -webkit-mask: url('./assets/rewards/hand-metal-filled.svg') center / 16px 16px
+    no-repeat;
+  mask: url('./assets/rewards/hand-metal-filled.svg') center / 16px 16px
+    no-repeat;
+}
+
+/* Collected: a pale blue on the info fill, not pure white — Figma's own
+   value for the glyph once the day has been claimed. */
 .bv-checkin-day.is-collected .bv-checkin-mark {
   background: var(--bv-info-300);
-  color: var(--bv-white);
+  color: #cadef4;
 }
 
 .bv-checkin-day.is-collected .bv-checkin-amount {

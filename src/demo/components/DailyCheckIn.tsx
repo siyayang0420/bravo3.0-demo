@@ -3,7 +3,7 @@
 // A week of squares above one button. The week is the whole story: three
 // filled, today waiting as a dashed outline, the rest greyed ahead of you —
 // so the streak reads at a glance, before any of the numbers do.
-import { Clock, HandMetal } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { type CheckIn } from '../data/rewardsDemo'
 
@@ -41,7 +41,11 @@ export default function DailyCheckIn({
           <div className={`bv-checkin-day is-${day.state}`} key={i}>
             <span className="bv-checkin-dow">{day.label}</span>
             <span className="bv-checkin-mark">
-              <HandMetal size={16} strokeWidth={1.9} />
+              {/* Figma's own filled glyph (20002:31281 / 19936:28061), not
+                  lucide's outline. Drawn as a mask rather than an <img> so
+                  the one exported silhouette can take the three different
+                  tints the three states need — see .bv-checkin-glyph. */}
+              <span className="bv-checkin-glyph" />
             </span>
             <span className="bv-checkin-amount">{day.amount}</span>
           </div>
