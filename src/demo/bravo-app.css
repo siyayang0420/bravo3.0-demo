@@ -3294,29 +3294,62 @@ button.bv-balance-pill:active {
 }
 
 /* ---------- empty state ---------- */
+/* A two-row rail you scroll sideways, not a stacked column: ten starters in
+   a column would fill the sheet and bury the input. Column flow fills top,
+   bottom, next column — so a swipe reveals whole pairs at a time.
+   It bleeds to both edges and re-applies the sheet's padding as scroll
+   padding, so the last brick can reach the left edge instead of stopping
+   short of it. */
 .bv-prompt-starters {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--bv-space-3);
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-columns: max-content;
+  align-items: stretch;
+  gap: var(--bv-space-2);
+  margin: 0 calc(var(--bv-space-4) * -1);
+  padding: 2px var(--bv-space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
   /* clears the floating bar — unlike the results, the starters should sit
      above it, not run behind it */
   padding-bottom: 96px;
 }
 
-/* Component: Prompt Starter (Figma 1363:3722) */
+.bv-prompt-starters::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each grid cell stretches to its row height, and the brick fills it — so
+   a one-line chip is as tall as the two-line one beside it and the rows
+   stay level. */
+.bv-prompt-starters > * {
+  display: flex;
+}
+
+/* Component: Prompt Starter (Figma 1363:3722)
+   "Brick" rather than pill: the text wraps inside a capped width instead of
+   running the chip off the screen, so long questions read as a block. */
 .bv-prompt-starter {
+  width: 100%;
+  max-width: 172px;
   padding: 10px var(--bv-space-3);
   border: none;
   border-radius: var(--bv-radius-xl);
-  background: var(--bv-neutral-100);
+  /* White, not neutral-100: on the sheet's own near-white the tinted fill
+     barely separated, and the bricks now sit shoulder to shoulder where
+     that edge has to read. The inset bubble does the lifting. */
+  background: var(--bv-white);
   box-shadow: var(--bv-inset-bubble);
   font-family: inherit;
   font-size: 14px;
   font-weight: 400;
   line-height: var(--bv-line-20);
   color: #282828;
-  white-space: nowrap;
+  text-align: left;
+  white-space: normal;
+  text-wrap: balance;
   cursor: pointer;
   transition: transform 0.16s var(--bv-ease-out);
 }
