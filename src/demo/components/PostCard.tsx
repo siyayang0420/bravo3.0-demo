@@ -1,24 +1,23 @@
 // Component — Figma social post (19582:176666)
 //
-// ONE component, six variants. The shell is always identical — avatar,
-// identity with streak + level labels, date, then a 12px-gap column — and
-// the variant only decides what sits between the caption and the actions:
-//
-//   comment  → optional caption, optional venue, optional photo rail
-//   spend    → achievement panel, spend badge art
-//   streak   → achievement panel, flame art
-//   bonus    → achievement panel, the interactive Bravo coin
-//
+// ONE component. The shell is always identical — avatar, identity with
+// streak + level labels, date, then a 12px-gap column — and what sits
+// between the caption and the actions falls out of which content fields are
+// present: an optional caption, an optional venue, an optional photo rail.
 // The three comment variants in the design (text+images / text only /
-// images only) are not separate code paths — they fall out of which
-// content fields are present.
+// images only) are not separate code paths.
+//
+// The tinted achievement panels — the spend badge, the flame, and the
+// interactive Bravo coin — used to sit at the bottom of a post. They were
+// removed at Siya's direction; `isAchievement` is what survives of them,
+// because those posts are still achievement posts and keep the two rules
+// the design gives them (see below).
 import { MessageSquare } from 'lucide-react'
 import LikeButton from './LikeButton'
 import { useOpenProfile } from './ProfileLauncher'
 import useDragScroll from '../hooks/useDragScroll'
 import { StreakLabel, LevelLabel, type AchievementLevel } from './AchievementLabel'
 import VenueCard, { type Venue } from './VenueCard'
-import AchievementPanel, { type Achievement } from './AchievementPanel'
 
 export type Post = {
   id: string
@@ -31,7 +30,12 @@ export type Post = {
   caption?: string | CaptionSegment[]
   venue?: Venue
   photos?: string[]
-  achievement?: Achievement
+  /**
+   * This post is about something earned. It no longer draws a panel, but it
+   * still sets the caption a step smaller and drops the comment action —
+   * both of which the design gives achievement posts.
+   */
+  isAchievement?: boolean
 }
 
 export type CaptionSegment = { text: string; bold?: boolean }
@@ -60,7 +64,7 @@ export default function PostCard({
   onSaveVenue?: () => void
 }) {
   const photos = useDragScroll<HTMLDivElement>()
-  const isAchievement = !!post.achievement
+  const isAchievement = !!post.isAchievement
   const openProfile = useOpenProfile()
   // Always flies from the avatar's own rect, whether the avatar or the name
   // text was the actual tap target.
@@ -106,8 +110,6 @@ export default function PostCard({
             ))}
           </div>
         )}
-
-        {post.achievement && <AchievementPanel achievement={post.achievement} />}
 
         <div className="bv-post-actions">
           {/* Achievements can be liked but not replied to. */}

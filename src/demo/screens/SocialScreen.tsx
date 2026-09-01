@@ -115,7 +115,7 @@ const POSTS: Post[] = [
     level: levelFor(postFaces[3].id),
     date: 'Jun 3, 2026',
     caption: '$2k deep into the year. too elite to be ordinary. 🍷',
-    achievement: { kind: 'spend', label: 'Unlocked Master!' },
+    isAchievement: true,
   },
   // 5 — achieved a streak badge
   {
@@ -130,7 +130,7 @@ const POSTS: Post[] = [
       { text: '5-month', bold: true },
       { text: ' dining streak. 🔥' },
     ],
-    achievement: { kind: 'streak', label: '5-month streak!' },
+    isAchievement: true,
   },
   // 6 — earned a bonus from a challenge; the coin is interactive
   {
@@ -145,7 +145,7 @@ const POSTS: Post[] = [
       { text: '$5', bold: true },
       { text: ' bonus from completing a challenge.' },
     ],
-    achievement: { kind: 'bonus', amount: 5 },
+    isAchievement: true,
   },
 ]
 
@@ -244,7 +244,7 @@ const FRIEND_POSTS: Post[] = [
       { text: '$5', bold: true },
       { text: ' bonus from completing a challenge.' },
     ],
-    achievement: { kind: 'bonus', amount: 5 },
+    isAchievement: true,
   },
   {
     id: 'f4',
@@ -254,7 +254,7 @@ const FRIEND_POSTS: Post[] = [
     level: levelFor(friendPostFaces[3].id),
     date: 'Jun 3, 2026',
     caption: '$2k deep into the year. too elite to be ordinary. 🍷',
-    achievement: { kind: 'spend', label: 'Unlocked Master!' },
+    isAchievement: true,
   },
   // 19582:177205 — streak badge
   {
@@ -269,7 +269,7 @@ const FRIEND_POSTS: Post[] = [
       { text: '5-month', bold: true },
       { text: ' dining streak. 🔥' },
     ],
-    achievement: { kind: 'streak', label: '5-month streak!' },
+    isAchievement: true,
   },
 ]
 

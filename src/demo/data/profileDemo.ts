@@ -145,7 +145,7 @@ function templatePosts(author: string, avatar: string): Post[] {
       level,
       date: 'Jun 3, 2026',
       caption: 'Earn extra $5 bonus from completing a challenge.',
-      achievement: { kind: 'streak', label: '5-month streak!' },
+      isAchievement: true,
     },
     {
       id: 'pr-3',
@@ -155,7 +155,7 @@ function templatePosts(author: string, avatar: string): Post[] {
       level,
       date: 'Jun 3, 2026',
       caption: 'Earn extra $5 bonus from completing a challenge.',
-      achievement: { kind: 'spend', label: 'Unlocked Master!' },
+      isAchievement: true,
     },
   ]
 }

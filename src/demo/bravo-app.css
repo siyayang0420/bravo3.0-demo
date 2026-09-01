@@ -4672,69 +4672,17 @@ button.bv-balance-pill:active {
 
 /* Achievement posts set their caption a step smaller. */
 .bv-post-caption.sm {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .bv-post-caption strong {
   font-weight: 700;
 }
 
-/* ---------- achievement panels (Figma 19582:177102 / 177255 / 177401) ---- */
-.bv-achievement-panel {
-  /* the coin's face diameter — the base every panel's art matches */
-  --bv-achievement-art-size: 150px;
-  width: 100%;
-  height: 230px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  overflow: hidden;
-}
-
-.bv-achievement-panel.spend {
-  background: #f8f5ff;
-  border-radius: var(--bv-radius-2xl);
-}
-
-.bv-achievement-panel.streak {
-  background: #fff9ea;
-  border-radius: var(--bv-radius-xl);
-}
-
-.bv-achievement-panel.bonus {
-  background: #fffae3;
-  border-radius: var(--bv-radius-xl);
-  gap: 0;
-}
-
-/* One art box for all three kinds, sized to the coin's face diameter
-   (BravoCoin size=150) so the panels read as a set. `contain` keeps each
-   illustration's own aspect ratio inside that square — Figma draws them at
-   three unrelated sizes (badge 126x79, flame 45x59, coin 83). */
-.bv-achievement-art {
-  width: calc(var(--bv-achievement-art-size) * var(--bv-achievement-art-scale, 1));
-  height: calc(var(--bv-achievement-art-size) * var(--bv-achievement-art-scale, 1));
-  object-fit: contain;
-  display: block;
-}
-
-/* The flame fills the box on height where the badge only reaches ~95 of it,
-   so it read heavier. 0.75 evens them out — same factor the coin uses
-   (ART_SHRINK in AchievementPanel.tsx). */
-.bv-achievement-panel.streak {
-  --bv-achievement-art-scale: 0.75;
-}
-
-.bv-achievement-caption {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.2;
-  color: #0c142b;
-  white-space: nowrap;
-}
+/* The tinted achievement panels (Figma 19582:177102 / 177255 / 177401) —
+   the spend badge, the streak flame, and the bonus panel that carried the
+   live Bravo coin — were removed from posts at Siya's direction. The coin
+   itself still ships: it is the reward on the challenge detail screen. */
 
 /* Component: Venue Card (Figma 19577:173665) */
 .bv-venue {
