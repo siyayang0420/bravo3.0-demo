@@ -1977,7 +1977,9 @@ button.bv-balance-pill:active {
   z-index: 10;
 }
 
-/* Screen-level placement — HomeScreen decides where the card sits. */
+/* Screen-level placement. The offset clears the balance pills, which sit at
+   the same height on the map and on your own profile, so both screens hang
+   the card from this one rule. */
 .bv-spendable-anchor {
   position: absolute;
   /* clears the top bar: status bar + 6 margin + 35 pill + 12 gap */
@@ -5002,6 +5004,14 @@ button.bv-balance-pill:active {
   );
   pointer-events: none;
   margin: 0;
+}
+
+/* While the Combined Spendable sheet is open the bar has to clear the scrim
+   (z-7), the way the map's permanent z-8 top bar does — the pills are what
+   the sheet hangs from, so they stay lit. Only for that sheet: the stats
+   popover deliberately dims everything above it. */
+.bv-profile-topbar.lit {
+  z-index: 8;
 }
 
 .bv-profile-topbar-row,

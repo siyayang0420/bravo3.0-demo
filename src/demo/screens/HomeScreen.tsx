@@ -22,6 +22,7 @@ import MapFriendComment from '../components/MapFriendComment'
 import { useDemoUser } from '../components/DemoIdentity'
 import VenueDetailScreen from './VenueDetailScreen'
 import { ELLIPSIS_FRIEND_COMMENT, FRIEND_POST_ID } from '../data/venueDetailDemo'
+import { TOP_UP_BONUS } from '../data/spendableDemo'
 import { pickPeople } from '../data/people'
 import ellipsisInterior from '../assets/venue/ellipsis-interior.png'
 import ellipsisDrinks from '../assets/venue/ellipsis-drinks.png'
@@ -31,8 +32,6 @@ import thumbRestaurants from '../assets/thumb-restaurants.png'
 import offerVeras from '../assets/offer-veras.png'
 import offerDawn from '../assets/offer-dawn.png'
 
-// Figma 19564:172074 — the bonus the top-up CTA advertises
-const TOP_UP_BONUS = '$80'
 // Figma annotation (node 19453:11110): other than Cuisine and Price
 // (defaults), the remaining 2–3 tags are LLM-generated from user preferences.
 const FILTERS = [

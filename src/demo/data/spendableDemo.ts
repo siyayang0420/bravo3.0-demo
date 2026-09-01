@@ -5,6 +5,14 @@
 // Balance is what you topped up and spent, Bonus is what you earned and
 // redeemed. The same merchant shows up in both — one visit can move both.
 
+/**
+ * Figma 19564:172074 — the bonus the Balance tab's top-up CTA advertises.
+ * Lives here rather than on a screen because the sheet opens from two of
+ * them now (the map and your own profile) and they must promise the same
+ * thing.
+ */
+export const TOP_UP_BONUS = '$80'
+
 export type SpendableActivity = {
   id: string
   label: string

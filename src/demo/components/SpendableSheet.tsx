@@ -1,8 +1,9 @@
 // Component — the Combined Spendable pop-up, two tabs
 // (Figma 19854:10237 Balance / 19854:10385 Bonus).
 //
-// Opens from either balance pill in the Home top bar, on the tab that
-// matches the pill you tapped. The two are the same layout — hero, recent
+// Opens from either balance pill, on the tab that matches the pill you
+// tapped — from the map's top bar and from your own profile's, which wear
+// the same pair. The two tabs are the same layout — hero, recent
 // activity, a total footer — over two different pots of money, so they are
 // one component switched by `tab` rather than two sheets.
 //

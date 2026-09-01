@@ -17,7 +17,7 @@ import Coin from '../components/Coin'
 import BottomNav, { type NavId } from '../components/BottomNav'
 import PromptBox from '../components/PromptBox'
 import useSearchLauncher from '../components/SearchLauncher'
-import { formatMoney } from '../components/SpendableSheet'
+import SpendableSheet, { formatMoney, type SpendableTab } from '../components/SpendableSheet'
 import { StreakLabel, LevelLabel } from '../components/AchievementLabel'
 import AchievementStats from '../components/AchievementStats'
 import SpendLevelsScreen from './SpendLevelsScreen'
@@ -30,6 +30,7 @@ import { useDemoUser } from '../components/DemoIdentity'
 import ChallengeScreen from './ChallengeScreen'
 import { RECEIVER_VIEW, SENDER_VIEW } from '../data/pendingChallengeDemo'
 import { EMPTY_COPY, EMPTY_PHOTOS } from '../data/emptyStateDemo'
+import { TOP_UP_BONUS } from '../data/spendableDemo'
 import { type ProfileData } from '../data/profileDemo'
 
 type ProfileTab = 'activity' | 'taste' | 'collectives'
@@ -84,6 +85,11 @@ export default function ProfileScreen({
   // closes if you scroll, rather than floating away from what it explains.
   const [statsOpen, setStatsOpen] = useState(false)
   const [levelsOpen, setLevelsOpen] = useState(false)
+  // The balance pills up here are the same pills the map wears, so they open
+  // the same Combined Spendable sheet — the top bar is pinned, not in the
+  // scroller, so the sheet can hang off a fixed offset the way it does there.
+  const [spendableOpen, setSpendableOpen] = useState(false)
+  const [spendableTab, setSpendableTab] = useState<SpendableTab>('balance')
   const [statsTop, setStatsTop] = useState(0)
   const labelsRef = useRef<HTMLButtonElement>(null)
 
@@ -100,6 +106,12 @@ export default function ProfileScreen({
       setStatsTop((rect.bottom - appRect.top) / scale + 12)
     }
     setStatsOpen(true)
+  }
+  // Same rule as the map: the pill you are already looking at closes the
+  // sheet, the other one switches tabs rather than shutting it in your face.
+  const openSpendable = (tab: SpendableTab) => {
+    setSpendableOpen((open) => !(open && spendableTab === tab))
+    setSpendableTab(tab)
   }
   // me mode wears the shared dock; the hook also renders its search / AI
   // overlays (used only when the dock is shown).
@@ -143,11 +155,18 @@ export default function ProfileScreen({
       {isMe ? (
         // Home top bar — balances left, bell + settings right. Overlays the
         // feed with a white fade, like the community header.
-        <div className="bv-profile-topbar">
+        // `lit` lifts the bar over the scrim while the sheet is open, so the
+        // pills it hangs from stay bright — the map's top bar sits there
+        // permanently, this one only needs it for the sheet.
+        <div className={`bv-profile-topbar${spendableOpen ? ' lit' : ''}`}>
           <div className="bv-profile-topbar-row">
             <div className="bv-topbar-group">
-              <BalancePill>{formatMoney(cash)}</BalancePill>
-              <BalancePill leading={<Coin />}>{formatMoney(coin)}</BalancePill>
+              <BalancePill onClick={() => openSpendable('balance')}>
+                {formatMoney(cash)}
+              </BalancePill>
+              <BalancePill onClick={() => openSpendable('bonus')} leading={<Coin />}>
+                {formatMoney(coin)}
+              </BalancePill>
             </div>
             <div className="bv-topbar-group">
               <CircleIconButton icon={<Settings size={20} strokeWidth={1.9} />} label="Settings" />
@@ -355,6 +374,42 @@ export default function ProfileScreen({
           {overlays}
         </>
       )}
+
+      {/* Combined Spendable sheet — the same card the map opens, hung off the
+          same pills. me mode only, since the public header has no balances.
+          The scrim is the plain one: the top bar is `lit` above it, so the
+          pills stay readable as the sheet's anchor, exactly as on the map. */}
+      <AnimatePresence>
+        {isMe && spendableOpen && (
+          <>
+            <motion.button
+              type="button"
+              className="bv-scrim"
+              aria-label="Close balance details"
+              onClick={() => setSpendableOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+            />
+            <motion.div
+              className="bv-spendable-anchor"
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+            >
+              <SpendableSheet
+                balance={cash}
+                bonus={coin}
+                topUpBonus={TOP_UP_BONUS}
+                tab={spendableTab}
+                onTabChange={setSpendableTab}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Stats popover — the same two meters the Rewards header opens, hung
           off the chips that were tapped here instead. */}
