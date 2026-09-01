@@ -14,13 +14,20 @@
 // TEN starters per screen, because the sheet lays them out as a two-row rail
 // you scroll sideways — five to a row. Fewer than ten leaves the second row
 // short, so keep these lists at ten if you edit them.
+//
+// Each carries an emoji for the KIND of thing it asks about. They are chosen
+// to stay distinct WITHIN a screen — ten glyphs in one rail, so a repeat
+// reads as a mistake — and to be legible at a glance rather than clever.
 import { pickPeople } from './people'
 
 export type PromptContext = 'map' | 'social' | 'me'
 
+/** One starter chip: a glyph and the question it stands for. */
+export type PromptStarterItem = { emoji: string; label: string }
+
 export type PromptSet = {
   placeholders: string[]
-  starters: string[]
+  starters: PromptStarterItem[]
 }
 
 // A friend to name in the community prompts. Drawn from the shared cast so
@@ -32,46 +39,46 @@ export const PROMPTS: Record<PromptContext, PromptSet> = {
   map: {
     placeholders: ['New onboarded restaurants', 'Best cafe near me'],
     starters: [
-      'New onboarded restaurants',
-      'Best cafe near me',
-      'Best dim sum in Richmond',
-      'Quick lunch near me',
-      'Somewhere quiet to work',
-      'Open late tonight',
-      'Highest cashback nearby',
-      'Good for a group of six',
-      'Cheap eats under $15',
-      'Worth the drive out',
+      { emoji: '✨', label: 'New onboarded restaurants' },
+      { emoji: '☕️', label: 'Best cafe near me' },
+      { emoji: '🥟', label: 'Best dim sum in Richmond' },
+      { emoji: '🥪', label: 'Quick lunch near me' },
+      { emoji: '💻', label: 'Somewhere quiet to work' },
+      { emoji: '🌙', label: 'Open late tonight' },
+      { emoji: '💸', label: 'Highest cashback nearby' },
+      { emoji: '👥', label: 'Good for a group of six' },
+      { emoji: '🪙', label: 'Cheap eats under $15' },
+      { emoji: '🚗', label: 'Worth the drive out' },
     ],
   },
   social: {
     placeholders: [`Where ${friend} dined last night`, 'Challenge restaurants I can go'],
     starters: [
-      `Where ${friend} dined last night`,
-      'Challenge restaurants I can go',
-      'What my friends saved this week',
-      'Places my friends rate highest',
-      'Who has the longest streak',
-      'Friends eating near me today',
-      'Posts I have not seen yet',
-      'Where my collective is going',
-      'Who to invite to a challenge',
-      'Restaurants we all still owe',
+      { emoji: '🍽️', label: `Where ${friend} dined last night` },
+      { emoji: '🏆', label: 'Challenge restaurants I can go' },
+      { emoji: '🔖', label: 'What my friends saved this week' },
+      { emoji: '⭐️', label: 'Places my friends rate highest' },
+      { emoji: '🔥', label: 'Who has the longest streak' },
+      { emoji: '📍', label: 'Friends eating near me today' },
+      { emoji: '🆕', label: 'Posts I have not seen yet' },
+      { emoji: '🧭', label: 'Where my collective is going' },
+      { emoji: '➕', label: 'Who to invite to a challenge' },
+      { emoji: '🧾', label: 'Restaurants we all still owe' },
     ],
   },
   me: {
     placeholders: ['Total spend last week', "Who's my best friend"],
     starters: [
-      'Total spend last week',
-      "Who's my best friend",
-      'My most visited restaurants',
-      'How my streak is going',
-      'What I spend most on',
-      'Cashback I earned this month',
-      'Places I saved but never went',
-      'My quietest month this year',
-      'How far to my next level',
-      'Cuisines I have never tried',
+      { emoji: '💳', label: 'Total spend last week' },
+      { emoji: '💛', label: "Who's my best friend" },
+      { emoji: '🔁', label: 'My most visited restaurants' },
+      { emoji: '🔥', label: 'How my streak is going' },
+      { emoji: '📊', label: 'What I spend most on' },
+      { emoji: '💸', label: 'Cashback I earned this month' },
+      { emoji: '🔖', label: 'Places I saved but never went' },
+      { emoji: '🌗', label: 'My quietest month this year' },
+      { emoji: '🪜', label: 'How far to my next level' },
+      { emoji: '🌏', label: 'Cuisines I have never tried' },
     ],
   },
 }

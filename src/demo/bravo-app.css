@@ -3335,7 +3335,13 @@ button.bv-balance-pill:active {
    running the chip off the screen, so long questions read as a block. */
 .bv-prompt-starter {
   width: 100%;
-  max-width: 172px;
+  max-width: 200px;
+  display: flex;
+  /* Top, not centre: the emoji sits with the FIRST line, so a two-line brick
+     does not float its glyph down into the gutter between the lines. */
+  align-items: flex-start;
+  /* The same 10px the map's SuggestionChip puts between glyph and label. */
+  gap: 10px;
   padding: 10px var(--bv-space-3);
   border: none;
   border-radius: var(--bv-radius-xl);
@@ -3354,6 +3360,24 @@ button.bv-balance-pill:active {
   text-wrap: balance;
   cursor: pointer;
   transition: transform 0.16s var(--bv-ease-out);
+}
+
+/* Fixed box so the labels all start on the same x regardless of how wide the
+   glyph renders — emoji metrics vary a lot between fonts. */
+.bv-prompt-starter-emoji {
+  width: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: var(--bv-line-20);
+}
+
+/* Takes the rest, and is allowed to shrink below its content so the text
+   wraps inside the brick instead of pushing it wider. */
+.bv-prompt-starter-label {
+  min-width: 0;
 }
 
 .bv-prompt-starter:active {

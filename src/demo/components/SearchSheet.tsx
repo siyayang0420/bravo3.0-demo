@@ -14,6 +14,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { X } from 'lucide-react'
 import PromptBox from './PromptBox'
 import PromptStarter from './PromptStarter'
+import { type PromptStarterItem } from '../data/promptDemo'
 import IosKeyboard from './IosKeyboard'
 import SearchTabs, { type SearchTabId } from './SearchTabs'
 import SearchResultRow from './SearchResultRow'
@@ -51,7 +52,7 @@ export default function SearchSheet({
   onVoiceMode,
 }: {
   /** The empty state's chips — per screen, see promptDemo.ts. */
-  starters?: string[]
+  starters?: PromptStarterItem[]
   onClose?: () => void
   /** Submitting the query hands off to the bravo AI thread. */
   onAsk?: (query: string) => void
@@ -153,13 +154,15 @@ export default function SearchSheet({
         {!hasQuery ? (
           // ---- empty state (19380:5446) ----
           <div className="bv-prompt-starters">
-            {starters.map((label, i) => (
-              <motion.div key={label} {...rise(i)}>
+            {starters.map((s, i) => (
+              <motion.div key={s.label} {...rise(i)}>
                 {/* A starter is a question for the assistant, not a search
                     term — tapping one sends it, so the thinking line reads
                     back the chip you chose. It used to only fill the field,
-                    which left the chip's own copy going nowhere. */}
-                <PromptStarter label={label} onSelect={() => onAsk?.(label)} />
+                    which left the chip's own copy going nowhere.
+                    Only the LABEL is sent: the emoji is a signpost on the
+                    chip, not part of the question. */}
+                <PromptStarter emoji={s.emoji} label={s.label} onSelect={() => onAsk?.(s.label)} />
               </motion.div>
             ))}
           </div>

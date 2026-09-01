@@ -477,20 +477,21 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     figmaNodes: ['1363:3722'],
     file: 'src/demo/components/PromptStarter.tsx',
     summary:
-      'A suggested query above the prompt box when the search sheet is empty. Unlike SuggestionChip it carries no thumbnail — just the label on a neutral-100 pill with the bubble inset.',
+      'A suggested query in the search sheet’s empty state. A "brick": an emoji leading a label that wraps inside a capped width, on a white pill with the bubble inset. Ten of them lay out as a two-row rail you scroll sideways, five to a row.',
     usedOn: ['Home search'],
     props: [
-      { name: 'label', type: 'string', required: true, description: 'The suggested query.' },
-      { name: 'onSelect', type: '() => void', required: false, description: 'Fills the prompt box with the label.' },
+      { name: 'emoji', type: 'string', required: false, description: 'One glyph for the kind of thing the question asks about. Kept distinct within a screen’s set of ten.' },
+      { name: 'label', type: 'string', required: true, description: 'The suggested query. Only this is sent when tapped — the emoji is a signpost, not part of the question.' },
+      { name: 'onSelect', type: '() => void', required: false, description: 'Sends the label to the AI thread.' },
     ],
-    tokens: ['--bv-neutral-100', '--bv-radius-xl', '--bv-inset-bubble', '--bv-space-3', '--bv-line-20'],
+    tokens: ['--bv-white', '--bv-radius-xl', '--bv-inset-bubble', '--bv-space-3', '--bv-line-20'],
     icons: [],
     flutterNote:
       'Figma annotation on 19380:5453: these are tied to user behaviour — time, location, budget, friend visits, trending campaign — so they are LLM-generated per user, not a fixed list.',
     preview: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
-        <PromptStarter label="Best dim sum in Richmond" />
-        <PromptStarter label="Quiet cafe for work" />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
+        <PromptStarter emoji="🥟" label="Best dim sum in Richmond" />
+        <PromptStarter emoji="💻" label="Somewhere quiet to work" />
       </div>
     ),
     previewBg: 'light',
