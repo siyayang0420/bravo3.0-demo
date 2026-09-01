@@ -3641,7 +3641,7 @@ button.bv-balance-pill:active {
    Chrome, not product UI. Inert by design — the real input is above it. */
 .bv-keyboard {
   width: 100%;
-  height: 342px;
+  height: var(--bv-keyboard-h);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -3796,6 +3796,13 @@ button.bv-balance-pill:active {
   overflow: hidden;
 }
 
+/* The mock keyboard's height, in one place: the keyboard sets its own box
+   from it, and any surface that has to get out of its way reads the same
+   number instead of repeating 342. */
+.bravo-app {
+  --bv-keyboard-h: 342px;
+}
+
 /* The brand wash bleeding in from above the header (19559:168158). It sits
    mostly off-canvas — only the bottom of the blur shows. */
 .bv-ai-glow {
@@ -3816,12 +3823,42 @@ button.bv-balance-pill:active {
   pointer-events: none;
 }
 
+/* Pinned header block — the row and the disclaimer together, on a white fade
+   the thread scrolls under. The tail is a fixed 16px rather than a share of
+   the height (see .bv-vd-topbar for why a proportional one veils whatever
+   sits just below it). */
+.bv-ai-topbar {
+  --ai-fade: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+  padding: calc(var(--bv-statusbar-h) + var(--bv-space-2)) 0 var(--ai-fade);
+  background: linear-gradient(
+    180deg,
+    var(--bv-white) 0,
+    var(--bv-white) calc(100% - var(--ai-fade)),
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* The fade tail is see-through, so it must not swallow taps meant for the
+     thread travelling underneath it. */
+  pointer-events: none;
+}
+
+.bv-ai-topbar button {
+  pointer-events: auto;
+}
+
 .bv-ai-header {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(var(--bv-statusbar-h) + var(--bv-space-2)) var(--bv-space-4) 0;
+  padding: 0 var(--bv-space-4);
 }
 
 .bv-ai-wordmark {
@@ -3832,7 +3869,7 @@ button.bv-balance-pill:active {
 
 .bv-ai-disclaimer {
   position: relative;
-  margin-top: var(--bv-space-4);
+  margin: 0;
   padding: 0 var(--bv-space-4);
   text-align: center;
   font-size: 12px;
@@ -3841,19 +3878,71 @@ button.bv-balance-pill:active {
   color: var(--bv-zinc-500);
 }
 
-/* The thread grows from the bottom — the newest turn sits just above the
-   prompt box, and the empty space is above it, as in the node. */
-.bv-ai-bottom {
+/* The reply is long — it scrolls, under the header and above the dock. The
+   padding is what keeps it clear of both: 88px is the pinned block's own
+   height (status bar + 8 + the 32px row + 16 gap + the 16px disclaimer +
+   the 16px fade). */
+.bv-ai-scroll {
   position: absolute;
-  left: 0;
-  right: 0;
+  inset: 0;
   /* rides above the phone's keyboard when one is up — same variable the
      search sheet uses, set by PresentMode in artboard units */
   bottom: var(--bv-kb-inset, 0px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: calc(var(--bv-statusbar-h) + 88px) var(--bv-space-4) 96px;
+  /* Roughly the keyboard's own spring, so the thread rises with it rather
+     than snapping out from under it. */
+  transition: bottom 0.3s var(--bv-ease-out);
+}
+
+/* The mock keyboard takes the bottom of the screen, so the thread stops
+   above it instead of running underneath — still fully scrollable, just in
+   a shorter box. AiChatScreen moves the scroll position by the same amount,
+   so the content slides up rather than being clipped. */
+.bv-ai-screen.kb-open .bv-ai-scroll {
+  bottom: calc(var(--bv-kb-inset, 0px) + var(--bv-keyboard-h));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-ai-scroll {
+    transition: none;
+  }
+}
+
+.bv-ai-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Pinned above the thread. */
+.bv-ai-dock {
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--bv-kb-inset, 0px);
+  z-index: 4;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--bv-space-4);
+  align-items: stretch;
+}
+
+/* The thread dissolves into the dock rather than being cut off by it, and
+   the box keeps the same 16/32 the social dock sits on — flush to the
+   bottom edge is where the home indicator lives. */
+.bv-ai-dock-box {
+  padding: var(--bv-space-6) var(--bv-space-4) 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--bv-white) 34.4%
+  );
+}
+
+/* With a keyboard up there is no bottom edge to clear — the keyboard is the
+   edge — so the box sits straight on top of it. */
+.bv-ai-screen.kb-open .bv-ai-dock-box {
+  padding-bottom: 0;
 }
 
 /* Installed there is no mock keyboard under the prompt box, so with the
@@ -3861,14 +3950,18 @@ button.bv-balance-pill:active {
    and on a phone that is where the home indicator lives. It collapses to 0
    once a keyboard is up, or it becomes a dead band of frosted glass between
    the bar and the keys. */
-.bravo-app.standalone .bv-ai-bottom {
-  padding-bottom: calc(36px * (1 - var(--bv-kb-open, 0)));
-}
+/* Installed, the dock's own 32px is already the clearance — no mock keyboard
+   is ever drawn, so there is nothing extra to add. */
 
+/* min-height, not justify-content on the scroller: a short thread sits at the
+   bottom the way the node draws it, and a long one grows downward from the
+   top where every browser can still scroll to it. Bottom-aligning the
+   scroll container itself makes its overflowing top unreachable. */
 .bv-ai-thread {
-  width: 370px;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: flex-end;
   gap: var(--bv-space-4);
 }
@@ -3930,44 +4023,328 @@ button.bv-balance-pill:active {
   width: 100%;
 }
 
-/* Component: AI Thinking (Figma 19559:168175)
-   A two-column grid so the detail line always lands under the label,
-   whatever size the orb is. Figma's 43px indent was 33 (orb) + 10 (gap) —
-   hardcoding it meant resizing the orb silently broke the alignment. */
-.bv-ai-thinking {
+/* ---------- the assistant's card ----------
+   One box for both moments: the loading bar (20031:22467) and the answer
+   that replaces it (20030:21014). Same border, radius and padding, so the
+   reply reads as the same card filling in rather than a second one. */
+.bv-ai-card {
   width: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  column-gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-6);
+  padding: var(--bv-space-3);
+  border: 1px solid var(--bv-neutral-200);
+  border-radius: var(--bv-radius-2xl);
+  background: var(--bv-white);
 }
 
-/* Lets the orb and the label become grid items of the parent. */
-.bv-ai-thinking-row {
-  display: contents;
+.bv-ai-loading {
+  gap: var(--bv-space-1);
 }
 
-.bv-ai-thinking-label {
-  position: relative;
-  font-size: 16px;
-  font-weight: 400;
-  /* wraps to a second line when the query is long, so it never runs off */
-  line-height: 20px;
+.bv-ai-loading-line {
+  margin: 0;
+  font-size: 12px;
+  line-height: var(--bv-line-16);
   color: var(--bv-neutral-500);
-  white-space: normal;
 }
 
-/* second column — aligns under the label, no magic indent */
-.bv-ai-thinking-detail {
-  grid-column: 2;
+/* 6px, not the 9px the challenge bars use — this one is a progress hint
+   under a line of text, not a headline number. */
+.bv-ai-loading-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 1000px;
+  background: #d9d9d9;
   overflow: hidden;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 16px;
-  color: var(--bv-neutral-400);
-  white-space: nowrap;
 }
 
+/* Full width, scaled from the left — see the note in AiLoadingCard on why
+   this animates a transform rather than its width. */
+.bv-ai-loading-fill {
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  border-radius: 1000px;
+  background: var(--bv-black);
+  box-shadow: var(--bv-inset-accent);
+}
+
+.bv-ai-answer-lead {
+  margin: 0;
+  font-size: 12px;
+  line-height: var(--bv-line-16);
+  color: var(--bv-black);
+}
+
+.bv-ai-place {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-3);
+}
+
+.bv-ai-place-head {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+.bv-ai-place-photo {
+  width: 100px;
+  height: 111px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+/* Stretches to the photo's height and pushes the saved row to its foot, so
+   the name sits at the top of the photo and the savers at the bottom. */
+.bv-ai-place-facts {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bv-ai-place-titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+.bv-ai-place-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: var(--bv-line-16);
+  color: var(--bv-black);
+}
+
+.bv-ai-place-meta {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-neutral-500);
+}
+
+.bv-ai-place-saved {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-ai-place-savers {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  min-width: 0;
+}
+
+/* Overlapping faces, each ringed in white so they read as separate people
+   where they cross — same stack the map's venue card wears. */
+.bv-ai-saver-stack {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bv-ai-saver-stack span {
+  width: 22.5px;
+  height: 30px;
+  border: 0.938px solid var(--bv-white);
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-ai-saver-stack span + span {
+  margin-left: -5.264px;
+}
+
+.bv-ai-saved-count {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-ai-place-save {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  color: var(--bv-black);
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.bv-ai-place-blurb {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-ai-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+}
+
+.bv-ai-note-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--bv-space-2);
+}
+
+.bv-ai-note-face {
+  width: 25px;
+  height: 33px;
+  flex-shrink: 0;
+  border-radius: var(--bv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--bv-inset-bubble);
+}
+
+/* Yellow, and the ONE square corner is the bottom-left — pointing back at
+   the face beside it. Their note, not the assistant's. */
+.bv-ai-note-bubble {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-1);
+  padding: var(--bv-space-3);
+  border-radius: var(--bv-radius-2xl) var(--bv-radius-2xl) var(--bv-radius-2xl) 0;
+  background: var(--bv-primary-200);
+  box-shadow: var(--bv-inset-bubble);
+}
+
+.bv-ai-note-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+}
+
+.bv-ai-note-who {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1);
+  min-width: 0;
+}
+
+.bv-ai-note-who b {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-ai-note-when {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+}
+
+.bv-ai-note-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* Indented past the face (25 + 8 gap + 13) so the footer lines up with the
+   bubble above it rather than the avatar. */
+.bv-ai-note-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bv-space-2);
+  padding-left: 46px;
+}
+
+.bv-ai-note-detail {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+  cursor: pointer;
+}
+
+.bv-ai-note-engage {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-2);
+}
+
+/* ---------- under the answer ---------- */
+.bv-ai-after {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bv-space-4);
+}
+
+.bv-ai-helpful {
+  display: flex;
+  align-items: center;
+  gap: var(--bv-space-1-5);
+  font-size: 12px;
+  line-height: var(--bv-line-20);
+  color: var(--bv-neutral-400);
+}
+
+.bv-ai-vote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--bv-neutral-400);
+  cursor: pointer;
+}
+
+.bv-ai-vote:hover {
+  color: var(--bv-black);
+}
+
+/* A row, not the search sheet's two-row rail — there are only ever a couple
+   of follow-ups, and they are answers to what just came back. */
+.bv-ai-followups {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bv-space-3);
+  flex-wrap: wrap;
+}
+
+.bv-ai-followups .bv-prompt-starter {
+  width: auto;
+  max-width: 100%;
+}
+
+/* AI Thinking (19559:168175) is gone — the orb-and-two-lines sequence was
+   replaced by the loading card (20031:22467), which is .bv-ai-loading above.
+   The orb below is still used by voice mode. */
 .bv-orb {
   flex-shrink: 0;
   display: block;
