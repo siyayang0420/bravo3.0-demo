@@ -52,6 +52,19 @@ export type CheckIn = {
    */
   bestLabel?: string
   collectLabel: string
+  /**
+   * What the button says once you have tapped it. The bonus is banked and
+   * there is nothing left to do today, so the label stops asking and starts
+   * telling — see DailyCheckIn.
+   */
+  collectedLabel: string
+  /**
+   * The count after that tap. Carried rather than computed for the same
+   * reason `streakLabel` is: the file's "0 day" already disagrees with the
+   * three days its week shows as collected, so incrementing it in code would
+   * be inventing a rule the design has not settled.
+   */
+  collectedStreakLabel: string
   week: CheckInDay[]
 }
 
@@ -64,6 +77,8 @@ export const CHECK_IN: CheckIn = {
   streakLabel: '0 day',
   bestLabel: 'Best: 23 days',
   collectLabel: 'Collect $0.1 daily bonus',
+  collectedLabel: '$0.1 in Bonus, come back tomorrow',
+  collectedStreakLabel: '1 day',
   week: [
     { label: 'M', state: 'collected', amount: '+$0.1' },
     { label: 'T', state: 'collected', amount: '+$0.1' },

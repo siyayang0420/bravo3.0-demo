@@ -5,6 +5,7 @@ import PresentMode from '../demo/PresentMode'
 import { Maximize2 } from 'lucide-react'
 import useStandalone from '../hooks/useStandalone'
 import { DEMO_USERS, type DemoUserId } from '../demo/data/profileDemo'
+import { type UnlockKind } from '../demo/data/unlockDemo'
 
 // Demo-state tweaker. Not product UI — a control panel so the review can
 // drive the demo into states that have designs, without a backend. It is
@@ -27,6 +28,24 @@ const HOME_STATES = [
 ] as const
 
 type HomeState = (typeof HOME_STATES)[number]['id']
+
+// The three "you just unlocked something" sheets (Figma 20016:12777,
+// 20016:12891, 20017:13218). Nothing in the app fires these yet — they land
+// on a real event in the product — so the tweaker stands in for the trigger.
+const UNLOCK_STATES: readonly { id: UnlockKind; label: string; hint: string }[] = [
+  { id: 'none', label: 'None', hint: 'Nothing to claim.' },
+  {
+    id: 'streak',
+    label: 'Streak',
+    hint: '8-month streak, with the twelve-month calendar under it.',
+  },
+  {
+    id: 'achievement',
+    label: 'Achievement',
+    hint: '"You are The Master" — a tier earned across all diners.',
+  },
+  { id: 'badge', label: 'Badge', hint: 'A single badge earned — the Rewards rail’s art and date.' },
+]
 
 const rowLabelStyle: CSSProperties = {
   fontSize: 11,
@@ -108,6 +127,7 @@ export default function LiveDemo() {
   )
   const [homeState, setHomeState] = useState<HomeState>('default')
   const [userId, setUserId] = useState<DemoUserId>('bobby')
+  const [unlock, setUnlock] = useState<UnlockKind>('none')
   const phoneScale = useFitScale()
 
   const user = DEMO_USERS.find((u) => u.id === userId)!
@@ -145,12 +165,18 @@ export default function LiveDemo() {
             value={homeState}
             onChange={setHomeState}
           />
+          <ControlRow
+            label="Unlock"
+            options={UNLOCK_STATES}
+            value={unlock}
+            onChange={setUnlock}
+          />
         </div>
 
         {/* The phone surface stays free for the app's own taps —
             full screen is entered from the button below only. */}
         <PhoneFrame scale={phoneScale}>
-          <BravoApp hasPromotion={hasPromotion} user={user} />
+          <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
         </PhoneFrame>
         <button className="btn btn-secondary" onClick={() => setPresenting(true)}>
           <Maximize2 size={14} />
@@ -162,6 +188,7 @@ export default function LiveDemo() {
         open={presenting}
         onClose={() => setPresenting(false)}
         hasPromotion={hasPromotion}
+        unlock={unlock}
         user={user}
       />
     </div>

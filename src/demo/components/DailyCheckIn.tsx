@@ -3,9 +3,10 @@
 // A week of squares above one button. The week is the whole story: three
 // filled, today waiting as a dashed outline, the rest greyed ahead of you —
 // so the streak reads at a glance, before any of the numbers do.
+import { useEffect, useState } from 'react'
 import { Clock } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { type CheckIn } from '../data/rewardsDemo'
+import { AnimatePresence, motion } from 'framer-motion'
+import { type CheckIn, type CheckInDay } from '../data/rewardsDemo'
 
 export default function DailyCheckIn({
   checkIn,
@@ -14,6 +15,26 @@ export default function DailyCheckIn({
   checkIn: CheckIn
   onCollect?: () => void
 }) {
+  // Collecting is the one thing this card does, so it owns the state rather
+  // than asking the screen to carry a flag it has no other use for.
+  const [collected, setCollected] = useState(false)
+
+  // Switching demo user swaps the whole week out — the claim belongs to the
+  // week that was on screen, not to the component.
+  useEffect(() => setCollected(false), [checkIn])
+
+  // What the tap does to the week: the NEXT day fills, not the dashed one.
+  // The dashed square is a day that went by unclaimed — it stays open, because
+  // a missed day is missed for good, and the bonus you are collecting is
+  // today's. So the first day still ahead of you is the one that turns blue.
+  const claimIndex = checkIn.week.findIndex((d) => d.state === 'upcoming')
+  const week: CheckInDay[] =
+    collected && claimIndex >= 0
+      ? checkIn.week.map((day, i): CheckInDay =>
+          i === claimIndex ? { ...day, state: 'collected' } : day,
+        )
+      : checkIn.week
+
   return (
     <section className="bv-checkin">
       <div className="bv-checkin-head">
@@ -28,14 +49,18 @@ export default function DailyCheckIn({
         </div>
         {/* Two stacked lines, pushed to the two edges so the count sits level
             with the title and the best with the "ends" line beside it. */}
+        {/* The count is the other half of the receipt: claiming the day is
+            what starts the run, so it ticks up with the square that fills. */}
         <div className="bv-checkin-score">
-          <span className="bv-checkin-streak">{checkIn.streakLabel}</span>
+          <span className="bv-checkin-streak">
+            {collected ? checkIn.collectedStreakLabel : checkIn.streakLabel}
+          </span>
           {checkIn.bestLabel && <span className="bv-checkin-best">{checkIn.bestLabel}</span>}
         </div>
       </div>
 
       <div className="bv-checkin-week">
-        {checkIn.week.map((day, i) => (
+        {week.map((day, i) => (
           // Index, not label, as the key: the initials repeat (T/T, S/S), so
           // they are not unique — they are a strip of seven, not a set.
           <div className={`bv-checkin-day is-${day.state}`} key={i}>
@@ -52,13 +77,34 @@ export default function DailyCheckIn({
         ))}
       </div>
 
+      {/* One button, two states. Collected it stops being a control: no press
+          scale, no pointer, disabled — the row of blue above it is the
+          receipt, and this line only says when to come back. */}
       <motion.button
         type="button"
-        className="bv-checkin-collect"
-        whileTap={{ scale: 0.98 }}
-        onClick={onCollect}
+        className={`bv-checkin-collect${collected ? ' is-collected' : ''}`}
+        whileTap={collected ? undefined : { scale: 0.98 }}
+        disabled={collected}
+        onClick={() => {
+          if (collected) return
+          setCollected(true)
+          onCollect?.()
+        }}
       >
-        {checkIn.collectLabel}
+        {/* The labels swap in place rather than cutting: the old line leaves
+            upward and the new one arrives from below, so the button reads as
+            having changed its mind rather than been replaced. */}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={collected ? 'collected' : 'collect'}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+          >
+            {collected ? checkIn.collectedLabel : checkIn.collectLabel}
+          </motion.span>
+        </AnimatePresence>
       </motion.button>
     </section>
   )

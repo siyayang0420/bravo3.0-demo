@@ -41,11 +41,12 @@ import SearchResultRow from '../demo/components/SearchResultRow'
 import FloatingAvatar from '../demo/components/FloatingAvatar'
 import OrbSphere from '../demo/components/OrbSphere'
 import VenueCard from '../demo/components/VenueCard'
-import AchievementPanel from '../demo/components/AchievementPanel'
 import ChallengeCard from '../demo/components/ChallengeCard'
 import ScreenNav from '../demo/components/ScreenNav'
 import SaveGlyph from '../demo/components/SaveGlyph'
 import MerchantRow from '../demo/components/MerchantRow'
+import UnlockSheet from '../demo/components/UnlockSheet'
+import { UNLOCKS } from '../demo/data/unlockDemo'
 import thumbDimsum from '../demo/assets/thumb-dimsum.jpg'
 import { BOBBY, pickPeople } from '../demo/data/people'
 import { publicProfile } from '../demo/data/profileDemo'
@@ -821,6 +822,36 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     previewBg: 'light',
   },
   {
+    id: 'unlock-sheet',
+    name: 'UnlockSheet',
+    figmaNodes: ['20016:12777', '20016:12891', '20017:13218'],
+    file: 'src/demo/components/UnlockSheet.tsx',
+    summary:
+      'The "you just unlocked something" sheet. Three Figma nodes draw the identical thing — a dimmed app behind a blurred translucent card carrying a title, a 75px piece of art, a name, a quiet detail line, and a Claim button — so they are one component driven by data, not three components. Only the streak variant adds anything: the twelve-month calendar under the copy, lit for the months you kept. Which one shows is a demo-state toggle on the review site ("Unlock"), since the app has no event that fires these yet.',
+    usedOn: ['Every tab — it covers whatever you were doing'],
+    props: [
+      { name: 'unlock', type: 'UnlockData', required: true, description: 'title, art, name, detail lines, and optionally months — see unlockDemo.ts.' },
+      { name: 'scrim', type: 'boolean', required: false, description: 'Defaults to true — the sheet always arrives over something in the app. False here, where the sheet is the subject and a full-bleed scrim would black out the card.' },
+      { name: 'onClaim', type: '() => void', required: false, description: 'Tapping Claim. Not wired to a state change — it just puts the sheet away.' },
+      { name: 'onDismiss', type: '() => void', required: false, description: 'Tapping the dimmed area behind the sheet.' },
+    ],
+    tokens: ['--bv-white', '--bv-black', '--bv-neutral-600', '--bv-zinc-500', '--bv-radius-3xl', '--bv-radius-2xl'],
+    icons: [],
+    flutterNote:
+      'The shell is the one translucent sheet in the app — rgba(255,255,255,0.7) over a 7.5px backdrop blur, so the screen behind reads through it. That is what makes it feel like a layer over what you were doing rather than a screen of its own, so do NOT flatten it to an opaque fill. Its 36px radius is off-token (the radius scale stops at 24), the same literal the Combined Spendable sheet uses; the white inner card is radius-3xl (24) and Claim is the shared Button at size="lg" variant="solid", which is already Figma\'s 48px / radius-16 black pill. The art and the two month flames are flat Figma renders, so they are exported assets, not drawn here — the flames are a genuine orange/grey pair, not one glyph recoloured. Dimming reuses the app\'s own .bv-scrim.over-topbar.',
+    preview: (
+      <div style={{ width: 370, position: 'relative', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* Rendered inline here — in the app these sit over the whole phone. */}
+        {(['streak', 'achievement', 'badge'] as const).map((k) => (
+          <div key={k} style={{ position: 'relative', height: k === 'streak' ? 360 : 280 }}>
+            <UnlockSheet unlock={UNLOCKS[k]} scrim={false} />
+          </div>
+        ))}
+      </div>
+    ),
+    previewBg: 'light',
+  },
+  {
     id: 'taste-identity-panel',
     name: 'TasteIdentityPanel',
     figmaNodes: ['19677:16435', '19668:16136', '19677:16426', '19635:14218'],
@@ -862,30 +893,6 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
     preview: (
       <div style={{ width: 338 }}>
         <TasteRadar axes={publicProfile(BOBBY).tasteIdentity.radar} max={58 * 1.25} />
-      </div>
-    ),
-    previewBg: 'light',
-  },
-  {
-    id: 'achievement-panel',
-    name: 'AchievementPanel',
-    figmaNodes: ['19582:177102', '19582:177255', '19582:177401'],
-    file: 'src/demo/components/AchievementPanel.tsx',
-    summary:
-      'The 230px tinted panel inside an achievement post. Three kinds: a spend badge, a streak flame, and a bonus — where the panel carries the live Bravo coin.',
-    usedOn: ['Social', 'Profile'],
-    props: [
-      { name: 'achievement', type: "{ kind: 'spend' | 'streak', label } | { kind: 'bonus', amount }", required: true, description: 'Picks the tint and the artwork. `bonus` engraves its amount on the coin.' },
-    ],
-    tokens: ['--bv-radius-2xl', '--bv-radius-xl'],
-    icons: [],
-    flutterNote:
-      'Tints are one-off: spend #f8f5ff at radius 16, streak #fff9ea at radius 12, bonus #fffae3 at radius 12. The bonus panel hosts BravoCoin — a real 3D object, not an image: drag to spin, tap to flip, amount engraved on the back. Its physics has a 1:1 Dart twin in the bravo-coin repo (flutter/bravo_coin.dart) — mirror any tuning change there.',
-    preview: (
-      <div style={{ width: 332, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <AchievementPanel achievement={{ kind: 'spend', label: 'Unlocked Master!' }} />
-        <AchievementPanel achievement={{ kind: 'streak', label: '5-month streak!' }} />
-        <AchievementPanel achievement={{ kind: 'bonus', amount: 5 }} />
       </div>
     ),
     previewBg: 'light',

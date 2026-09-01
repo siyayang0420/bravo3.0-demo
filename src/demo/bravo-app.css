@@ -1780,6 +1780,120 @@ button.bv-balance-pill:active {
   pointer-events: none;
 }
 
+/* ---- Unlock sheet (Figma 20016:12777 / 20016:12891 / 20017:13218) ----
+   Sits above the scrim, 16px in from both edges and 16px off the bottom,
+   with the Claim button 18px under the card. */
+.bv-unlock {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+
+/* The translucent shell. Unlike every other sheet this one is NOT opaque —
+   the app reads through it, which is what makes it feel like a layer over
+   what you were doing rather than a screen of its own. 36px matches the
+   Combined Spendable sheet; the radius scale stops at 24, so it is a
+   literal in both places. */
+.bv-unlock-card {
+  width: 100%;
+  padding: 16px;
+  border-radius: 36px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bv-unlock-title {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-neutral-600);
+}
+
+/* The white card inside the blurred one. */
+.bv-unlock-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 12px;
+  border-radius: var(--bv-radius-3xl);
+  background: var(--bv-white);
+}
+
+.bv-unlock-art {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+}
+
+.bv-unlock-name {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* Figma groups the name and the detail 24px apart from the art but only
+   4px from each other, so the detail owns the tighter gap. */
+.bv-unlock-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: -16px;
+}
+
+.bv-unlock-detail p {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+}
+
+.bv-unlock-detail b {
+  font-weight: 700;
+}
+
+/* Twelve months, six to a row. */
+.bv-unlock-months {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px 0;
+  width: 100%;
+}
+
+.bv-unlock-month {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.bv-unlock-month-label {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-zinc-500);
+}
+
+.bv-unlock-claim {
+  width: 100%;
+}
+
 /* Holds the field and the rotating hint in the same box, so the hint can be
    painted exactly over the placeholder position. */
 .bv-prompt-field {
@@ -6520,12 +6634,17 @@ button.bv-balance-pill:active {
      "today" square is the same size as the filled ones rather than 2px
      bigger — border-box would still shift the icon. */
   border: 1px solid transparent;
+  /* Collecting moves a square from one state to the next, and the tint has to
+     travel with it — a hard swap would look like a re-render, not a claim. */
+  transition: background 0.25s var(--bv-ease-out),
+    border-color 0.25s var(--bv-ease-out), color 0.25s var(--bv-ease-out);
 }
 
 .bv-checkin-amount {
   font-size: 12px;
   font-weight: 500;
   line-height: var(--bv-line-20);
+  transition: color 0.25s var(--bv-ease-out);
 }
 
 /* Claimed: filled, and the amount is coloured to match — the row of blue is
@@ -6586,6 +6705,25 @@ button.bv-balance-pill:active {
   line-height: var(--bv-line-20);
   color: var(--bv-white);
   cursor: pointer;
+  /* The label swaps by animating in and out of the same slot, so the button
+     has to centre whichever line is in it — and clip the one on its way past
+     the edges rather than growing to fit both. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background 0.25s var(--bv-ease-out),
+    box-shadow 0.25s var(--bv-ease-out), color 0.25s var(--bv-ease-out);
+}
+
+/* Claimed: the accent is spent. It keeps the same box so nothing below it
+   moves, but drops to a flat neutral surface — a statement of what happened,
+   sitting where the control used to be. */
+.bv-checkin-collect.is-collected {
+  background: var(--bv-neutral-100);
+  box-shadow: none;
+  color: var(--bv-neutral-500);
+  cursor: default;
 }
 
 /* ---------- Achievements rail (Figma 19970:30547) ---------- */

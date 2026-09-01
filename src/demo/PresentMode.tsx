@@ -11,6 +11,7 @@ import { X } from 'lucide-react'
 import PhoneFrame, { FRAME_WIDTH, FRAME_HEIGHT } from './PhoneFrame'
 import BravoApp from './BravoApp'
 import { DEMO_USERS, type DemoUser } from './data/profileDemo'
+import { type UnlockKind } from './data/unlockDemo'
 import useStandalone from '../hooks/useStandalone'
 import useKeyboardInset from '../hooks/useKeyboardInset'
 
@@ -128,11 +129,13 @@ export default function PresentMode({
   open,
   onClose,
   hasPromotion = false,
+  unlock = 'none',
   user = DEMO_USERS[0],
 }: {
   open: boolean
   onClose: () => void
   hasPromotion?: boolean
+  unlock?: UnlockKind
   user?: DemoUser
 }) {
   const compact = useIsCompact()
@@ -246,11 +249,11 @@ export default function PresentMode({
                   ['--bv-kb-open' as string]: keyboardInset > 0 ? '1' : '0',
                 }}
               >
-                <BravoApp hasPromotion={hasPromotion} user={user} />
+                <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
               </div>
             ) : (
               <PhoneFrame scale={scale}>
-                <BravoApp hasPromotion={hasPromotion} user={user} />
+                <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
               </PhoneFrame>
             )}
           </motion.div>

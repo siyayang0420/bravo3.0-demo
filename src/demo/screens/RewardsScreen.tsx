@@ -132,7 +132,7 @@ export default function RewardsScreen({
 
         <section className="bv-rewards-section">
           <div className="bv-rewards-section-head">
-            <h2 className="bv-rewards-section-title">Achievements</h2>
+            <h2 className="bv-rewards-section-title">Welcome Badges</h2>
             {/* Counted off the badges themselves, not carried as a number:
                 a badge is earned exactly when it has an earnedOn date, so a
                 new account reads 0/7 without anything else being told. */}

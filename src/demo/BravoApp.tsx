@@ -7,7 +7,9 @@ import ProfileScreen from './screens/ProfileScreen'
 import RewardsScreen from './screens/RewardsScreen'
 import ProfileProvider from './components/ProfileLauncher'
 import DemoUserProvider from './components/DemoIdentity'
+import UnlockSheet from './components/UnlockSheet'
 import { DEMO_USERS, meProfile, type DemoUser } from './data/profileDemo'
+import { UNLOCKS, type UnlockKind } from './data/unlockDemo'
 import type { NavId } from './components/BottomNav'
 import useStandalone from '../hooks/useStandalone'
 
@@ -24,14 +26,26 @@ const BUILT_TABS: NavId[] = ['map', 'friends', 'rewards', 'profile']
 
 export default function BravoApp({
   hasPromotion = false,
+  unlock = 'none',
   user = DEMO_USERS[0],
 }: {
   /** Demo state toggled from the review site — see LiveDemo. */
   hasPromotion?: boolean
+  /**
+   * Which unlock sheet is up, if any. A demo-state toggle for now: the app
+   * has no event that fires these yet, so the tweaker stands in for one.
+   */
+  unlock?: UnlockKind
   /** Who you are signed in as — drives your own profile. */
   user?: DemoUser
 }) {
   const [tab, setTab] = useState<NavId>('map')
+  // Dismissing puts the sheet away without touching the tweaker, so the
+  // reviewer can look behind it and then flip the control to bring it back.
+  const [unlockShown, setUnlockShown] = useState(true)
+  useEffect(() => {
+    setUnlockShown(true)
+  }, [unlock])
   // Your own profile, for whichever demo user is active.
   const me = useMemo(() => meProfile(user), [user])
 
@@ -112,6 +126,19 @@ export default function BravoApp({
                   to return to the map.
                 </p>
               </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Unlock sheets — over everything, including whichever tab you
+              are on, because in the product these arrive on top of what you
+              were doing rather than living on a screen. */}
+          <AnimatePresence>
+            {unlock !== 'none' && unlockShown && (
+              <UnlockSheet
+                unlock={UNLOCKS[unlock]}
+                onClaim={() => setUnlockShown(false)}
+                onDismiss={() => setUnlockShown(false)}
+              />
             )}
           </AnimatePresence>
         </ProfileProvider>
