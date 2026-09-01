@@ -593,19 +593,35 @@ list shows 7, which is a mock-length choice, not a bug.
 8px gap, then a 332px column at gap 12 holding identity+date → caption →
 venue → photos → panel → actions. Only the *content fields present* differ:
 
-| # | Variant | caption | venue | photos | panel | actions |
-|---|---|---|---|---|---|---|
-| 1 | comment, images + text | ✓ | ✓ | ✓ | — | comment · like |
-| 2 | comment, text only | ✓ | ✓ | — | — | comment · like |
-| 3 | comment, images only | — | ✓ | ✓ | — | comment · like |
-| 4 | spend badge earned | ✓ | — | — | spend | like |
-| 5 | streak badge earned | ✓ | — | — | streak | like |
-| 6 | bonus earned | ✓ | — | — | bonus | like |
+| # | Variant | caption | venue | photos | actions |
+|---|---|---|---|---|---|
+| 1 | comment, images + text | ✓ | ✓ | ✓ | comment · like |
+| 2 | comment, text only | ✓ | ✓ | — | comment · like |
+| 3 | comment, images only | — | ✓ | ✓ | comment · like |
+| 4 | spend badge earned | ✓ | — | — | like |
+| 5 | streak badge earned | ✓ | — | — | like |
+| 6 | bonus earned | ✓ | — | — | like |
 
 The three comment variants are **not code paths** — they fall out of which
 fields the data carries. The only two rules the component applies are:
 achievement posts set the caption to 12px (vs 14) and drop the comment
 action, keeping the heart.
+
+**The achievement panels are gone.** Variants 4–6 used to end in a 230px
+tinted panel — a spend badge on `#f8f5ff`, a flame on `#fff9ea`, and a bonus
+panel on `#fffae3` that hosted the live Bravo coin. All three were removed
+from posts at Siya's direction, so those posts are now their caption and the
+heart. What survives is `Post.isAchievement`, a plain boolean: the posts are
+still *about* something earned, so they keep the two rules above.
+
+Removed with them, having no other caller: `AchievementPanel.tsx`, its
+Design System entry, the `.bv-achievement-*` CSS, and
+`hooks/useCoinFlipHint.ts` (the scroll-into-view nudge that made the coin
+read as grabbable).
+
+**The Bravo coin itself still ships** — it is the reward on the challenge
+detail screen, which uses `BravoCoin` directly. `src/demo/coin/*` is
+untouched and still byte-identical to the bravo-coin repo.
 
 **The heart is its own component (`LikeButton.tsx`) with a like burst and
 count.** Comment and Like both render at 20px in **neutral-500** (`#737373`,
@@ -640,15 +656,15 @@ separator here, since one byline is not a list.
 Photos are 280×302 at radius 16 with a 15px gutter. The place chip is gone —
 it became `VenueCard`.
 
-### AchievementPanel + the Bravo coin
+### The Bravo coin
 
-The 230px panel inside an achievement post. Three kinds, each a one-off tint:
-
-| Kind | Background | Radius | Art |
-|---|---|---|---|
-| spend | `#f8f5ff` | 16 | badge sticker, 125.977×79.436 |
-| streak | `#fff9ea` | 12 | flame, 45×59.054 |
-| bonus | `#fffae3` | 12 | **the live Bravo coin** |
+> **The achievement panels that used to host it are gone.** A 230px tinted
+> panel closed each achievement post — spend on `#f8f5ff`, streak on
+> `#fff9ea`, and bonus on `#fffae3` carrying the live coin — until they were
+> removed at Siya's direction. `AchievementPanel.tsx`, its Design System
+> entry, the `.bv-achievement-*` CSS and `hooks/useCoinFlipHint.ts` went with
+> them; see **All six feed variants** above. The coin below is unaffected:
+> its remaining home is the challenge detail screen.
 
 **The coin is a real 3D object, not an image.** Drag to spin, tap to flip;
 the bonus amount is engraved on the back face. It is copied **verbatim** from
@@ -666,29 +682,17 @@ its Flutter twin in that repo (`flutter/bravo_coin.dart`) — the physics loop,
 > mirror it in `flutter/bravo_coin.dart` before the two drift further.
 
 Because it ships as JS, `allowJs` is on in `tsconfig.json` (with `checkJs`
-off, so that source is not held to this project's strictness). The panel
-renders it at `size={150} thickness={13}` to fit the 230px panel.
+off, so that source is not held to this project's strictness).
 
-**Scroll-in hint.** When the bonus card scrolls into view the coin turns ~30°
-and settles back, so it reads as grabbable rather than as a picture
-(`hooks/useCoinFlipHint.ts`). It fires on each false → true visibility edge,
-so scrolling away and back re-hints, and is skipped under
-`prefers-reduced-motion`.
-
-The hint drives the coin through its **public pointer handlers** — a short
-synthetic drag — rather than reaching into its state, precisely so the coin
-source stays untouched and in sync with Dart. Two consequences worth knowing:
-
-- The gesture is stepped on a **timer, not rAF**. rAF is frozen while a tab
-  is hidden, which would strand the coin mid-drag if the card scrolled in and
-  the user switched away.
-- Synthetic pointer ids are not real active pointers, so the coin's
-  `setPointerCapture` call would throw; it is stubbed for the duration and
-  restored after.
-
-If this affordance should ship in the product rather than just the demo, it
-belongs **inside** `BravoCoin` (and mirrored in the Dart twin), not in the
-panel.
+**The scroll-in hint went with the panels.** A `useCoinFlipHint` hook used to
+turn the coin ~30° and settle it back as the bonus card scrolled into view,
+so it read as grabbable rather than as a picture. It drove the coin through
+its public pointer handlers — a short synthetic drag, stepped on a timer
+rather than rAF, with `setPointerCapture` stubbed — precisely so the coin
+source stayed in sync with Dart. Nothing else called it, so it was deleted
+with the panel. Worth reviving **inside** `BravoCoin` (and mirrored in the
+Dart twin) if the affordance should ship, since the challenge screen's coin
+has the same "is this a picture?" problem.
 
 ### VenueCard (`19577:173665`)
 
@@ -778,6 +782,38 @@ Each step carries its **own hold time** (`aiChatDemo.ts`) rather than a fixed
 tick — "Looking for restaurants…" earns longer on screen than "Let me think".
 Steps crossfade in place so the row never jumps as the text length changes,
 and the detail line expands under it rather than appearing fully formed.
+
+### The keyboard takes the bottom of the screen, so the thread gives it up
+
+The mock keyboard is raised by **tapping the field**, not by arriving on the
+screen — you come here to read a reply, and a keyboard covering half of it
+before you have asked anything is in the way. The mic and voice buttons are
+not the field, so they leave it down.
+
+When it is up, `.kb-open` on `.bv-ai-screen` lifts the scroll box's bottom
+edge by `--bv-keyboard-h`, so the thread **ends exactly where the keys
+begin** rather than running underneath them. It stays fully scrollable —
+just in a shorter box.
+
+**Lifting the box alone would only clip what you were reading**, so
+`AiChatScreen` moves the scroll position by the same amount in the opposite
+direction: the content slides up with the keyboard and everything stays
+reachable. It is stepped on the next frame, because the bottom edge is
+mid-transition on the current one and `scrollHeight` has not settled, which
+would clamp the scroll short. Closing reverses it.
+
+**Tapping anything that is not the dock puts it away**, the way it does on a
+phone. Blurring the field matters as much as clearing the flag: leave focus
+on it and the next tap fires no focus event, so the keyboard never comes
+back.
+
+`--bv-keyboard-h` is the keyboard's height in one place — the keyboard sets
+its own box from it and every surface that has to get out of its way reads
+the same number, rather than repeating `342px`.
+
+None of this runs installed: there the phone raises its **own** keyboard and
+`--bv-kb-inset` already moves everything (see **Installed as an app**), so
+the mock one never mounts.
 
 The user bubble is 12px on three corners and **2px on the bottom-right** —
 that corner is the tail, pointing back at the sender, which is why only one
@@ -1424,6 +1460,70 @@ per-screen placeholder images.
   its own Design System preview) rather than importing a fixed image, so it
   reflects whichever demo user is signed in — wired through `BravoApp` →
   `HomeScreen`/`SocialScreen`/`ProfileScreen` from the tweaker's `user` state.
+
+---
+
+## Unlock sheets (Figma `20016:12777`, `20016:12891`, `20017:13218`)
+
+Three nodes — Streak unlocked, Achievement unlocked, Badge unlocked — that
+draw **the identical sheet**: the app dimmed behind a blurred translucent
+card carrying a title, a 75px piece of art, a name, a quiet detail line, and
+a Claim button. So they are one component (`UnlockSheet`) driven by data
+(`unlockDemo.ts`), not three components.
+
+| Figma node | Variant | What is different |
+|---|---|---|
+| `20016:12777` | `streak` | Adds the twelve-month calendar under the copy |
+| `20016:12891` | `achievement` | Two detail lines; the second bolds a run ("67%") |
+| `20017:13218` | `badge` | One detail line — the date earned |
+
+Almost all of it is reuse; the component-identification pass turned up only
+two genuinely new things (the shell and the month grid):
+
+| Piece of the sheet | Reused |
+|---|---|
+| The dimming layer | **`.bv-scrim.over-topbar`** — the app's one overlay |
+| Claim | **Button** `size="lg" variant="solid"` — already Figma's 48px / radius-16 black pill |
+| The badge art | `link-card-chrome.webp`, already on the Rewards rail — this sheet *is* the moment that badge was earned |
+
+### The shell is the one translucent surface in the app
+
+Every other sheet is opaque; this one is `rgba(255,255,255,0.7)` over a
+7.5px backdrop blur, so the screen behind reads through it. That is what
+makes it feel like a layer over what you were doing rather than a screen of
+its own — do not flatten it to a solid fill. Its **36px radius is off-token**
+(the scale stops at 24), the same literal the Combined Spendable sheet uses;
+the white inner card is `radius-3xl` and the copy sits on `--bv-neutral-600`
+(title) and `--bv-zinc-500` (detail), both of which already existed.
+
+**Figma dims to `rgba(0,0,0,0.5)`; this uses the app's shared 0.35 scrim.**
+Consistency with every other pop-up won over the single node — the same call
+already recorded for the Offers sheet under **Pop-up overlay**.
+
+### Assets
+
+The art and the two month flames are flat renders in Figma, so they are
+exported assets rather than anything drawn in code. **The lit and unlit
+flames are a genuine pair** (an `#FF9500` disc and a grey one), not one glyph
+recoloured, so both are committed. The two PNGs arrive far larger than the
+75px slot they fill — the flame at 2880px / 2.4MB — and are downscaled to
+225px (3x), matching the badge renders. They stay PNG rather than the WebP
+those use: this machine's `sips` has no WebP encoder, and 37/43KB at 3x is
+not worth a build step.
+
+### It is a demo toggle, not an app event
+
+Nothing in the app fires these yet — in the product they land on a real
+event. The review site's tweaker gained an **Unlock** row (None / Streak /
+Achievement / Badge) that stands in for the trigger, threaded through
+`BravoApp`'s `unlock` prop and `PresentMode`. Claim and the scrim both just
+dismiss; neither is wired to a state change. Dismissing does not reset the
+tweaker, so you can look behind the sheet and flip the control to bring it
+back.
+
+`scrim={false}` drops the dimming layer — used only by the Design System
+preview, where the sheet is the subject and a full-bleed scrim would black
+out the library card.
 
 ---
 
