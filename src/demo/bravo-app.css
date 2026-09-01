@@ -1621,11 +1621,17 @@ button.bv-balance-pill:active {
   flex-shrink: 0;
 }
 
-.bv-suggestion-chip img {
+/* The emoji sits in the 30px box the thumbnail used to fill, so the chip's
+   height and the gap to the label are unchanged — only what is in the box. */
+.bv-suggestion-emoji {
   width: 30px;
   height: 30px;
-  border-radius: var(--bv-radius-md);
-  object-fit: cover;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
 }
 
 /* ---------- dock (prompt + nav) — Figma 19564:169322 ----------

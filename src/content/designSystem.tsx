@@ -211,13 +211,13 @@ export const COMPONENT_SPECS: ComponentSpec[] = [
       'A prompt suggestion with a 30px thumbnail. Tapping it should populate the prompt box.',
     usedOn: ['Home'],
     props: [
-      { name: 'image', type: 'string', required: true, description: 'Thumbnail URL (30×30, rendered at radius 6).' },
+      { name: 'emoji', type: 'string', required: true, description: 'One glyph standing for the kind of thing the question asks about, in a 30×30 box.' },
       { name: 'label', type: 'string', required: true, description: 'Suggestion text.' },
       { name: 'onClick', type: '() => void', required: false, description: 'Tap handler.' },
     ],
-    tokens: ['--bv-neutral-100', '--bv-radius-xl', '--bv-radius-md', '--bv-inset-bubble'],
+    tokens: ['--bv-white', '--bv-radius-xl', '--bv-inset-bubble-hard'],
     icons: [],
-    preview: <SuggestionChip image={thumbDimsum} label="Best dim sum in Richmond" />,
+    preview: <SuggestionChip emoji="🥟" label="Best dim sum in Richmond" />,
     previewBg: 'light',
   },
   {

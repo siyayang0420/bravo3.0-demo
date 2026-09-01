@@ -41,9 +41,12 @@ const FILTERS = [
   { label: 'Price', hasDropdown: true },
   { label: 'Micheline', hasDropdown: false },
 ]
+// An emoji rather than a photo: these are QUESTIONS, and a thumbnail of one
+// restaurant promises a specific place the question does not actually name.
+// The glyph reads as a category and stays honest about that.
 const SUGGESTIONS = [
-  { image: thumbDimsum, label: 'Best dim sum in Richmond' },
-  { image: thumbRestaurants, label: 'New onboarded restaurants' },
+  { emoji: '🥟', label: 'Best dim sum in Richmond' },
+  { emoji: '✨', label: 'New onboarded restaurants' },
 ]
 
 // EDIT ME — the real map's opening view and restaurant pins.
@@ -247,7 +250,7 @@ export default function HomeScreen({
           {SUGGESTIONS.map((s) => (
             <SuggestionChip
               key={s.label}
-              image={s.image}
+              emoji={s.emoji}
               label={s.label}
               onClick={() => ask(s.label)}
             />
