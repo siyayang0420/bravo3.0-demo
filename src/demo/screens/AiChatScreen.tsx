@@ -14,6 +14,7 @@ import AiLoadingCard from '../components/AiLoadingCard'
 import AiAnswerCard from '../components/AiAnswerCard'
 import AiVoiceScreen from './AiVoiceScreen'
 import useStandalone from '../../hooks/useStandalone'
+import useWebFrame from '../../hooks/useWebFrame'
 import { AI_ANSWER, AI_DISCLAIMER } from '../data/aiChatDemo'
 import wordmark from '../assets/bravo-ai-wordmark.svg'
 
@@ -30,6 +31,7 @@ export default function AiChatScreen({
   onBack: () => void
 }) {
   const standalone = useStandalone()
+  const web = useWebFrame()
   const reduce = useReducedMotion()
   const [voiceOpen, setVoiceOpen] = useState(false)
 
@@ -45,8 +47,11 @@ export default function AiChatScreen({
   }, [query])
 
   // Installed, the phone raises its own keyboard and --bv-kb-inset already
-  // moves everything; the mock one only exists in a browser tab.
-  const kbShown = keyboardOpen && !standalone
+  // moves everything; on the web build the reviewer has a real keyboard and
+  // nothing rises over the page at all. The mock one only exists inside the
+  // phone frame in a browser tab — and it gates the lift as well as the
+  // drawing, so no keyboard means no gap where one would have been.
+  const kbShown = keyboardOpen && !standalone && !web
 
   // The keyboard takes the bottom of the screen away from the thread, so the
   // thread has to give up the same amount — `.kb-open` lifts the scroll box's

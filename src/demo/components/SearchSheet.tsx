@@ -23,6 +23,7 @@ import LeaderboardRail from './LeaderboardRail'
 import { useDemoUser } from './DemoIdentity'
 import { SEARCH_MERCHANTS, SEARCH_PEOPLE, type SearchPerson } from '../data/searchDemo'
 import useStandalone from '../../hooks/useStandalone'
+import useWebFrame from '../../hooks/useWebFrame'
 
 // Emil's strong ease-out. The built-in curves are too weak to read as
 // intentional at these durations.
@@ -76,6 +77,7 @@ export default function SearchSheet({
   }, [isNew])
   const reduce = useReducedMotion()
   const standalone = useStandalone()
+  const web = useWebFrame()
 
   const hasQuery = query.trim().length > 0
 
@@ -282,9 +284,12 @@ export default function SearchSheet({
 
       {/* Installed to the home screen the phone raises its OWN keyboard when
           the input takes focus, so ours would be a second one stacked under
-          it. In a browser tab there is no real keyboard to defer to (the
-          demo is a mockup, not a focused field), so it stays. */}
-      {!standalone && <IosKeyboard suggestions={AUTOCORRECT} />}
+          it. On the web build there is no on-screen keyboard at all — the
+          reviewer types on a real one — so the mock would be a drawing of a
+          keyboard under a field already taking keystrokes. Inside the phone
+          frame in a browser tab it stays: there it is the device chrome that
+          makes the sheet read as a phone. */}
+      {!standalone && !web && <IosKeyboard suggestions={AUTOCORRECT} />}
 
       {/* Figma 19661:16109 — 36px, 12px in from the top and right. */}
       <button

@@ -457,3 +457,71 @@ button {
   background: var(--color-bg-subtle);
   border-radius: 4px;
 }
+
+/* ---------- Web section: the device switcher and its frame ---------- */
+.web-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-12);
+}
+
+.web-devices {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--color-bg-subtle);
+}
+
+.web-device {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.web-device:hover {
+  color: var(--color-text-primary);
+}
+
+.web-device.active {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+}
+
+.web-note {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* Scrolls sideways rather than squashing: a 1440 preview crammed into a
+   1000px panel would be reporting a layout the app never actually chooses. */
+.web-stage {
+  overflow-x: auto;
+  padding-bottom: var(--space-8);
+}
+
+.web-frame {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-default);
+  background: #fff;
+}
+
+/* The app inside is absolutely positioned (like the phone build), so the
+   viewport is what gives it a height to fill. */
+.web-viewport {
+  position: relative;
+  height: 780px;
+}

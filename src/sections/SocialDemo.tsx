@@ -1,0 +1,215 @@
+// Social UI demo — a full, INDEPENDENT copy of the Live UI demo.
+//
+// This is deliberately a duplicate rather than a second render of the same
+// components. The point of this section is to be a place to change the design
+// without touching the one the review is signed off against, so nothing here
+// may import from ../demo: every screen, component, data file and asset it
+// uses lives under ../demo-social, and its CSS lives in
+// ../demo-social/bravo-social.css.
+//
+// The clone is namespaced. The phone build's stylesheet is essentially global
+// — some 7,000 lines of bare `.bv-*` selectors, only eight of them scoped to
+// `.bravo-app` — so a byte-identical copy of it would still have restyled the
+// original, because both apps would be rendering the same class names. Inside
+// this tree every `bv-` is `sv-` and every `--bv-` token is `--sv-`, in the
+// markup and the CSS together, so the two share no selector and no token.
+//
+// If you add a file here, keep it here. An import reaching back into ../demo
+// is the one thing that silently re-couples the two.
+import { useEffect, useState, type CSSProperties } from 'react'
+import PhoneFrame, { FRAME_WIDTH } from '../demo-social/PhoneFrame'
+import BravoApp from '../demo-social/BravoApp'
+import PresentMode from '../demo-social/PresentMode'
+import { Maximize2 } from 'lucide-react'
+import useStandalone from '../hooks/useStandalone'
+import { DEMO_USERS, type DemoUserId } from '../demo-social/data/profileDemo'
+import { type UnlockKind } from '../demo-social/data/unlockDemo'
+
+// Demo-state tweaker. Not product UI — a control panel so the review can
+// drive the demo into states that have designs, without a backend. It is
+// built to grow: every setting is one labelled row (see ControlRow), so as
+// more conditional states land on more pages for more users, they slot in as
+// new rows and new option lists rather than reworking the layout.
+
+// Who you are signed in as. Bobby sends a challenge, Happy receives it — a
+// reviewer can play both sides. Derived from the demo users so there is one
+// source of truth.
+const USER_OPTIONS = DEMO_USERS.map((u) => ({ id: u.id, label: u.name, hint: u.role }))
+
+const HOME_STATES = [
+  { id: 'default', label: 'Default', hint: 'No promotion running.' },
+  {
+    id: 'promotion',
+    label: 'Promotion live',
+    hint: 'Adds the "My offers?" chip — tap it for the featured promotions.',
+  },
+] as const
+
+type HomeState = (typeof HOME_STATES)[number]['id']
+
+// The three "you just unlocked something" sheets (Figma 20016:12777,
+// 20016:12891, 20017:13218). Nothing in the app fires these yet — they land
+// on a real event in the product — so the tweaker stands in for the trigger.
+const UNLOCK_STATES: readonly { id: UnlockKind; label: string; hint: string }[] = [
+  { id: 'none', label: 'None', hint: 'Nothing to claim.' },
+  {
+    id: 'streak',
+    label: 'Streak',
+    hint: '8-month streak, with the twelve-month calendar under it.',
+  },
+  {
+    id: 'achievement',
+    label: 'Achievement',
+    hint: '"You are The Master" — a tier earned across all diners.',
+  },
+  { id: 'badge', label: 'Badge', hint: 'A single badge earned — the Rewards rail’s art and date.' },
+]
+
+const rowLabelStyle: CSSProperties = {
+  fontSize: 11,
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+  color: 'var(--color-text-tertiary)',
+  whiteSpace: 'nowrap',
+}
+
+const rowHintStyle: CSSProperties = {
+  fontSize: 13,
+  color: 'var(--color-text-secondary)',
+  minWidth: 0,
+}
+
+// One setting: a label, a segmented control, and the active option's hint —
+// three cells that drop into the panel's shared 3-column grid so every row
+// lines up. Generic over the option id so each row keeps its own type.
+function ControlRow<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string
+  options: readonly { id: T; label: string; hint?: string }[]
+  value: T
+  onChange: (v: T) => void
+}) {
+  const active = options.find((o) => o.id === value)
+  return (
+    <>
+      <span style={rowLabelStyle}>{label}</span>
+      <div style={{ display: 'flex', gap: 6 }}>
+        {options.map((o) => (
+          <button
+            key={o.id}
+            className={`btn ${value === o.id ? 'btn-primary' : 'btn-secondary'}`}
+            aria-pressed={value === o.id}
+            onClick={() => onChange(o.id)}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <span style={rowHintStyle}>{active?.hint}</span>
+    </>
+  )
+}
+
+/** Shrink the device so it always fits the column it sits in. */
+function useFitScale() {
+  const [scale, setScale] = useState(0.78)
+
+  useEffect(() => {
+    const fit = () => {
+      const w = window.innerWidth
+      if (w > 820) return setScale(0.78)
+      // section padding is var(--space-6) either side on mobile
+      const available = w - 40
+      setScale(Math.max(0.42, Math.min(0.78, available / (FRAME_WIDTH + 20))))
+    }
+    fit()
+    window.addEventListener('resize', fit)
+    return () => window.removeEventListener('resize', fit)
+  }, [])
+
+  return scale
+}
+
+export default function SocialDemo() {
+  const standalone = useStandalone()
+  // Launched from the home screen on a phone, open straight into the app.
+  // Tapping the icon should give you the product, not a review site with a
+  // sidebar — the ✕ still drops back into the written sections.
+  const [presenting, setPresenting] = useState(
+    () => standalone && window.matchMedia('(max-width: 820px), (pointer: coarse)').matches,
+  )
+  const [homeState, setHomeState] = useState<HomeState>('default')
+  const [userId, setUserId] = useState<DemoUserId>('bobby')
+  const [unlock, setUnlock] = useState<UnlockKind>('none')
+  const phoneScale = useFitScale()
+
+  const user = DEMO_USERS.find((u) => u.id === userId)!
+  const hasPromotion = homeState === 'promotion'
+
+  return (
+    <div className="section-page" style={{ maxWidth: 1080 }}>
+      <p className="eyebrow">Interactive — independent copy</p>
+      <h1 className="page-title">Social UI demo</h1>
+      <p className="page-lede">
+        A working copy of the Live UI demo, identical to it today and wired to its own
+        screens, components and stylesheet. Change anything here and the Live UI demo is
+        untouched.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+        {/* The demo control panel — one row per setting, all sharing a
+            3-column grid (label · control · hint) so they line up. */}
+        <div
+          className="card"
+          style={{
+            padding: 16,
+            display: 'grid',
+            gridTemplateColumns: 'auto auto minmax(0, 1fr)',
+            alignItems: 'center',
+            columnGap: 16,
+            rowGap: 12,
+            width: '100%',
+            maxWidth: 640,
+          }}
+        >
+          <ControlRow label="User" options={USER_OPTIONS} value={userId} onChange={setUserId} />
+          <ControlRow
+            label="Home state"
+            options={HOME_STATES}
+            value={homeState}
+            onChange={setHomeState}
+          />
+          <ControlRow
+            label="Unlock"
+            options={UNLOCK_STATES}
+            value={unlock}
+            onChange={setUnlock}
+          />
+        </div>
+
+        {/* The phone surface stays free for the app's own taps —
+            full screen is entered from the button below only. */}
+        <PhoneFrame scale={phoneScale}>
+          <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
+        </PhoneFrame>
+        <button className="btn btn-secondary" onClick={() => setPresenting(true)}>
+          <Maximize2 size={14} />
+          Present full screen
+        </button>
+      </div>
+
+      <PresentMode
+        open={presenting}
+        onClose={() => setPresenting(false)}
+        hasPromotion={hasPromotion}
+        unlock={unlock}
+        user={user}
+      />
+    </div>
+  )
+}

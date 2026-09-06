@@ -1,0 +1,166 @@
+/* ==================================================================
+   Bravo for the web — FRAME ONLY.
+
+   There are no components in this file, and there is no second design system
+   in it either. The web build mounts the phone's actual screens (see
+   WebApp.tsx), so every pill, chip, card, row, icon and button is already
+   styled by bravo-app.css. What is left for this file is the box those
+   screens are mounted in, and the one thing the extra width adds: the results
+   panel floating over the map.
+
+   If you are about to write a border-radius, a background or a font-size for
+   something that looks like a control — stop. That control exists in
+   demo/components, and the phone screen already renders it.
+
+   Every breakpoint is a CONTAINER query, not a media query. The app is
+   previewed inside a resizable frame on the review site, so `@media` would
+   answer for the reviewer's monitor and the "mobile" preview would lay itself
+   out as a desktop.
+
+     < 780px    phone     the app exactly as the phone runs it, nothing added
+     780-1179   tablet    same, on a wider map
+     >= 1180    desktop   the results panel appears over the map's left side
+   ================================================================== */
+.w-app {
+  container-type: inline-size;
+  container-name: app;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bv-white);
+
+  /* Declared out here, NOT inside the @container block below: a container
+     query only ever matches DESCENDANTS of its container, never the container
+     element itself, so a custom property set on .w-app in there is never
+     defined — and `padding-left: var(--undefined)` computes to 0, silently
+     removing the inset instead of failing loudly. */
+
+  /* 370 of content — the width .bv-merchant is drawn at — plus a gutter each
+     side. Stretching the rows would mean overriding the component's own CSS,
+     which is restyling by another name. */
+  --w-panel-w: calc(370px + var(--bv-space-4) * 2);
+  /* Where the map's own controls have to start to clear the panel: the
+     panel's left offset, its width, and a gap. */
+  --w-panel-clear: calc(var(--w-panel-w) + var(--bv-space-4) * 2);
+}
+
+/* .bravo-app is the phone's own shell — width/height 100%, relative,
+   overflow hidden — so it needs nothing here but the box to fill. The
+   `standalone` class beside it (WebApp.tsx) is what zeroes --bv-statusbar-h:
+   a browser draws its own chrome, so there is no 9:41 band to clear. */
+.w-shell {
+  position: absolute;
+  inset: 0;
+}
+
+/* ------------------------------------------------------------------
+   The results panel.
+
+   Hidden by default: under 1180 the phone's own flow already answers the
+   screen, and a panel there would be covering the map it floats on.
+   ------------------------------------------------------------------ */
+.w-results {
+  display: none;
+}
+
+@container app (min-width: 1180px) {
+  .w-results {
+    position: absolute;
+    /* Clears the top bar: 6 margin + 35 pill + 12 gap. --bv-statusbar-h is 0
+       here, but it is kept in the sum so this tracks the phone's own offset
+       if the shell ever runs with a status bar. */
+    top: calc(var(--bv-statusbar-h) + 53px);
+    left: var(--bv-space-4);
+    bottom: var(--bv-space-4);
+    /* Over the map (z-0) and level with the top bar (z-8), so the pills stay
+       above it and the bottom stack (z-6) passes behind it. */
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    width: var(--w-panel-w);
+    border-radius: var(--bv-radius-3xl);
+    background: var(--bv-white);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  /* The panel's own inset, on all four sides: this padding plus the list's
+     is what keeps the rows off the card's edges. Every value is a real token
+     — there is no --bv-space-5 in the scale, and a shorthand that names a
+     missing custom property is thrown away whole, taking the padding on the
+     other three sides with it. */
+  .w-results-head {
+    flex-shrink: 0;
+    padding: var(--bv-space-6) var(--bv-space-4) var(--bv-space-4);
+  }
+
+  .w-results-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--bv-black);
+  }
+
+  .w-results-sub {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: var(--bv-neutral-500);
+  }
+
+  .w-results-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--bv-space-6);
+    padding: 0 var(--bv-space-4) var(--bv-space-6);
+  }
+
+  .w-results-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The phone centres its top bar and its bottom stack in a 370 column,
+     which is the whole screen there. Here that column is a stripe down the
+     middle of a wide map, so the chrome spreads to the frame instead: pills
+     to the left edge, scan/bell to the right. The controls themselves are
+     untouched — only where they sit. */
+  .w-shell .bv-topbar {
+    width: auto;
+    margin: 6px var(--bv-space-4) 0;
+  }
+
+  /* The search sheet is the dock's prompt box, opened up — so here it takes
+     the dock's own width rather than the phone's 402.
+     On a phone those are the same thing: the bar spans the screen and so
+     does the sheet. On a wide map they had come apart — a 402 sheet under a
+     988 bar, pinned to the left where it covered the results panel, with the
+     starter rail cut off inside it.
+     Both edges are therefore measured to land the sheet's prompt box exactly
+     on the bar it replaces: 16px out on the left, because the sheet insets
+     its own dock by that much, and flush right, because the dock's own 16px
+     padding already does the same job on that side. */
+  .w-shell .bv-search-sheet {
+    left: calc(var(--w-panel-clear) - var(--bv-space-4));
+    right: 0;
+    width: auto;
+  }
+
+  /* The chips and the dock step clear of the panel rather than sliding under
+     it, so the panel never covers a control.
+     The inset goes on each ROW, not on the stack around them: the dock paints
+     the white fade the map runs out under, and a background paints the
+     padding box — so padding here keeps that fade spanning the full width and
+     running on beneath the panel (stack z-6, panel z-8), while the prompt box
+     and the nav inside it still start clear of the card. Shifting the stack
+     itself would drag the fade's left edge along with it and cut the white
+     off in the middle of the screen. */
+  .w-shell .bv-filter-row,
+  .w-shell .bv-suggestion-row,
+  .w-shell .bv-dock {
+    padding-left: var(--w-panel-clear);
+  }
+}

@@ -1,0 +1,7100 @@
+/* ==================================================================
+   Bravo Mobile DS — generated from Figma Variables
+   (Figma Variables/Colors.json, Typography.json, Spacing.json,
+    Radius.json, Progress.json)
+   Scoped under .bravo-social-app so it never collides with the Jeni/Oreo
+   tokens that style the review site around it.
+   Font: DM Sans (font/family/primary-app)
+   ================================================================== */
+
+/* Tokens live on `.bravo-social-scope` so they can also be applied to isolated
+   component previews in the Design System page, not just the full app. */
+.bravo-social-app,
+.bravo-social-scope {
+  /* --- grays --- */
+  --sv-black: #202020;              /* grays/black */
+  --sv-white: #ffffff;              /* grays/white */
+  --sv-border-strong: #474747;      /* grays/border/strong */
+  --sv-border-subtle: #e5e5ea;      /* grays/border/subtle */
+
+  --sv-zinc-50: #f2f2f7;
+  --sv-zinc-100: #e5e5ea;
+  --sv-zinc-200: #d1d1d6;
+  --sv-zinc-300: #c7c7cc;
+  --sv-zinc-400: #aeaeb2;
+  --sv-zinc-500: #8e8e93;
+  --sv-zinc-600: #636366;
+  --sv-zinc-700: #48484a;
+  --sv-zinc-800: #3a3a3c;
+  --sv-zinc-900: #2c2c2e;
+
+  --sv-neutral-50: #fafafa;
+  --sv-neutral-100: #f5f5f5;
+  --sv-neutral-150: #f2f2f2;
+  --sv-neutral-200: #e5e5e5;
+  --sv-neutral-300: #d4d4d4;
+  --sv-neutral-400: #a3a3a3;
+  --sv-neutral-500: #737373;
+  --sv-neutral-600: #525252;
+  --sv-neutral-700: #404040;
+  --sv-neutral-800: #262626;
+  --sv-neutral-900: #171717;
+
+  /* --- brand --- */
+  --sv-primary-500: #fee160;
+  --sv-primary-400: #fee780;
+  --sv-primary-300: #feeda0;
+  --sv-primary-200: #fff3bf;
+  --sv-primary-100: #fff9df;
+
+  --sv-base-500: #c63659;
+  --sv-base-400: #d15e7a;
+  --sv-base-300: #dd869b;
+  --sv-base-200: #e8afbd;
+  --sv-base-100: #f4d7de;
+  --sv-base-red: #c51f1f;
+
+  /* --- brand/theme --- */
+  --sv-orange-bright: #fea724;
+  --sv-orange-dark: #372100;
+  --sv-cyan-bright: #0cd0e7;
+  --sv-cyan-dark: #00282d;
+  --sv-purple-bright: #8a5dff;
+  --sv-purple-dark: #120041;
+  --sv-green-bright: #02cc6e;
+  --sv-green-dark: #00311a;
+  --sv-green-neo: #00ed7f;
+
+  /* --- semantic --- */
+  /* Figma carries a standalone `success` alongside the numbered ramp below —
+     iOS system green, used for money coming IN (a credit in the Combined
+     Spendable activity). Deliberately not success-400: that is the button
+     fill, several shades darker, and reads as a state rather than an amount. */
+  --sv-success: #34c759;
+  --sv-success-500: #1e4d3a;
+  --sv-success-400: #2f7657;
+  --sv-success-300: #53b483;
+  --sv-success-200: #8ee4ba;
+  --sv-success-100: #d9f9e6;
+  --sv-warning-500: #78310b;
+  --sv-warning-400: #a35c00;
+  --sv-warning-300: #e9a23b;
+  --sv-warning-200: #ffd16a;
+  --sv-warning-100: #fbf2cb;
+  --sv-info-500: #163253;
+  --sv-info-400: #2e5f99;
+  --sv-info-300: #4a90e2;
+  --sv-info-200: #92bcee;
+  --sv-info-100: #c9def6;
+  --sv-error-500: #601b1b;
+  --sv-error-400: #a32e2e;
+  --sv-error-300: #f34141;
+  --sv-error-200: #f7a1a1;
+  --sv-error-100: #fde9e9;
+
+  --sv-text-primary: var(--sv-black);      /* semantic/text/primary */
+  --sv-text-on-inverse: var(--sv-white);   /* semantic/text/on-inverse */
+  --sv-border-default: rgba(0, 0, 0, 0.12);
+  --sv-hover: rgba(0, 0, 0, 0.02);
+  --sv-press: rgba(0, 0, 0, 0.05);
+  --sv-hover-inverse: rgba(255, 255, 255, 0.06);
+  --sv-press-inverse: rgba(255, 255, 255, 0.1);
+  --sv-disabled-bg: var(--sv-neutral-100);
+  --sv-disabled-text: var(--sv-neutral-400);
+  --sv-store-open: #08e800;
+  --sv-store-closed: #eb3f3f;
+  --sv-pay: #04a956;
+  --sv-connected: #5cdf1e;
+
+  /* --- spacing (Figma Spacing.json) --- */
+  --sv-space-0: 0px;
+  --sv-space-1: 4px;
+  --sv-space-1-5: 6px;
+  --sv-space-2: 8px;
+  --sv-space-3: 12px;
+  --sv-space-4: 16px;
+  --sv-space-6: 24px;
+  --sv-space-8: 32px;
+  --sv-space-10: 40px;
+  --sv-space-12: 48px;
+  --sv-space-16: 64px;
+  --sv-space-24: 96px;
+  --sv-space-32: 128px;
+
+  /* --- radius (Figma Radius.json) --- */
+  --sv-radius-0: 0px;
+  --sv-radius-sm: 2px;
+  --sv-radius-base: 4px;
+  --sv-radius-md: 6px;
+  --sv-radius-lg: 8px;
+  --sv-radius-xl: 12px;
+  --sv-radius-2xl: 16px;
+  --sv-radius-3xl: 24px;
+  --sv-radius-full: 9999px;
+
+  /* --- typography (Figma Typography.json) --- */
+  --sv-font: 'DM Sans', -apple-system, sans-serif; /* font/family/primary-app */
+  /* Display face — Figma uses Boldonse for the social feed's section tabs.
+     Single weight (400); loaded from Google Fonts in index.html. */
+  --sv-font-display: 'Boldonse', 'DM Sans', -apple-system, sans-serif;
+  --sv-line-20: 20px;                              /* font/lineHeight/20 */
+
+  /* --- effects (styles observed in Figma: "bubble", "hard bubble",
+         "accent-default") --- */
+  --sv-shadow-float: 0px 5px 4px rgba(0, 0, 0, 0.15);
+  --sv-inset-bubble: inset 0px 1px 4px 0px #ffffff,
+    inset 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
+  /* "hard bubble" (Figma) — same recipe, a stronger bottom shadow (0.2).
+     Used on the tappable chip buttons. */
+  --sv-inset-bubble-hard: inset 0px 1px 4px 0px #ffffff,
+    inset 0px -2px 5px 0px rgba(0, 0, 0, 0.2);
+  --sv-inset-glow: inset 0px 0px 6.4px 0px #ffffff;
+  --sv-inset-accent: inset 0px -4px 4px 0px #000000,
+    inset 0px 1px 5px 0px rgba(255, 255, 255, 0.6);
+
+  /* ---------- device chrome ----------
+     The artboard reserves 59px for a status bar, and a dozen offsets are
+     measured from it (the top bar, the social header fade, the pushed-screen
+     nav, the sheets). Installed to the home screen the PHONE draws the
+     status bar outside our box, so this drops to 0 and every one of those
+     offsets follows — otherwise the whole app sits a status bar too low.
+     Expressed as a token so there is one number to change, not twelve. */
+  --sv-statusbar-h: 59px;
+
+  font-family: var(--sv-font);
+  color: var(--sv-text-primary);
+}
+
+.bravo-social-app.standalone {
+  --sv-statusbar-h: 0px;
+}
+
+/* ---------- effect utilities ----------
+   Siya's Figma effect styles, as classes, so an effect can be dropped onto
+   any element the same way it is applied on the canvas. The tokens above
+   stay for the cases where the effect has to be composed with another
+   shadow on the same element (box-shadow does not cascade-merge).
+
+   "accent" is the dark-surface treatment: a hard black lip along the
+   bottom and a soft white catch-light along the top, which is what makes
+   the black pills read as raised rather than flat. It belongs on every
+   solid dark control — the prompt box's voice button, the progress fill,
+   and every solid Button. */
+.sv-accent {
+  box-shadow: var(--sv-inset-accent);
+}
+
+/* "bubble" is the light-surface counterpart, carried by every avatar and
+   the neutral chips. */
+.sv-bubble {
+  box-shadow: var(--sv-inset-bubble);
+}
+
+/* ---------- easing ----------
+   The built-in CSS curves are too weak to read as intentional at UI
+   durations. `ease-in` is never used: it delays the first frame, which is
+   exactly the moment the user is watching. */
+.bravo-social-app,
+.bravo-social-scope {
+  --sv-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --sv-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --sv-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Full-app layout — only when rendering the actual phone screen. */
+.bravo-social-app {
+  background: var(--sv-white);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ---------- map ----------
+   Real MapLibre map filling the artboard, at the base layer so the top bar
+   (z-8) and the bottom stack (z-6) float over it. Interactive: pan + zoom. */
+.sv-map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.sv-map .maplibregl-canvas {
+  outline: none;
+}
+
+/* Only when the raster fallback is standing in for the vector basemap (see
+   MapView). Positron needs no help; OpenStreetMap's own tiles are a far
+   louder map — pink motorways, beige land — so they are desaturated and
+   lifted toward white until they read as the same pale basemap. Saturation is
+   pulled down rather than out, so water keeps a trace of blue and parks a
+   trace of green, which is what the design has.
+   The filter is on the CANVAS, not on .sv-map, so the pins, the user dot and
+   every other marker layered over the map keep their full colour. */
+.sv-map.is-raster .maplibregl-canvas {
+  filter: saturate(0.35) brightness(1.16) contrast(0.84);
+}
+/* keep the attribution readable but out of the way, above the dock fade */
+.sv-map .maplibregl-ctrl-bottom-right {
+  bottom: 96px;
+  z-index: 1;
+}
+.sv-map .maplibregl-ctrl-attrib {
+  font-size: 9px;
+  border-radius: 8px 0 0 0;
+}
+
+/* the blue "you are here" dot */
+.sv-map-user {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #2b7fff;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* restaurant pin — white pill, round photo on the left, name + meta.
+   Anchored at its left edge so the photo sits on the location. */
+.sv-map-pin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 210px;
+  padding: 5px 12px 5px 5px;
+  background: var(--sv-white);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  user-select: none;
+}
+
+.sv-map-pin-photo {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #e6e6e6 50% / cover no-repeat;
+}
+
+.sv-map-pin-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.sv-map-pin-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--sv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sv-map-pin-meta {
+  font-size: 11px;
+  color: #6b6b6b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- status bar (Figma AppleStatusBar 19548:163729) ----------
+   Installed to the home screen the phone draws its own, so ours goes
+   invisible and the real clock/battery show through. `visibility`, not
+   `display`: the 59px band has to stay in the layout or every screen
+   measured against it (the challenge nav's 65px, the search sheet's
+   `calc(100% - var(--sv-statusbar-h) - 16px - var(--sv-kb-inset, 0px))`) would shift up. */
+/* Out of the layout entirely, not just invisible: the phone's own bar sits
+   above our box, so keeping the band would push the app a status bar too
+   far down. Every offset that cleared it is on --sv-statusbar-h, which is
+   0 here, so they collapse in step. */
+.bravo-social-app.standalone .sv-statusbar {
+  display: none;
+}
+
+.sv-statusbar {
+  height: var(--sv-statusbar-h);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 36px;
+  font-size: 17px;
+  font-weight: 600;
+  position: relative;
+  /* Always on top, like the real OS status bar — full-screen pushes such as
+     the challenge detail slide under it rather than covering the clock. */
+  z-index: 30;
+}
+
+.sv-statusbar-levels {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ---------- top bar (Figma 19548:163730) ----------
+   Sits above .sv-scrim so the balance pills stay lit while the
+   Combined Spendable sheet is open — they are the sheet's anchor. */
+.sv-topbar {
+  position: relative;
+  z-index: 8;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 370px;
+  margin: 6px auto 0;
+}
+
+.sv-topbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Component: Balance Pill (Figma 19548:163732 / 19548:163734) */
+.sv-balance-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-100);
+  border: 0.8px solid #ededed;
+  filter: drop-shadow(0px 5px 4px rgba(0, 0, 0, 0.15));
+  box-shadow: var(--sv-inset-glow);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+  font-family: inherit;
+  transition: transform 0.15s ease;
+}
+
+button.sv-balance-pill {
+  cursor: pointer;
+}
+
+button.sv-balance-pill:active {
+  transform: scale(0.96);
+}
+
+/* Component: Coin (Figma "coin a" / Group 1996)
+   The rosette is placed in percentages so the same rule holds at 19px
+   inside a balance pill and at 42px inside a promotion card. */
+.sv-coin {
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+}
+
+.sv-coin > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sv-coin > .sv-coin-mark {
+  inset: auto;
+  left: 18.55%;
+  top: 15.45%;
+  width: 62.89%;
+  height: 68.29%;
+}
+
+/* Component: Circle Icon Button (Figma 19548:163745 / 19548:163747)
+   Always a true 35x35 circle — it used to take its height from the row,
+   which made it an ellipse next to the taller balance pills. */
+.sv-circle-btn {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  border: none;
+  filter: drop-shadow(0px 5px 4px rgba(0, 0, 0, 0.15));
+  color: var(--sv-black);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.sv-circle-btn:active {
+  transform: scale(0.94);
+}
+
+/* Inside a bordered card the shadow is dropped (Figma 19577:173694). */
+.sv-circle-btn-flat {
+  filter: none;
+}
+
+/* ==================================================================
+   Map venue card — Figma 19868:16231, with the friend's note at
+   19869:16905. Opened by tapping a pin; the bottom stack drops out
+   of frame to make room (see HomeScreen).
+   ================================================================== */
+.sv-venue-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* above the bottom stack (6) and the top bar (8), below the scrims (10) */
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  /* 16px sides puts the card at Figma's 370 on the 402 artboard; the 32px
+     foot is the same clearance the dock keeps, so it never crowds the home
+     indicator. */
+  padding: 0 var(--sv-space-4) 32px;
+}
+
+/* Frosted, not solid — it sits on the map and the streets should still
+   read through it. */
+.sv-venue-card {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: var(--sv-space-3);
+  border-radius: var(--sv-radius-2xl);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8.5px);
+  -webkit-backdrop-filter: blur(8.5px);
+}
+
+.sv-venue-photos {
+  display: flex;
+  gap: var(--sv-space-3);
+}
+
+.sv-venue-photo {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 178px;
+  border-radius: var(--sv-radius-xl);
+  overflow: hidden;
+}
+
+.sv-venue-photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Figma's radius here is a literal 1563px — i.e. "as round as it goes". */
+.sv-venue-rate {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 6.25px 12.5px;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-black);
+  color: var(--sv-white);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sv-venue-savers {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  padding: 0 var(--sv-space-3);
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  box-shadow: var(--sv-shadow-float);
+  color: var(--sv-black);
+}
+
+.sv-venue-saver-stack {
+  display: flex;
+  align-items: center;
+}
+
+.sv-venue-saver-stack > span {
+  width: 15.19px;
+  height: 20.25px;
+  border-radius: var(--sv-radius-full);
+  border: 0.581px solid var(--sv-white);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.553px 2.212px 0 #ffffff,
+    inset 0 -1.106px 2.765px 0 rgba(0, 0, 0, 0.1);
+}
+
+.sv-venue-saver-stack > span + span {
+  margin-left: -5.9px;
+}
+
+.sv-venue-saver-count {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.sv-venue-copy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-venue-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-venue-logo {
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-lg);
+  object-fit: cover;
+  display: block;
+}
+
+/* 24px type on a 20px line — Figma's own values, deliberately tight. */
+.sv-venue-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--sv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* width:100% explicitly — a broader rule resolves the column's align-items to
+   flex-start, so this row would otherwise shrink to its text and the distance
+   would sit next to the meta instead of out at the right edge. */
+.sv-venue-meta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+/* ---- the friend's note ---- */
+.sv-venue-comment {
+  max-width: 100%;
+  /* Tapping the note opens the venue detail scrolled to it. */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-venue-comment-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-venue-comment-avatar {
+  flex-shrink: 0;
+  width: 29px;
+  height: 38px;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Three round corners and a square bottom-left — the tail, pointing back at
+   the friend's face beside it. Same rule as the post bubbles. */
+.sv-venue-comment-bubble {
+  max-width: 320px;
+  padding: var(--sv-space-3);
+  border-radius: var(--sv-radius-2xl);
+  border-bottom-left-radius: 0;
+  background: var(--sv-neutral-600);
+  box-shadow: var(--sv-inset-bubble);
+  color: var(--sv-white);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==================================================================
+   Venue detail — Figma 19867:16050. Pushed in from the map's venue
+   card: one long scroll, with the assistant and the action row
+   pinned at the bottom.
+   ================================================================== */
+.sv-vd-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the venue card layer (9) and the top bar (8) */
+  z-index: 12;
+}
+
+.sv-vd-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+.sv-vd-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+  /* Clears the pinned header's CONTENT (statusbar + 94), plus the 4px that
+     used to separate the title row from the facts below it — so the page
+     opens looking exactly as it did when the header still scrolled. The
+     header's fade tail hangs past this on purpose: it is meant to overlap. */
+  padding: calc(var(--sv-statusbar-h) + 98px) 0 190px;
+}
+
+.sv-vd-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* A flex column that scrolls will SHRINK its children to fit rather than
+   overflow — which collapsed the photo rail (no intrinsic height of its own)
+   to zero while its images kept their size and got clipped. Every section
+   keeps its natural height and the column scrolls instead. */
+.sv-vd-scroll > * {
+  flex-shrink: 0;
+}
+
+/* ---- pinned header — Figma 19890:18100 ----
+   Lives outside the scroller and covers the status bar band, so the back
+   button and the venue's name are always reachable and nothing scrolls into
+   the clock. Same fade recipe as the social feed's header: the content is
+   19 + 32 (back) + 8 (gaps) + 35 (title row) = 94px under the status bar,
+   and Figma's white stop at 75.492% is what fixes the frame height — the
+   fade has to BEGIN where the title row ends, so 94 / 0.75492 sets it. */
+.sv-vd-topbar {
+  /* 0 at rest, 1 once the two rows have merged. VenueDetailScreen writes it
+     on every scroll frame; everything below reads it, so the collapse is
+     scroll-linked rather than a transition that can fall out of step. */
+  --vd-collapse: 0;
+  /* How far the identity row travels: back button (32) + the 8px under it. */
+  --vd-lift: 40px;
+  /* The two axes are STAGGERED, and the stagger is load-bearing: the logo has
+     to be clear of the arrow (past 32px) before it starts rising, or it clips
+     the arrow's corner on the way past. Sliding right finishes by the halfway
+     point; rising only starts at 0.3, by which time there is room. The two
+     windows overlap enough that it still reads as one curved move. */
+  --vd-slide-t: clamp(0, var(--vd-collapse) / 0.5, 1);
+  --vd-lift-t: clamp(0, (var(--vd-collapse) - 0.3) / 0.7, 1);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* over the scroller, under the status bar (30) */
+  z-index: 3;
+  /* The fade tail GROWS AS YOU SCROLL rather than being a fixed share of the
+     height. Figma's 75.492% white stop works out to a ~45px tail here, which
+     reached far enough down the page to veil the meta line ("Cafe • $$ •
+     13.5km") — that line starts just 4px below where the header's solid part
+     ends, so any tail worth the name lands on top of it.
+     The tail is only there to soften content passing underneath, and at rest
+     nothing is: the header sits on the page's own white. So there is no fade
+     at 0, and it opens to 16px by the time the header has collapsed and the
+     photos are actually travelling under it. */
+  --vd-fade: calc(var(--vd-collapse) * 16px);
+  /* Tracks the LIFT, not the raw scroll: the solid part has to end where the
+     title row ends, whatever point of the move that row is at. */
+  height: calc(
+    var(--sv-statusbar-h) + 94px - var(--vd-lift-t) * var(--vd-lift) +
+      var(--vd-fade)
+  );
+  padding: calc(var(--sv-statusbar-h) + 19px) var(--sv-space-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  background: linear-gradient(
+    180deg,
+    var(--sv-white) 0,
+    var(--sv-white) calc(100% - var(--vd-fade)),
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* The fade tail is see-through, so it must not swallow taps meant for the
+     photos travelling underneath it. */
+  pointer-events: none;
+}
+
+/* Only the controls take input, never the rows holding them: once collapsed
+   the identity row sits ON TOP of the back button, and as a plain box it
+   would eat the arrow's taps. */
+.sv-vd-topbar button {
+  pointer-events: auto;
+}
+
+.sv-vd-topbar > * {
+  /* The box shrinks as it collapses; the rows must not be squeezed with it —
+     they are moved by transform instead. */
+  flex-shrink: 0;
+}
+
+/* The arrow is the one thing that holds still — it is the target you are
+   reaching for. It only drops the 1.5px that centres it in the 35px row once
+   the identity has come up alongside it. */
+.sv-vd-topbar .sv-screen-back {
+  transform: translateY(calc(var(--vd-lift-t) * 1.5px));
+}
+
+/* Right to clear the arrow, then up alongside it — the logo lands 6px off the
+   arrow, the same 6px it keeps from the name on its other side. */
+.sv-vd-topbar .sv-vd-title-row {
+  transform: translateY(calc(var(--vd-lift-t) * var(--vd-lift) * -1));
+  will-change: transform;
+}
+
+.sv-vd-topbar .sv-vd-identity {
+  /* 32 (arrow) + 6 (the identity's own gap). A MARGIN, not padding: padding
+     would keep the arrow inside the identity's own box, where it is covered
+     by it — the margin leaves that strip out of the box entirely. */
+  margin-left: calc(var(--vd-slide-t) * 38px);
+}
+
+/* ---- header facts (what is left in the scroll) ---- */
+.sv-vd-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-vd-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* A floor, not a spacer: a long name runs out of room 16px short of the
+     save/share pair rather than crowding it. */
+  gap: var(--sv-space-4);
+  margin-top: var(--sv-space-1);
+}
+
+/* Takes the leftover width and is allowed to shrink below its content, which
+   is what lets the name inside it ellipsize instead of shoving the buttons
+   off the right edge. */
+.sv-vd-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sv-vd-logo {
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-lg);
+  object-fit: cover;
+  display: block;
+}
+
+.sv-vd-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* A flex item refuses to shrink past its text by default, so without this
+     the ellipsis above never gets the chance to fire. */
+  min-width: 0;
+}
+
+.sv-vd-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  flex-shrink: 0;
+}
+
+.sv-vd-round {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  box-shadow: var(--sv-shadow-float);
+  color: var(--sv-black);
+  cursor: pointer;
+}
+
+.sv-vd-meta {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-vd-desc {
+  margin-top: var(--sv-space-3);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-vd-hours {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-4);
+  margin-top: var(--sv-space-3);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.sv-vd-open {
+  font-weight: 700;
+  color: var(--sv-green-bright);
+}
+
+.sv-vd-day {
+  font-weight: 700;
+  color: var(--sv-black);
+}
+
+.sv-vd-hours-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  cursor: pointer;
+}
+
+/* ---- photo rail ----
+   Figma lays two 258px photos side by side, which is wider than the 402
+   artboard — so they scroll rather than being squeezed to fit. */
+.sv-vd-photos {
+  display: flex;
+  gap: 18.66px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-vd-photos::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-vd-photos > img {
+  width: 258.85px;
+  height: 285.67px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-2xl);
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- offer ---- */
+.sv-vd-offer {
+  margin: 0 var(--sv-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+  padding: var(--sv-space-4);
+  border-radius: 15px;
+  background: var(--sv-white);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.sv-vd-offer-top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+}
+
+.sv-vd-offer-rate {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #282828;
+  color: var(--sv-white);
+}
+
+.sv-vd-offer-rate b {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+}
+
+.sv-vd-offer-rate span {
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.sv-vd-offer-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+}
+
+.sv-vd-offer-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  color: var(--sv-black);
+}
+
+.sv-vd-offer-detail {
+  font-size: 14px;
+  line-height: 19px;
+  color: var(--sv-black);
+}
+
+.sv-vd-offer-more {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--sv-zinc-500);
+  cursor: pointer;
+}
+
+/* ---- sections ---- */
+.sv-vd-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-2);
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-vd-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sv-vd-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-vd-saved-count {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* ---- saved by ---- */
+.sv-vd-savers {
+  display: flex;
+  gap: 13.99px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* room for the bookmark badge that hangs off each face */
+  padding-bottom: 2px;
+}
+
+.sv-vd-savers::-webkit-scrollbar {
+  display: none;
+}
+
+/* A <button>, because tapping a saver opens their profile — reset back to
+   the plain column it looks like. */
+.sv-vd-saver {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-vd-saver-face {
+  position: relative;
+  width: 58.27px;
+  height: 77.69px;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+.sv-vd-saver-name {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* ---- write a post ----
+   A dashed outline, not a filled bubble — it is an invitation, not a
+   message somebody already sent. */
+.sv-vd-write {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sv-space-2);
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-vd-write-bubble {
+  flex: 1;
+  max-width: 280px;
+  min-height: 37px;
+  padding: 10px var(--sv-space-3);
+  border: 1px dashed var(--sv-zinc-500);
+  /* Your own face sits to the RIGHT of this one, so the tail squares off
+     that way — the mirror of the post bubbles below. */
+  border-radius: var(--sv-radius-2xl);
+  border-bottom-right-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: left;
+  color: var(--sv-zinc-500);
+  cursor: pointer;
+}
+
+.sv-vd-write-face {
+  flex-shrink: 0;
+  width: 32px;
+  height: 43px;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ---- posts ---- */
+.sv-vd-post {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  padding: 0 var(--sv-space-4);
+}
+
+/* Arriving here by tapping the note on the map scrolls to that note and
+   flashes it, so it is obvious which of several posts you were sent to.
+   A tint that swells and drains — no border, nothing that shifts layout. */
+.sv-vd-post.is-flash {
+  animation: sv-post-flash 1.9s ease-out;
+}
+
+@keyframes sv-post-flash {
+  0% {
+    background: rgba(255, 190, 60, 0);
+  }
+  18% {
+    background: rgba(255, 190, 60, 0.22);
+  }
+  100% {
+    background: rgba(255, 190, 60, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-vd-post.is-flash {
+    animation-duration: 0.01ms;
+    background: rgba(255, 190, 60, 0.18);
+  }
+}
+
+.sv-vd-post-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sv-space-2);
+}
+
+.sv-vd-post-face {
+  flex-shrink: 0;
+  width: 32px;
+  height: 43px;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.951px 3.805px 0 #ffffff,
+    inset 0 -1.903px 4.756px 0 rgba(0, 0, 0, 0.1);
+}
+
+.sv-vd-post-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-2);
+}
+
+/* Photo stack (PhotoStack.tsx) — the back photo leans out from behind the
+   front one, so "there are more" reads without spending a carousel on it.
+   Swipe deals the front card under the deck; tap opens the lightbox.
+   The count pill's offsets are measured against the 160x175 box below, so
+   these rules have to travel together. */
+.sv-photostack {
+  position: relative;
+  /* Its own stacking context, so the card layers below stay INSIDE the deck.
+     Without this, `position: relative; z-index: auto` creates no context and
+     the cards compete with the dock — the photo paints over the prompt bar. */
+  isolation: isolate;
+  width: 160px;
+  height: 175px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-photostack-back,
+.sv-photostack-front {
+  position: absolute;
+  border-radius: var(--sv-radius-xl);
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Layered so a swiped card can be dealt UNDER the deck: a card leaving (or
+   not yet pulled back out) drops to z-index 0, this leaning card sits at 1,
+   and the cards in play are at 2-3 — set by PhotoStack's motion targets. */
+.sv-photostack-back {
+  z-index: 1;
+  left: 22px;
+  top: 8px;
+  width: 126.62px;
+  height: 155.84px;
+  transform: rotate(6.51deg);
+}
+
+/* No transform here: framer-motion owns this card's transform while it is
+   being dragged and while it swaps places with the next one. */
+.sv-photostack-front {
+  left: 0;
+  top: 0;
+  width: 141.81px;
+  height: 175px;
+  cursor: grab;
+}
+
+.sv-photostack-front:active {
+  cursor: grabbing;
+}
+
+.sv-photostack-count {
+  position: absolute;
+  /* Above every card layer (see PhotoStack's slot table). */
+  z-index: 4;
+  left: 96.85px;
+  top: 134px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--sv-white);
+  font-size: 14px;
+  line-height: 19px;
+  /* Sits above the cards, but must never eat the swipe. */
+  pointer-events: none;
+}
+
+/* Full-screen photo viewer (PhotoLightbox.tsx). Fills the phone, not the
+   window — it is a child of .sv-vd-screen, which is the containing block. */
+.sv-lightbox {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  /* Opaque: the page behind is a bright white scroll, and any bleed-through
+     reads as a rendering glitch rather than depth. */
+  background: #0a0a0a;
+  outline: none;
+}
+
+.sv-lightbox-close {
+  position: absolute;
+  top: calc(var(--sv-statusbar-h) + 12px);
+  right: 16px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--sv-white);
+  cursor: pointer;
+}
+
+/* Top padding clears the status bar and the close button, so a tall photo
+   never slides underneath either of them. */
+/* Grid, not flex: the outgoing and incoming photos share one cell so they can
+   cross over each other, and padding still keeps them clear of the status bar
+   and the close button. */
+.sv-lightbox-stage {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--sv-statusbar-h) + 60px) 16px 0;
+  overflow: hidden;
+}
+
+.sv-lightbox-photo {
+  grid-area: 1 / 1;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--sv-radius-xl);
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: grab;
+}
+
+.sv-lightbox-photo:active {
+  cursor: grabbing;
+}
+
+.sv-lightbox-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-3);
+  padding: 20px 0 40px;
+}
+
+.sv-lightbox-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sv-lightbox-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.sv-lightbox-dot.is-on {
+  width: 18px;
+  background: var(--sv-white);
+}
+
+.sv-lightbox-count {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* The square corner is the tail, and it points at whoever is speaking. Their
+   face sits to the LEFT of this bubble, so the bottom-left corner squares
+   off toward them. */
+.sv-vd-bubble {
+  max-width: 320px;
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  padding: var(--sv-space-3);
+  border-radius: var(--sv-radius-2xl);
+  border-bottom-left-radius: 0;
+  background: var(--sv-neutral-100);
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-vd-bubble-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-vd-bubble-who {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  min-width: 0;
+}
+
+/* The author's name is a button (it opens their profile) but must read as
+   the same bold text it was before. */
+.sv-vd-bubble-who b,
+.sv-vd-bubble-name {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Anything in the venue detail that opens a person's profile. */
+.sv-vd-person {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-vd-bubble-when {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+}
+
+.sv-vd-bubble-text {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-vd-post-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 40px;
+}
+
+.sv-vd-post-detail {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+  cursor: pointer;
+}
+
+.sv-vd-post-engage {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+.sv-vd-post-action {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--sv-black);
+  cursor: pointer;
+}
+
+/* ---- same vibe ---- */
+.sv-vd-vibe {
+  display: flex;
+  gap: var(--sv-space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sv-vd-vibe::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-vd-vibe-card {
+  flex-shrink: 0;
+  width: 123px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sv-vd-vibe-card > img {
+  width: 123px;
+  height: 141px;
+  margin-bottom: var(--sv-space-1-5);
+  border-radius: var(--sv-radius-lg);
+  object-fit: cover;
+  display: block;
+}
+
+.sv-vd-vibe-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sv-vd-vibe-cat {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- dock ---- */
+.sv-vd-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+  padding: var(--sv-space-3) var(--sv-space-4) 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--sv-white) 34.4%
+  );
+}
+
+.sv-vd-chips {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sv-vd-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-vd-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  padding: var(--sv-space-1-5) var(--sv-space-3);
+  border: none;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-100);
+  box-shadow: var(--sv-inset-bubble);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  color: var(--sv-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Pay is the one thing you came here to do, so it takes the accent. */
+.sv-vd-chip.pay {
+  background: var(--sv-black);
+  box-shadow: var(--sv-inset-accent);
+  color: var(--sv-text-on-inverse);
+}
+
+/* ---------- bottom stack ---------- */
+.sv-bottom-stack {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* the dock steps aside while the search sheet stands in for it */
+.sv-bottom-stack.search-hidden,
+.sv-dock-social.search-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Component: Filter Chip (Figma 19453:11111) */
+.sv-filter-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-left: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sv-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-filter-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  padding: var(--sv-space-1-5) var(--sv-space-3);
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  box-shadow: var(--sv-inset-bubble-hard);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  color: var(--sv-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sv-filter-chip:active {
+  background: var(--sv-neutral-150);
+}
+
+/* Component: Suggestion Chip (Figma 19453:11120) */
+.sv-suggestion-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sv-suggestion-row::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-suggestion-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--sv-radius-xl);
+  background: var(--sv-white);
+  box-shadow: var(--sv-inset-bubble-hard);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #282828;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* The emoji sits in the 30px box the thumbnail used to fill, so the chip's
+   height and the gap to the label are unchanged — only what is in the box. */
+.sv-suggestion-emoji {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* ---------- dock (prompt + nav) — Figma 19564:169322 ----------
+   No card and no drag handle: the dock is a vertical fade that goes
+   transparent at the top so the map reads through, reaching solid
+   white at 34.4% — the stop Figma specifies. */
+.sv-dock {
+  box-sizing: border-box;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--sv-white) 34.4%
+  );
+  padding: 0 var(--sv-space-4) 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sv-space-3);
+}
+
+/* Custom properties are strings by default, so `--sv-ring-angle` would jump
+   from one keyframe to the next instead of sweeping. Registering it as an
+   <angle> is what makes it interpolate. Unsupported browsers fall back to
+   the initial value and simply hold the ring still. */
+@property --sv-ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 90deg;
+}
+
+@keyframes sv-ring-spin {
+  to {
+    --sv-ring-angle: 450deg;
+  }
+}
+
+/* Component: Prompt Box (Figma 19453:11129) — "bravo ai" gradient ring.
+   The ring turns: same colours, same stops, only the gradient angle moves.
+   It starts and ends at Figma's 90deg, so a paused ring is the node exactly.
+   Linear, because a rotation that eases would read as a wobble. */
+.sv-prompt-box {
+  width: 100%;
+  border-radius: var(--sv-radius-full);
+  padding: 1.5px;
+  background: linear-gradient(
+    var(--sv-ring-angle),
+    #4af3ff 0%,
+    #7ce0ff 30%,
+    #ffc36a 75%,
+    #ff8f4a 100%
+  );
+  animation: sv-ring-spin 6s linear infinite;
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.04))
+    drop-shadow(0px 0px 0.5px rgba(0, 0, 0, 0.24));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-prompt-box {
+    animation: none;
+  }
+}
+
+/* 'search' variant (Figma 19612:9735) — a plain hairline instead of the
+   gradient ring. The 1px border replaces the 1.5px gradient padding, so
+   the inner pill keeps the same 8/12 padding and the box the same height. */
+.sv-prompt-box.search {
+  padding: 0;
+  border: 1px solid var(--sv-neutral-400);
+  background: var(--sv-white);
+  /* No gradient to turn — don't leave the property animating under a
+     background that has been painted over. */
+  animation: none;
+}
+
+.sv-prompt-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  background: var(--sv-white);
+  border-radius: var(--sv-radius-full);
+  /* Right padding is 4px over Figma's 12: the voice button is a filled
+     circle and crowded the ring at 12, where the plus on the left is an
+     outline and does not. */
+  padding: var(--sv-space-2) 16px var(--sv-space-2) var(--sv-space-3);
+}
+
+/* Both end states occupy the same slot so the pill never reflows when the
+   mic/voice pair swaps for the submit button. */
+.sv-prompt-idle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sv-black);
+}
+
+.sv-prompt-search-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sv-black);
+}
+
+.sv-prompt-plus {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  border: 0.5px solid var(--sv-neutral-200);
+  color: var(--sv-black);
+  cursor: pointer;
+}
+
+.sv-prompt-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  /* iOS Safari zooms focused inputs below 16px, which pans the installed PWA
+     under the native keyboard. */
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-text-primary);
+}
+
+.sv-prompt-input::placeholder {
+  color: var(--sv-neutral-400);
+}
+
+/* Recording: Figma hides the placeholder at opacity 0 rather than removing
+   the field, and the Input keeps its flex-1. So the field stays a
+   full-width spacer — invisible, inert, but still pushing the Voice Input
+   pill and the submit button to the right edge, exactly as in the node. */
+.sv-prompt-input.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Unlock sheet (Figma 20016:12777 / 20016:12891 / 20017:13218) ----
+   Sits above the scrim, 16px in from both edges and 16px off the bottom,
+   with the Claim button 18px under the card. */
+.sv-unlock {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+
+/* The translucent shell. Unlike every other sheet this one is NOT opaque —
+   the app reads through it, which is what makes it feel like a layer over
+   what you were doing rather than a screen of its own. 36px matches the
+   Combined Spendable sheet; the radius scale stops at 24, so it is a
+   literal in both places. */
+.sv-unlock-card {
+  width: 100%;
+  padding: 16px;
+  border-radius: 36px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sv-unlock-title {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-neutral-600);
+}
+
+/* The white card inside the blurred one. */
+.sv-unlock-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 12px;
+  border-radius: var(--sv-radius-3xl);
+  background: var(--sv-white);
+}
+
+.sv-unlock-art {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+}
+
+.sv-unlock-name {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Figma groups the name and the detail 24px apart from the art but only
+   4px from each other, so the detail owns the tighter gap. */
+.sv-unlock-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: -16px;
+}
+
+.sv-unlock-detail p {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+}
+
+.sv-unlock-detail b {
+  font-weight: 700;
+}
+
+/* Twelve months, six to a row. */
+.sv-unlock-months {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px 0;
+  width: 100%;
+}
+
+.sv-unlock-month {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.sv-unlock-month-label {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+}
+
+.sv-unlock-claim {
+  width: 100%;
+}
+
+/* Holds the field and the rotating hint in the same box, so the hint can be
+   painted exactly over the placeholder position. */
+.sv-prompt-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* The hint's track. `overflow: hidden` is what turns the flip into an
+   entrance and an exit rather than two lines drifting past the field, and
+   the perspective gives the rotateX somewhere to turn. */
+.sv-prompt-rotator {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 160px;
+}
+
+.sv-prompt-rotator-line {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.2;
+  /* Same colour the native ::placeholder uses — this stands in for it. */
+  color: var(--sv-neutral-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+
+.sv-prompt-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  color: var(--sv-black);
+}
+
+/* audio-lines button — "accent-default" effect style */
+.sv-prompt-voice {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-black);
+  box-shadow: var(--sv-inset-accent);
+  color: var(--sv-white);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.sv-prompt-voice:active {
+  transform: scale(0.94);
+}
+
+/* The mic is a real control once a transcript is wired up, but it must not
+   look like one — no chrome, just the glyph, exactly as in the idle node. */
+.sv-prompt-mic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ---------- Voice Input (Figma I19377:5111;1355:26180) ----------
+   Replaces the field while the mic records: ten metering bars, then Stop. */
+.sv-prompt-recording {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+.sv-voice-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  padding: 0 var(--sv-space-4);
+  border-radius: var(--sv-radius-full);
+  /* Figma's rgba(201, 222, 246, 0.5) is info-100 at half strength — kept as
+     the token rather than the flattened literal. */
+  background: color-mix(in srgb, var(--sv-info-100) 50%, transparent);
+}
+
+.sv-voice-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+
+.sv-voice-bar {
+  display: block;
+  width: 2px;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-info-400);
+}
+
+.sv-voice-stop {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-info-400);
+  cursor: pointer;
+}
+
+/* Component: Bottom Nav (Figma 19453:11130) */
+.sv-bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 32px;
+  height: 27.6px;
+}
+
+.sv-nav-item {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sv-black);
+  opacity: 0.85;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.sv-nav-item:active {
+  transform: scale(0.92);
+}
+
+.sv-nav-item.inactive {
+  opacity: 0.45;
+}
+
+/* Matches the four Lucide icons beside it. Figma draws this one larger than
+   the rest, which read as a mistake rather than emphasis. */
+.sv-nav-avatar {
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--sv-radius-full);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Selected state. The icon items show it by dropping their dimming, which a
+   photo cannot do, so this one takes a ring instead. border-box keeps the
+   button 22px with the ring inside, so the row does not shift on select. */
+.sv-nav-avatar.active {
+  border: 1px solid var(--sv-black);
+}
+
+/* ---------- pop-up overlay ----------
+   One overlay behind every pop-up: it dims what is underneath and closes
+   the pop-up when tapped. Two depths, because the Combined Spendable sheet
+   (Figma 19564:172054) hangs off the balance pills and has to leave them
+   lit, while the bottom sheets own the screen and dim the top bar along
+   with everything else. The status bar (z-30) stays above both, as on iOS.
+
+     z-6  bottom stack        z-9   spendable sheet
+     z-7  .sv-scrim           z-10  .sv-scrim.over-topbar
+     z-8  top bar             z-11  offers / search sheet          */
+.sv-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border: none;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.sv-scrim.over-topbar {
+  z-index: 10;
+}
+
+/* Screen-level placement. The offset clears the balance pills, which sit at
+   the same height on the map and on your own profile, so both screens hang
+   the card from this one rule. */
+.sv-spendable-anchor {
+  position: absolute;
+  /* clears the top bar: status bar + 6 margin + 35 pill + 12 gap */
+  top: calc(var(--sv-statusbar-h) + 53px);
+  left: var(--sv-space-4);
+  right: var(--sv-space-4);
+  z-index: 9;
+}
+
+/* Two tabs over two pots of money — Figma 19854:10237 / 19854:10385.
+   Overflow is hidden so a pane sliding in or out is clipped by the card's
+   own radius instead of escaping it. */
+.sv-spendable-sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* off-token: Figma uses a literal 20px here, no spacing-5 variable exists */
+  gap: 20px;
+  padding: var(--sv-space-4);
+  /* Figma says 16; softened to 24, then 36, at Siya's direction. Off-token:
+     the radius scale stops at 24 (radius-3xl), so this is a literal. */
+  border-radius: 36px;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* ---- tabs ---- */
+.sv-spendable-tabs {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.sv-spendable-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.sv-spendable-tab-label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-spendable-tab.active .sv-spendable-tab-label {
+  font-weight: 700;
+  color: var(--sv-black);
+}
+
+.sv-spendable-tab-rule {
+  width: 60px;
+  height: 2px;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-black);
+}
+
+/* ---- the swapping pane ---- */
+.sv-spendable-pane {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* the carousel drags horizontally; let vertical gestures through */
+  touch-action: pan-y;
+}
+
+/* ---- hero ---- */
+.sv-spendable-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+}
+
+.sv-spendable-hero-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sv-black);
+}
+
+.sv-spendable-hero-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-spendable-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-spendable-hero-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-spendable-hero-amount {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-spendable-hero-caption {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-spendable-link {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  text-decoration: underline;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---- recent activity ---- */
+.sv-spendable-activity {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sv-spendable-activity-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sv-spendable-activity-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-spendable-viewall {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  cursor: pointer;
+}
+
+.sv-spendable-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-3);
+}
+
+/* Figma pins this column to 89px so the long merchant names wrap rather than
+   pushing the amount around. */
+.sv-spendable-row-copy {
+  width: 89px;
+  flex: 1 1 89px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sv-spendable-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-spendable-row-when {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-400);
+}
+
+.sv-spendable-row-amount {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-spendable-row-amount.credit {
+  color: var(--sv-success);
+}
+
+/* ---- total footer ---- */
+.sv-spendable-total {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+  padding: var(--sv-space-3);
+  border-radius: var(--sv-radius-2xl);
+  background: var(--sv-neutral-100);
+}
+
+.sv-spendable-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-spendable-total-label {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-spendable-total-aside,
+.sv-spendable-total-other {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-spendable-total-other {
+  color: var(--sv-black);
+}
+
+.sv-spendable-total-value {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Component: Balance Row (Figma 19564:172059 / 19564:172067) */
+.sv-balance-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sv-balance-row-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sv-balance-row-label {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-balance-row-sub {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-400);
+}
+
+.sv-balance-row-value {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sv-space-1);
+  color: var(--sv-neutral-400);
+}
+
+.sv-balance-row-amount {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Component: Button (Figma DS component 1344:21875) */
+.sv-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sv-space-2);
+  padding: var(--sv-space-1-5) var(--sv-space-3);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.sv-button-lg {
+  width: 100%;
+  height: 48px;
+  /* Figma says 12; raised to 16 at Siya's direction. */
+  border-radius: var(--sv-radius-2xl);
+}
+
+.sv-button-sm {
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-lg);
+}
+
+.sv-button:active {
+  transform: scale(0.98);
+}
+
+.sv-button-accent {
+  color: var(--sv-primary-500);
+}
+
+/* --- fills (Figma 19346:8464 outline, 19650:15243 success) --- */
+
+/* The default. Carries the "accent" effect — the black lip and white
+   catch-light that make the pill read as raised. Same treatment as the
+   prompt box's voice button and the challenge progress fill. */
+.sv-button-solid {
+  background: var(--sv-black);
+  color: var(--sv-text-on-inverse);
+  box-shadow: var(--sv-inset-accent);
+}
+
+.sv-button-outline {
+  background: var(--sv-white);
+  border: 0.5px solid var(--sv-border-strong);
+  color: var(--sv-text-primary);
+}
+
+.sv-button-success {
+  background: var(--sv-success-400);
+  color: var(--sv-text-on-inverse);
+}
+
+/* Yellow reads "you can do this"; grey reads "you already are". */
+.sv-button-primary {
+  background: var(--sv-primary-500);
+  color: var(--sv-black);
+}
+
+.sv-button-quiet {
+  background: var(--sv-neutral-100);
+  color: var(--sv-neutral-500);
+}
+
+/* Component: Expiry Pill (Figma 19299:7837 / 19344:8461) */
+.sv-expiry-pill {
+  flex-shrink: 0;
+  padding: var(--sv-space-1-5) var(--sv-space-2);
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-150);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+/* ==================================================================
+   Social feed — Figma 19564:170684 ("Home-Scroll Up Discovery")
+   ================================================================== */
+
+/* Figma 19564:170686 — the header sits over the feed on a white-to-
+   transparent fade, so posts dissolve as they scroll under it.
+   The content is 100px tall (59 status bar + 6 + 35 row), and Figma's
+   white stop at 75.492% is what fixes the frame height: the fade has to
+   BEGIN where the tab row ends, so 100 / 0.75492 = 132.46px.
+   z-index 4 keeps it under the status bar (5) and over the feed (3). */
+.sv-social-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  /* content is statusbar + 6 + 35; Figma's white stop at 75.492% is what
+     fixes the frame height, so the fade begins where the tab row ends */
+  height: calc((var(--sv-statusbar-h) + 41px) / 0.75492);
+  padding: calc(var(--sv-statusbar-h) + 6px) var(--sv-space-4) 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--sv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.sv-social-header-row {
+  width: 370px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+/* Component: Section Tabs (Figma 19564:171669) */
+.sv-section-tabs {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 35px;
+}
+
+.sv-section-tab {
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  align-items: stretch;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Boldonse — the display face, used only here. 14px per Figma. */
+.sv-section-tab-label {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sv-section-tab.active .sv-section-tab-label {
+  color: var(--sv-black);
+}
+
+.sv-section-tab-rule {
+  height: 2px;
+  width: 100%;
+  background: var(--sv-black);
+  opacity: 0;
+}
+
+.sv-section-tab.active .sv-section-tab-rule {
+  opacity: 1;
+}
+
+/* The second tab centres its label; the first is left-aligned (Figma). */
+.sv-section-tab:not(:first-child) .sv-section-tab-label {
+  text-align: center;
+}
+
+/* ---------- scrolling feed ---------- */
+.sv-social-scroll {
+  position: absolute;
+  /* full height: the feed scrolls under the header's fade */
+  inset: 0;
+  z-index: 3;
+  overflow-y: auto;
+  /* panes slide in from off-screen — clip rather than scroll sideways */
+  overflow-x: hidden;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  /* puts the Leaderboard heading at y=124 per Figma (statusbar + 65) */
+  padding-top: calc(var(--sv-statusbar-h) + 65px);
+  /* clears the dock */
+  padding-bottom: 140px;
+}
+
+.sv-social-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* one tab's worth of content — the thing that slides */
+.sv-social-pane {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+}
+
+.sv-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  width: 370px;
+  margin: 0 auto;
+}
+
+.sv-leaderboard-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sv-leaderboard-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-leaderboard-viewall {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  cursor: pointer;
+}
+
+/* Component: Leaderboard Rail (Figma 19564:171678) */
+.sv-leaderboard-rail {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.sv-leaderboard-rail.is-dragging {
+  cursor: grabbing;
+}
+
+.sv-leaderboard-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-leaderboard-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.sv-leaderboard-avatar {
+  width: 61px;
+  height: 82px;
+  border-radius: 100px;
+}
+
+.sv-leaderboard-name {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+/* ---------- In Progress Challenge (Figma 19582:176379) ---------- */
+.sv-challenge-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  width: 370px;
+  margin: 0 auto;
+}
+
+.sv-challenge-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+  padding: var(--sv-space-4);
+  border-radius: var(--sv-radius-2xl);
+  background: var(--sv-white);
+  filter: drop-shadow(0px 0px 7.5px rgba(0, 0, 0, 0.1));
+}
+
+.sv-challenge-people {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+}
+
+/* 48x64 portraits overlapping by 15px, each with a 2px white ring that
+   separates it from the face behind. Same bubble as every other avatar.
+   border-box so the ring eats into the 48x64, as it does in Figma. */
+.sv-challenge-stack {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.sv-challenge-stack > span {
+  box-sizing: border-box;
+  width: 48px;
+  height: 64px;
+  border: 2px solid var(--sv-white);
+  border-radius: 100px;
+  flex-shrink: 0;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-clip: padding-box;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-challenge-stack > span:not(:last-child) {
+  margin-right: -15px;
+}
+
+.sv-challenge-participants {
+  flex: 1 0 0;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-challenge-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+/* Boldonse — the display face, as on the section tabs */
+.sv-challenge-name,
+.sv-challenge-reward {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-challenge-reward {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  flex-shrink: 0;
+}
+
+.sv-challenge-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-challenge-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-challenge-track {
+  width: 100%;
+  height: 9px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.sv-challenge-fill {
+  height: 100%;
+  border-radius: 1000px;
+  background: #343434;
+  /* Figma "accent-default" — same inset the voice CTA uses */
+  box-shadow: var(--sv-inset-accent);
+}
+
+/* ==================================================================
+   Challenge detail — Figma 19608:9122
+   ================================================================== */
+.sv-challenge-screen-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+}
+
+.sv-challenge-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* ---------- background blobs (Figma 19612:9388 / 19612:9392) ----------
+   Every number here is off the node. The nested img insets are Figma's
+   blur bleed: the artwork spills far outside its own frame, so the frame
+   is the anchor, not the visible size. */
+.sv-challenge-blobs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 402px;
+  height: 874px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* "blur gb" — frame 629x456 at (-62, -117) */
+.sv-blob-gb {
+  position: absolute;
+  left: -62px;
+  top: -117px;
+  width: 629px;
+  height: 456px;
+}
+
+/* inset: -87.72% vertical, -63.59% horizontal */
+.sv-blob-gb img {
+  position: absolute;
+  left: -63.59%;
+  top: -87.72%;
+  width: 227.18%;
+  height: 275.44%;
+  max-width: none;
+  display: block;
+}
+
+/* the third blob sits OUTSIDE the clip group in Figma, rotated 43.33deg */
+.sv-blob-ellipse {
+  position: absolute;
+  left: -140px;
+  top: 189px;
+  width: 347.576px;
+  height: 343.606px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sv-blob-ellipse-rot {
+  transform: rotate(43.33deg);
+  flex: none;
+}
+
+.sv-blob-ellipse-box {
+  position: relative;
+  width: 292.689px;
+  height: 196.258px;
+}
+
+/* inset: -178.34% vertical, -119.58% horizontal */
+.sv-blob-ellipse-box img {
+  position: absolute;
+  left: -119.58%;
+  top: -178.34%;
+  width: 339.16%;
+  height: 456.68%;
+  max-width: none;
+  display: block;
+}
+
+/* Component: Screen Nav (Figma 19608:9127 / 19612:9480) — shared by every
+   pushed screen. Figma stacks status bar (59) + 6 gap + nav row, so the
+   nav clears the status bar rather than sliding under the dynamic island. */
+.sv-screen-nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  padding: 0 var(--sv-space-4);
+  margin-top: calc(var(--sv-statusbar-h) + 6px);
+  height: 35px;
+}
+
+.sv-screen-back {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--sv-black);
+  cursor: pointer;
+}
+
+.sv-screen-nav-title {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Right-aligned counterpart to the title ("Invited: 4/4"). Same type; the
+   auto margin is what pushes it, so the title keeps its 6px gap from the
+   back button instead of spreading across the row. */
+.sv-screen-nav-trailing {
+  margin-left: auto;
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* ---------- floating participants ---------- */
+.sv-challenge-play {
+  position: absolute;
+  /* below the nav, down to the sheet — the whole drag playground */
+  left: 0;
+  right: 0;
+  top: calc(var(--sv-statusbar-h) + 41px);
+  bottom: 356px;
+  z-index: 2;
+}
+
+.sv-float {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.sv-float-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sv-float-avatar {
+  /* sits above the tap-reaction emoji so they read as coming from behind */
+  position: relative;
+  z-index: 1;
+  border-radius: 999px;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* the same bubble every avatar carries, scaled up */
+  box-shadow: inset 0px 1.485px 5.94px 0px #ffffff,
+    inset 0px -2.97px 7.424px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Pending: the photo underneath, dimmed, with a waiting glyph on top —
+   never eats a drag or a tap, so it sits over the photo, under nothing. */
+.sv-float-avatar-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--sv-white);
+  pointer-events: none;
+}
+
+/* Empty seat: no photo, just an open invite — the JSX never sets a
+   background-image for this status, so this flat fill is all that shows. */
+.sv-float-avatar-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--sv-neutral-400);
+  color: var(--sv-white);
+}
+
+/* tap reaction — emoji fly out of the middle of the avatar, from behind it */
+.sv-float-burst {
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sv-float-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 1;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
+  /* centred on the emitter before the burst transform runs */
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+}
+
+.sv-float-crown {
+  position: absolute;
+  transform: rotate(30deg);
+  pointer-events: none;
+}
+
+/* name stays 14px at every avatar size — only the pill padding scales */
+.sv-float-name {
+  position: relative;
+  z-index: 2;
+  border-radius: 999px;
+  background: var(--sv-white);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+/* Your own unanswered invite — a real button in the name pill's place, so
+   it needs its own reset (the pill it replaces is a <span>). */
+.sv-float-accept {
+  border: none;
+  appearance: none;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--sv-black);
+  color: var(--sv-white);
+  box-shadow: var(--sv-inset-accent);
+}
+
+.sv-float-share {
+  display: block;
+  margin-top: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ---------- bottom sheet ---------- */
+.sv-challenge-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 356px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sv-space-6) var(--sv-space-4);
+  /* No fill in this node — the gradient runs behind the sheet content.
+     The corner radius is kept from the node but has nothing to clip. */
+  border-radius: 32px 32px 0 0;
+}
+
+.sv-challenge-sheet-top {
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+}
+
+.sv-challenge-coin {
+  display: flex;
+  justify-content: center;
+  /* the coin stage is wider than the coin; pull the slack back */
+  margin: -18px 0 -22px;
+}
+
+.sv-challenge-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-2);
+  text-align: center;
+}
+
+.sv-challenge-heading {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-challenge-blurb {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-challenge-numbers.detail .sv-challenge-amount {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.sv-challenge-merchants {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+  padding: var(--sv-space-1-5) var(--sv-space-2);
+  border: 1px solid var(--sv-neutral-200);
+  border-radius: var(--sv-radius-xl);
+  background: var(--sv-white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sv-challenge-merchant-stack {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sv-challenge-merchant-stack img {
+  width: 25px;
+  height: 25px;
+  border-radius: var(--sv-radius-full);
+  display: block;
+}
+
+.sv-challenge-merchant-stack img:not(:last-child) {
+  margin-right: -8px;
+}
+
+/* ==================================================================
+   Eligible merchants — Figma 19612:9472 ("Community-Challenge")
+   ================================================================== */
+.sv-merchants-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the challenge screen (12), below the status bar (30) */
+  z-index: 13;
+}
+
+.sv-merchants-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* The nav row ends at statusbar + 41; Figma puts a 16 gap under it. */
+.sv-merchants-list {
+  position: absolute;
+  inset: calc(var(--sv-statusbar-h) + 57px) 0 0;
+  z-index: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-6);
+  /* clears the search bar */
+  padding-bottom: 90px;
+}
+
+.sv-merchants-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Same fade as the Home/Social dock — transparent to white at 34.4%. */
+.sv-merchants-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 0 var(--sv-space-4) 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--sv-white) 34.4%
+  );
+}
+
+/* ==================================================================
+   Select friends — Figma 19686:49817. The invite picker, pushed in
+   from an empty seat on the challenge. Same shell as the merchants
+   list; the rows are the shared PersonRow with an Invite control.
+   ================================================================== */
+.sv-friends-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the challenge screen (12) and the merchants list (13) */
+  z-index: 14;
+}
+
+.sv-friends-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* Figma puts a 16 gap under the nav row, which ends at statusbar + 41. */
+.sv-friends-list {
+  position: absolute;
+  inset: calc(var(--sv-statusbar-h) + 57px) 0 0;
+  z-index: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: 0 var(--sv-space-4) 90px;
+}
+
+.sv-friends-list::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-friends-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 12px var(--sv-space-4) 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--sv-white) 34.4%
+  );
+}
+
+/* Figma's invite chips are a step smaller than the shared Button and carry
+   the bubble inset. Scoped here rather than added as a Button variant —
+   it is this screen's treatment, not a new system-wide size. */
+.sv-friends-list .sv-button-sm {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.sv-friends-list .sv-button-primary {
+  box-shadow: var(--sv-inset-bubble);
+}
+
+/* The read-only states ("Pending", "In a challenge") are a flatter grey than
+   the shared quiet fill, with black text — they are labels, not controls. */
+.sv-friends-list .sv-button-quiet {
+  background: var(--sv-neutral-150);
+  color: var(--sv-black);
+  cursor: default;
+}
+
+/* ==================================================================
+   Home search — Figma 19380:5446 / 19542:163494 / 19380:5586 /
+   19380:5756 / 19559:167807. One sheet, five states.
+   ================================================================== */
+.sv-search-sheet {
+  position: absolute;
+  left: 0;
+  /* Sits ON the keyboard, never behind it. Paired with the height below,
+     this pins the TOP edge at a constant `statusbar + 16` and lets only the
+     BOTTOM follow the keyboard:
+
+       top = 100% - height - bottom
+           = 100% - (100% - statusbar - 16 - kb) - kb
+           = statusbar + 16          ← independent of the keyboard
+
+     The content is top-anchored, so opening and closing the keyboard leaves
+     everything you are reading exactly where it was. Anchoring the bottom
+     at 0 instead let the list run away behind the keyboard, and made the
+     sheet snap to full height the moment results appeared. */
+  bottom: var(--sv-kb-inset, 0px);
+  z-index: 11;
+  width: 402px;
+  /* Never rises past 16px below the status bar (59 + 16 = 75), so the grab
+     handle always clears the dynamic island. The empty state sizes to its
+     content and sits lower still. */
+  max-height: calc(100% - var(--sv-statusbar-h) - 16px - var(--sv-kb-inset, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  padding-top: var(--sv-space-2);
+  overflow: hidden;
+  border-radius: var(--sv-radius-3xl) var(--sv-radius-3xl) 0 0;
+  /* same translucent surface as the offers sheet — the map reads through */
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+}
+
+/* In the results state the sheet takes its full allowance, so its height is
+   the same whichever tab is showing — switching never resizes it under
+   your thumb. The empty state stays content-sized. */
+.sv-search-sheet.results {
+  height: calc(100% - var(--sv-statusbar-h) - 16px - var(--sv-kb-inset, 0px));
+}
+
+/* Installed, the sheet hugs its content instead of stretching to a share of
+   the artboard. Percentage-of-artboard minus a keyboard inset is fragile —
+   the two are measured by different things (iOS resizes the layout viewport
+   in a standalone app, not just the visual one) and any disagreement pushes
+   the top off the screen. A content-sized sheet simply cannot overshoot.
+   The scroll area keeps a fixed height so switching tabs still does not
+   resize it. */
+.sv-search-body {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--sv-space-4);
+  padding: 0 var(--sv-space-4);
+}
+
+/* The search bar floats over the results instead of sitting below them, so
+   the list visibly continues behind it. Pinned 32px off the sheet's bottom
+   edge — it stays there while the list scrolls under. */
+.sv-search-dock {
+  position: absolute;
+  left: var(--sv-space-4);
+  right: var(--sv-space-4);
+  /* The sheet already ends at the keyboard, so this only needs its resting
+     gap: 32px off the sheet's bottom with no keyboard, flush against one
+     when it is up (or the gap reads as a dead band of glass above the
+     keys). Adding the keyboard inset here too would double-count it. */
+  bottom: calc(32px * (1 - var(--sv-kb-open, 0)));
+  z-index: 2;
+  transition: bottom 0.2s var(--sv-ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-search-dock {
+    transition: none;
+  }
+}
+
+/* Fades the last rows into the sheet under the bar, so it reads as "more
+   below" rather than a hard cut. Matches the sheet's own translucent white
+   so it does not darken the blur behind it. */
+.sv-search-body::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 112px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 55%
+  );
+}
+
+.sv-search-sheet.results .sv-search-body {
+  flex: 1 0 0;
+}
+
+.sv-dock-search-trigger {
+  width: 100%;
+  cursor: text;
+}
+
+/* ---------- empty state ---------- */
+/* A two-row rail you scroll sideways, not a stacked column: ten starters in
+   a column would fill the sheet and bury the input. Column flow fills top,
+   bottom, next column — so a swipe reveals whole pairs at a time.
+   It bleeds to both edges and re-applies the sheet's padding as scroll
+   padding, so the last brick can reach the left edge instead of stopping
+   short of it. */
+.sv-prompt-starters {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-columns: max-content;
+  align-items: stretch;
+  gap: var(--sv-space-2);
+  margin: 0 calc(var(--sv-space-4) * -1);
+  padding: 2px var(--sv-space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  /* clears the floating bar — unlike the results, the starters should sit
+     above it, not run behind it */
+  padding-bottom: 96px;
+}
+
+.sv-prompt-starters::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each grid cell stretches to its row height, and the brick fills it — so
+   a one-line chip is as tall as the two-line one beside it and the rows
+   stay level. */
+.sv-prompt-starters > * {
+  display: flex;
+}
+
+/* Component: Prompt Starter (Figma 1363:3722)
+   "Brick" rather than pill: the text wraps inside a capped width instead of
+   running the chip off the screen, so long questions read as a block. */
+.sv-prompt-starter {
+  width: 100%;
+  max-width: 200px;
+  display: flex;
+  /* Top, not centre: the emoji sits with the FIRST line, so a two-line brick
+     does not float its glyph down into the gutter between the lines. */
+  align-items: flex-start;
+  /* The same 10px the map's SuggestionChip puts between glyph and label. */
+  gap: 10px;
+  padding: 10px var(--sv-space-3);
+  border: none;
+  border-radius: var(--sv-radius-xl);
+  /* White, not neutral-100: on the sheet's own near-white the tinted fill
+     barely separated, and the bricks now sit shoulder to shoulder where
+     that edge has to read. The inset bubble does the lifting. */
+  background: var(--sv-white);
+  box-shadow: var(--sv-inset-bubble);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: var(--sv-line-20);
+  color: #282828;
+  text-align: left;
+  white-space: normal;
+  text-wrap: balance;
+  cursor: pointer;
+  transition: transform 0.16s var(--sv-ease-out);
+}
+
+/* Fixed box so the labels all start on the same x regardless of how wide the
+   glyph renders — emoji metrics vary a lot between fonts. */
+.sv-prompt-starter-emoji {
+  width: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: var(--sv-line-20);
+}
+
+/* Takes the rest, and is allowed to shrink below its content so the text
+   wraps inside the brick instead of pushing it wider. */
+.sv-prompt-starter-label {
+  min-width: 0;
+}
+
+.sv-prompt-starter:active {
+  transform: scale(0.97);
+}
+
+/* ---------- results ---------- */
+.sv-search-results {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+}
+
+/* Only stretch inside the fixed-height sheet. With a content-sized sheet
+   (no matches) `flex: 1 0 0` has nothing to grow into and collapses the
+   block to zero. */
+.sv-search-sheet.results .sv-search-results,
+.sv-search-sheet.results .sv-search-scroll {
+  flex: 1 0 0;
+}
+
+/* Component: Search Tabs (Figma 19542:163501) */
+.sv-search-tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--sv-space-3);
+  flex-shrink: 0;
+}
+
+.sv-search-tab {
+  position: relative;
+  padding: var(--sv-space-1-5) var(--sv-space-3);
+  border: none;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-100);
+  box-shadow: var(--sv-inset-bubble);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  color: var(--sv-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sv-search-tab.active {
+  color: var(--sv-white);
+  box-shadow: none;
+}
+
+/* The travelling fill. "accent-pressed" — a single black inset, not the
+   two-part accent the raised controls use. */
+.sv-search-tab-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-800);
+  box-shadow: inset 0px 1px 5px 0px #000000;
+}
+
+.sv-search-tab-label {
+  position: relative;
+}
+
+/* Fills whatever the fixed sheet leaves, so every tab reserves the same
+   box and the sheet height is identical across All / Restaurant / People. */
+.sv-search-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Room for the floating bar (48) + its 32 offset + breathing space, so
+     the last result can be scrolled clear of it rather than trapped under.
+     No keyboard term — the sheet itself already ends above the keyboard. */
+  padding-bottom: 96px;
+}
+
+.sv-search-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-search-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+}
+
+.sv-search-people-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-4);
+}
+
+.sv-search-people-rail .sv-leaderboard-rail {
+  width: 100%;
+  justify-content: space-between;
+  gap: var(--sv-space-3);
+}
+
+.sv-search-more {
+  padding: var(--sv-space-1-5) var(--sv-space-3);
+  border: 0.5px solid var(--sv-border-default);
+  border-radius: var(--sv-radius-lg);
+  background: var(--sv-white);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: var(--sv-line-20);
+  color: var(--sv-neutral-400);
+  cursor: pointer;
+  transition: transform 0.16s var(--sv-ease-out);
+}
+
+.sv-search-more:active {
+  transform: scale(0.97);
+}
+
+/* Component: Search Result Row (Figma 19542:163507) */
+.sv-search-result-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sv-search-result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+  padding: var(--sv-space-3) 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* The 0.5px rule belongs between rows, not under the last one. */
+.sv-search-result-list > *:not(:last-child) .sv-search-result {
+  border-bottom: 0.5px solid var(--sv-border-subtle);
+}
+
+.sv-search-result-name {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #000000;
+}
+
+.sv-search-result-end {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  flex-shrink: 0;
+  color: var(--sv-neutral-400);
+}
+
+.sv-search-result-distance {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Component: Person Row (Figma 19380:5763 / 19559:167807) */
+.sv-search-person-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+}
+
+.sv-person {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+  width: 100%;
+}
+
+/* A rounded portrait, not a circle — the same shape every other avatar in
+   the app uses (30×40 in a post, 61×82 on the rail, 48×64 in the challenge
+   stack). A square here was the odd one out. */
+.sv-person-avatar {
+  width: 35px;
+  height: 47px;
+  flex-shrink: 0;
+  border-radius: 100px;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-person-copy {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sv-person-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  margin-bottom: 6px;
+}
+
+.sv-person-meta {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-person-follow-label {
+  display: inline-block;
+}
+
+/* No-match state: an offer to ask the assistant, not a dead end. */
+.sv-search-ask {
+  align-self: center;
+  padding: var(--sv-space-6) var(--sv-space-4);
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--sv-neutral-500);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.16s var(--sv-ease-out);
+}
+
+.sv-search-ask:active {
+  transform: scale(0.97);
+}
+
+/* The "bravo AI" wordmark (Figma 19650:15977), painted with the same
+   gradient as the prompt box's ring — that gradient is what marks an AI
+   surface, so the one place the product is named should carry it.
+   The SVG is a single union path, so it is used as a MASK rather than an
+   <img>: the gradient sits behind and the glyphs cut it out. Painting the
+   fill into the file instead would freeze the colour.
+   89.664 x 15 in the export — scaled with the 16px line, which lands it at
+   its native size. */
+.sv-search-ask-brand {
+  display: inline-block;
+  width: 89.7px;
+  height: 15px;
+  vertical-align: -2px;
+  background: linear-gradient(90deg, #4af3ff 0%, #7ce0ff 30%, #ffc36a 75%, #ff8f4a 100%);
+  -webkit-mask: url('./assets/bravo-ai-wordmark.svg') no-repeat center / contain;
+  mask: url('./assets/bravo-ai-wordmark.svg') no-repeat center / contain;
+}
+
+/* ---------- iOS keyboard (Figma 19380:5466) ----------
+   Chrome, not product UI. Inert by design — the real input is above it. */
+.sv-keyboard {
+  width: 100%;
+  height: var(--sv-keyboard-h);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 10px;
+  background: #e6e9ed;
+  border-radius: 27px 27px 0 0;
+  user-select: none;
+}
+
+.sv-keyboard-autocorrect {
+  width: 100%;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 22px;
+}
+
+.sv-keyboard-suggestion {
+  flex: 1 0 0;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 22px;
+  letter-spacing: -0.43px;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.sv-keyboard-separator {
+  position: absolute;
+  left: -10px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #cccccc;
+  opacity: 0.4;
+}
+
+.sv-keyboard-keys {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 8.5px 0;
+}
+
+.sv-keyboard-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sv-keyboard-row.inset-1 {
+  padding: 0 20px;
+}
+
+.sv-keyboard-row.wide-gap {
+  gap: 14.25px;
+}
+
+.sv-keyboard-row-inner {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  gap: 6px;
+}
+
+.sv-key {
+  flex: 1 0 0;
+  min-width: 0;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8.5px;
+  background: #ffffff;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.28);
+  font-family: -apple-system, 'SF Compact', system-ui, sans-serif;
+  font-size: 25px;
+  line-height: 30px;
+  color: #1a1a1a;
+}
+
+.sv-key-mod {
+  flex: none;
+  width: 44.667px;
+  background: #adb3bc;
+  color: #1a1a1a;
+}
+
+.sv-key-abc {
+  flex: none;
+  width: 91.667px;
+  background: #adb3bc;
+  font-size: 18px;
+}
+
+.sv-key-space {
+  flex: 1 0 0;
+}
+
+.sv-key-return {
+  flex: none;
+  width: 92px;
+  background: #0088ff;
+  color: #ffffff;
+}
+
+.sv-keyboard-foot {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 27px 39px 15px 36px;
+  color: #1a1a1a;
+}
+
+.sv-keyboard-globe {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-prompt-starter,
+  .sv-search-more {
+    transition: none;
+  }
+}
+
+/* ==================================================================
+   bravo AI chat — Figma 19559:168018 / 19559:168156 / 19560:168548.
+   Three nodes, one screen: they differ only in the thinking step.
+   ================================================================== */
+.sv-ai-screen-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+}
+
+.sv-ai-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* The mock keyboard's height, in one place: the keyboard sets its own box
+   from it, and any surface that has to get out of its way reads the same
+   number instead of repeating 342. */
+.bravo-social-app {
+  --sv-keyboard-h: 342px;
+}
+
+/* The brand wash bleeding in from above the header (19559:168158). It sits
+   mostly off-canvas — only the bottom of the blur shows. */
+.sv-ai-glow {
+  position: absolute;
+  left: calc(50% - 4.5px);
+  transform: translateX(-50%);
+  top: -32px;
+  width: 395px;
+  height: 82px;
+  opacity: 0.8;
+  filter: blur(36.85px);
+  background: linear-gradient(
+    93.65deg,
+    #4af3ff 0.169%,
+    #fee160 50%,
+    #f94f4f 99.831%
+  );
+  pointer-events: none;
+}
+
+/* Pinned header block — the row and the disclaimer together, on a white fade
+   the thread scrolls under. The tail is a fixed 16px rather than a share of
+   the height (see .sv-vd-topbar for why a proportional one veils whatever
+   sits just below it). */
+.sv-ai-topbar {
+  --ai-fade: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: calc(var(--sv-statusbar-h) + var(--sv-space-2)) 0 var(--ai-fade);
+  background: linear-gradient(
+    180deg,
+    var(--sv-white) 0,
+    var(--sv-white) calc(100% - var(--ai-fade)),
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* The fade tail is see-through, so it must not swallow taps meant for the
+     thread travelling underneath it. */
+  pointer-events: none;
+}
+
+.sv-ai-topbar button {
+  pointer-events: auto;
+}
+
+.sv-ai-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-ai-wordmark {
+  width: 89.663px;
+  height: 15px;
+  display: block;
+}
+
+.sv-ai-disclaimer {
+  position: relative;
+  margin: 0;
+  padding: 0 var(--sv-space-4);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--sv-zinc-500);
+}
+
+/* The reply is long — it scrolls, under the header and above the dock. The
+   padding is what keeps it clear of both: 88px is the pinned block's own
+   height (status bar + 8 + the 32px row + 16 gap + the 16px disclaimer +
+   the 16px fade). */
+.sv-ai-scroll {
+  position: absolute;
+  inset: 0;
+  /* rides above the phone's keyboard when one is up — same variable the
+     search sheet uses, set by PresentMode in artboard units */
+  bottom: var(--sv-kb-inset, 0px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: calc(var(--sv-statusbar-h) + 88px) var(--sv-space-4) 96px;
+  /* Roughly the keyboard's own spring, so the thread rises with it rather
+     than snapping out from under it. */
+  transition: bottom 0.3s var(--sv-ease-out);
+}
+
+/* The mock keyboard takes the bottom of the screen, so the thread stops
+   above it instead of running underneath — still fully scrollable, just in
+   a shorter box. AiChatScreen moves the scroll position by the same amount,
+   so the content slides up rather than being clipped. */
+.sv-ai-screen.kb-open .sv-ai-scroll {
+  bottom: calc(var(--sv-kb-inset, 0px) + var(--sv-keyboard-h));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-ai-scroll {
+    transition: none;
+  }
+}
+
+.sv-ai-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Pinned above the thread. */
+.sv-ai-dock {
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--sv-kb-inset, 0px);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* The thread dissolves into the dock rather than being cut off by it, and
+   the box keeps the same 16/32 the social dock sits on — flush to the
+   bottom edge is where the home indicator lives. */
+.sv-ai-dock-box {
+  padding: var(--sv-space-6) var(--sv-space-4) 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--sv-white) 34.4%
+  );
+}
+
+/* With a keyboard up there is no bottom edge to clear — the keyboard is the
+   edge — so the box sits straight on top of it. */
+.sv-ai-screen.kb-open .sv-ai-dock-box {
+  padding-bottom: 0;
+}
+
+/* Installed there is no mock keyboard under the prompt box, so with the
+   real one dismissed it would otherwise sit flush on the bottom edge —
+   and on a phone that is where the home indicator lives. It collapses to 0
+   once a keyboard is up, or it becomes a dead band of frosted glass between
+   the bar and the keys. */
+/* Installed, the dock's own 32px is already the clearance — no mock keyboard
+   is ever drawn, so there is nothing extra to add. */
+
+/* min-height, not justify-content on the scroller: a short thread sits at the
+   bottom the way the node draws it, and a long one grows downward from the
+   top where every browser can still scroll to it. Bottom-aligning the
+   scroll container itself makes its overflowing top unreachable. */
+.sv-ai-thread {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--sv-space-4);
+}
+
+/* ---------- voice mode (Figma 19691:50951) ----------
+   Covers the chat when the voice-mode button is hit. Same chrome; the
+   thread is replaced by a centered orb, the box by a placeholder + X. */
+.sv-ai-voice-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Full-bleed flex box so the orb sits dead centre regardless of the inline
+   transform framer-motion writes while it breathes. */
+.sv-ai-voice-orb {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sv-ai-voice-dock {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--sv-space-6);
+  width: 370px;
+}
+
+.sv-ai-bubble-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 12px everywhere except the bottom-right 2px — that corner is the tail,
+   pointing back at the sender. */
+.sv-ai-bubble {
+  max-width: 300px;
+  padding: 10px var(--sv-space-3);
+  border-radius: var(--sv-radius-xl) var(--sv-radius-xl) var(--sv-radius-sm)
+    var(--sv-radius-xl);
+  background: var(--sv-neutral-100);
+  box-shadow: var(--sv-inset-bubble);
+  /* Figma says 14; raised to 16 at Siya's direction — your own words read
+     larger than the assistant's status lines. */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* The assistant's turn spans the thread so it stays left-aligned; without
+   this it inherits the flex-end that right-aligns your bubble. */
+.sv-ai-turn {
+  width: 100%;
+}
+
+/* ---------- the assistant's card ----------
+   One box for both moments: the loading bar (20031:22467) and the answer
+   that replaces it (20030:21014). Same border, radius and padding, so the
+   reply reads as the same card filling in rather than a second one. */
+.sv-ai-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+  padding: var(--sv-space-3);
+  border: 1px solid var(--sv-neutral-200);
+  border-radius: var(--sv-radius-2xl);
+  background: var(--sv-white);
+}
+
+.sv-ai-loading {
+  gap: var(--sv-space-1);
+}
+
+.sv-ai-loading-line {
+  margin: 0;
+  font-size: 12px;
+  line-height: var(--sv-line-16);
+  color: var(--sv-neutral-500);
+}
+
+/* 6px, not the 9px the challenge bars use — this one is a progress hint
+   under a line of text, not a headline number. */
+.sv-ai-loading-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+/* Full width, scaled from the left — see the note in AiLoadingCard on why
+   this animates a transform rather than its width. */
+.sv-ai-loading-fill {
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  border-radius: 1000px;
+  background: var(--sv-black);
+  box-shadow: var(--sv-inset-accent);
+}
+
+.sv-ai-answer-lead {
+  margin: 0;
+  font-size: 12px;
+  line-height: var(--sv-line-16);
+  color: var(--sv-black);
+}
+
+.sv-ai-place {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+}
+
+.sv-ai-place-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+.sv-ai-place-photo {
+  width: 100px;
+  height: 111px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+/* Stretches to the photo's height and pushes the saved row to its foot, so
+   the name sits at the top of the photo and the savers at the bottom. */
+.sv-ai-place-facts {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sv-ai-place-titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+  min-width: 0;
+}
+
+.sv-ai-place-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: var(--sv-line-16);
+  color: var(--sv-black);
+}
+
+.sv-ai-place-meta {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-ai-place-saved {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-ai-place-savers {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  min-width: 0;
+}
+
+/* Overlapping faces, each ringed in white so they read as separate people
+   where they cross — same stack the map's venue card wears. */
+.sv-ai-saver-stack {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sv-ai-saver-stack span {
+  width: 22.5px;
+  height: 30px;
+  border: 0.938px solid var(--sv-white);
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-ai-saver-stack span + span {
+  margin-left: -5.264px;
+}
+
+.sv-ai-saved-count {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sv-ai-place-save {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  color: var(--sv-black);
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.sv-ai-place-blurb {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-ai-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+}
+
+.sv-ai-note-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sv-space-2);
+}
+
+.sv-ai-note-face {
+  width: 25px;
+  height: 33px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+/* Yellow, and the ONE square corner is the bottom-left — pointing back at
+   the face beside it. Their note, not the assistant's. */
+.sv-ai-note-bubble {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  padding: var(--sv-space-3);
+  border-radius: var(--sv-radius-2xl) var(--sv-radius-2xl) var(--sv-radius-2xl) 0;
+  background: var(--sv-primary-200);
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-ai-note-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-ai-note-who {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  min-width: 0;
+}
+
+.sv-ai-note-who b {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-ai-note-when {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+}
+
+.sv-ai-note-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Indented past the face (25 + 8 gap + 13) so the footer lines up with the
+   bubble above it rather than the avatar. */
+.sv-ai-note-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+  padding-left: 46px;
+}
+
+.sv-ai-note-detail {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+  cursor: pointer;
+}
+
+.sv-ai-note-engage {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+/* ---------- under the answer ---------- */
+.sv-ai-after {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+}
+
+.sv-ai-helpful {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  font-size: 12px;
+  line-height: var(--sv-line-20);
+  color: var(--sv-neutral-400);
+}
+
+.sv-ai-vote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sv-neutral-400);
+  cursor: pointer;
+}
+
+.sv-ai-vote:hover {
+  color: var(--sv-black);
+}
+
+/* A row, not the search sheet's two-row rail — there are only ever a couple
+   of follow-ups, and they are answers to what just came back. */
+.sv-ai-followups {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+  flex-wrap: wrap;
+}
+
+.sv-ai-followups .sv-prompt-starter {
+  width: auto;
+  max-width: 100%;
+}
+
+/* AI Thinking (19559:168175) is gone — the orb-and-two-lines sequence was
+   replaced by the loading card (20031:22467), which is .sv-ai-loading above.
+   The orb below is still used by voice mode. */
+.sv-orb {
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Component: Merchant Row (Figma 19612:9555) */
+.sv-merchant {
+  display: flex;
+  gap: var(--sv-space-3);
+  width: 370px;
+  height: 89px;
+  flex-shrink: 0;
+}
+
+.sv-merchant-photo {
+  position: relative;
+  width: 79px;
+  height: 89px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-xl);
+  overflow: hidden;
+}
+
+.sv-merchant-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The rate is burned into a gradient over the bottom 31px of the photo
+   (Figma offsets the overlay 58px down inside the 89px frame). */
+.sv-merchant-rate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  padding: 6px 0 8px var(--sv-space-2);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
+  backdrop-filter: blur(0.9px);
+  -webkit-backdrop-filter: blur(0.9px);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-white);
+}
+
+.sv-merchant-body {
+  width: 279px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sv-merchant-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.sv-merchant-name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-merchant-meta {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  white-space: nowrap;
+}
+
+.sv-merchant-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sv-merchant-savers {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+}
+
+/* 30px round faces overlapping by 10px — avatars, so they carry the
+   same bubble inset as every other avatar in the app. */
+.sv-merchant-saver-stack {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sv-merchant-saver-stack > span {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 100px;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-merchant-saver-stack > span:not(:last-child) {
+  margin-right: -10px;
+}
+
+.sv-merchant-saved {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+/* inline-block so the count can be transformed when it changes */
+.sv-merchant-saved-count {
+  display: inline-block;
+}
+
+/* Unlike the VenueCard save button, this one keeps its shadow. */
+.sv-merchant-save {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-white);
+  border: none;
+  padding: 0;
+  color: var(--sv-black);
+  cursor: pointer;
+  filter: drop-shadow(0px 5px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Component: Save Glyph — shared by MerchantRow's own button and the
+   CircleIconButton on VenueCard, so both fill and pop identically.
+   Lucide writes fill="none" as a presentation attribute; a CSS rule wins
+   over it, so the saved state can fill and un-fill on a transition. */
+.sv-save-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sv-save-glyph svg {
+  fill: transparent;
+  transition: fill 0.22s ease-out;
+}
+
+.sv-save-glyph.is-saved svg {
+  fill: var(--sv-black);
+}
+
+/* ---------- posts ---------- */
+.sv-social-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+}
+
+/* Component: Post Card (Figma 19564:171797 / 19577:173585)
+   Avatar on the left, everything else in one 12px-gap column. */
+.sv-post {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-2);
+  width: 370px;
+  margin: 0 auto;
+}
+
+.sv-post-body {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+}
+
+/* ---------- avatars ----------
+   Every avatar is painted as a background rather than an <img>, because an
+   inset box-shadow renders *underneath* replaced content — on an <img> the
+   "bubble" would be covered by the photo and never show. `lightgray` is the
+   placeholder behind a slow or missing image. */
+.sv-leaderboard-avatar,
+.sv-post-avatar,
+.sv-nav-avatar {
+  display: block;
+  flex-shrink: 0;
+  background-color: lightgray;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-post-avatar {
+  width: 30px;
+  height: 40px;
+  border-radius: 100px;
+}
+
+.sv-post-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sv-space-1);
+}
+
+/* name • date, on one line (Figma 19577:173431) */
+.sv-post-byline {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  white-space: nowrap;
+}
+
+.sv-post-date {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-400);
+}
+
+/* The bullet is a separator, not a list marker — Figma authored it as a
+   <li> but semantically this is one byline, not a list of one. */
+.sv-post-date::before {
+  content: '•';
+  margin-right: var(--sv-space-1);
+}
+
+.sv-post-name {
+  /* now a button (opens the author's profile) — strip the chrome */
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  /* bold in the current node — it was regular when the date sat top-right */
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Face and name both open the profile. */
+.sv-post-person {
+  cursor: pointer;
+}
+
+.sv-post-labels {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+}
+
+/* Component: Achievement Label (Figma 467:5570 / 467:7926)
+   One-off tints straight from Figma — deliberately not tokens. */
+.sv-achievement {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 6px;
+  border-radius: var(--sv-radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sv-achievement-icon {
+  display: block;
+  flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  object-fit: contain;
+}
+
+/* The flame render carries transparent margin the sparks do not, so it is
+   scaled up inside a clipped box to land at the same optical size — Figma
+   crops it the same way (117% inside the 11px frame). */
+.sv-achievement-icon-zoom {
+  overflow: hidden;
+  object-fit: initial;
+}
+
+.sv-achievement-icon-zoom img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.17);
+}
+
+/* One chip, every level (Figma 19895:20504). This replaces the seven tinted
+   variants the labels used to carry: the pill is now neutral-150 with
+   neutral-600 text, and the LEVEL is told entirely by its spark. Colouring
+   the pill as well was saying the same thing twice, and it made a row of
+   labels read as seven different kinds of badge rather than one badge at
+   seven levels. */
+.sv-achievement {
+  background: var(--sv-neutral-150);
+  color: var(--sv-neutral-600);
+}
+
+.sv-post-caption {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Achievement posts set their caption a step smaller. */
+.sv-post-caption.sm {
+  font-size: 14px;
+}
+
+.sv-post-caption strong {
+  font-weight: 700;
+}
+
+/* The tinted achievement panels (Figma 19582:177102 / 177255 / 177401) —
+   the spend badge, the streak flame, and the bonus panel that carried the
+   live Bravo coin — were removed from posts at Siya's direction. The coin
+   itself still ships: it is the reward on the challenge detail screen. */
+
+/* Component: Venue Card (Figma 19577:173665) */
+.sv-venue {
+  width: 100%;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px var(--sv-space-3) 4px 4px;
+  border: 1px solid var(--sv-neutral-150);
+  border-radius: var(--sv-radius-lg);
+}
+
+.sv-venue-main {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+  min-width: 0;
+}
+
+.sv-venue-thumb {
+  position: relative;
+  width: 79px;
+  height: 58px;
+  flex-shrink: 0;
+}
+
+.sv-venue-thumb img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--sv-radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+.sv-venue-cashback {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  padding: 2px var(--sv-space-2);
+  border-radius: 100px;
+  background: var(--sv-black);
+  color: var(--sv-white);
+  /* body/lg — stepped up from 12 so the bonus reads at a glance */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.sv-venue-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sv-space-1-5);
+  min-width: 0;
+}
+
+.sv-venue-name {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-venue-meta {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-post-photos {
+  width: 100%;
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+/* No scroll-snap: `mandatory` re-snaps on any layout change, which can
+   jump a carousel to the far end mid-demo. */
+.sv-post-photos.is-dragging {
+  cursor: grabbing;
+}
+
+.sv-post-photos::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-post-photo {
+  width: 280px;
+  height: 302px;
+  /* radius stepped up to 16 in the current design */
+  border-radius: var(--sv-radius-2xl);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* actions sit alone on the right — the place chip became the venue card */
+.sv-post-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* 16px between comment and the heart group (Figma 19577:173449). */
+  gap: var(--sv-space-4);
+}
+
+.sv-post-action {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: none;
+  border: none;
+  padding: 0;
+  /* Icons are neutral-500 gray, not black (Figma 19577:173449). */
+  color: var(--sv-neutral-500);
+  cursor: pointer;
+}
+
+/* Like button — heart + count in a row; the glyph pops and particles fly
+   out of the heart's centre. Wider than the square action so the count fits;
+   8px between heart and number, per the node. */
+.sv-like {
+  width: auto;
+  gap: var(--sv-space-2);
+  /* Single source for the liked colour — glyph fill and every particle. */
+  --sv-like-color: #c51f1f;
+}
+
+/* Relative anchor for the emitter, sized to the 20px glyph. */
+.sv-like-heart {
+  position: relative;
+  display: inline-flex;
+}
+
+.sv-like-glyph {
+  display: inline-flex;
+}
+
+/* Unliked stays the neutral-500 outline; liking turns the glyph red. */
+.sv-like[aria-pressed='true'] .sv-like-glyph {
+  color: var(--sv-like-color);
+}
+
+/* Inter-style 14px medium, always gray even while the heart is red. */
+.sv-like-count {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--sv-neutral-500);
+  /* Every digit the same width, so ticking 11 → 12 cannot resize the column
+     and nudge the heart sideways. */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zero-size origin dead-centre of the heart. */
+.sv-like-emitter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Centred by a fixed negative offset, NOT translate — framer-motion writes
+   the particle's transform inline as it flies, which would clobber a
+   translate(-50%,-50%). A 12px glyph offset by -6/-6 sits on the origin. */
+.sv-like-particle {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  color: var(--sv-like-color);
+}
+
+/* ---------- social dock ---------- */
+.sv-dock-social {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  overflow: visible;
+}
+
+.sv-dock-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* the prompt box, or the search trigger wrapping it, takes the leftover
+   width next to the compose button */
+.sv-dock-row > .sv-prompt-box,
+.sv-dock-row > .sv-dock-search-trigger {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+}
+
+.sv-dock-row > .sv-compose-btn {
+  flex: 0 0 48px;
+}
+
+/* Bottom nav collapses out of the dock while scrolling down. The slot
+   owns the spacing so the dock closes up as the nav leaves. */
+.sv-dock-social {
+  gap: 0;
+}
+
+/* The nav is treated as one face of a cube hinged along its top edge: on
+   the way out it tips backward through the dock rather than sliding down.
+   The perspective is deliberately short (320px) so the far edge
+   foreshortens hard and the turn reads as depth, not a squash. */
+.sv-nav-slot {
+  width: 100%;
+  height: 27.6px;
+  margin-top: var(--sv-space-3);
+  overflow: hidden;
+  perspective: 320px;
+  perspective-origin: 50% 0%;
+  transition: height 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-top 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sv-nav-slot .sv-bottom-nav {
+  transform-origin: 50% 0%;
+  backface-visibility: hidden;
+  transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.22s ease-out;
+}
+
+.sv-dock-social.nav-hidden .sv-nav-slot {
+  height: 0;
+  margin-top: 0;
+}
+
+/* -90deg swings the lower edge away from the viewer (−Z), so the face
+   turns out of sight instead of toward you. */
+.sv-dock-social.nav-hidden .sv-nav-slot .sv-bottom-nav {
+  transform: rotateX(-90deg);
+  opacity: 0;
+}
+
+/* Compose FAB (Figma 19564:171724) — primary-500 with a glow of itself */
+.sv-compose-btn {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-3xl);
+  background: var(--sv-primary-500);
+  border: none;
+  color: var(--sv-black);
+  cursor: pointer;
+  filter: drop-shadow(0px 0px 7.2px var(--sv-primary-500));
+  transition: transform 0.15s ease;
+}
+
+.sv-compose-btn:active {
+  transform: scale(0.94);
+}
+
+/* ---------- promotions ----------
+   Only present when a promotion is live (demo toggle in the review site). */
+
+/* Component: Promo Chip (Figma 19453:10434) */
+.sv-promo-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--sv-space-2) var(--sv-space-3);
+  border-radius: var(--sv-radius-xl);
+  background: var(--sv-orange-bright);
+  box-shadow: var(--sv-inset-bubble-hard);
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: var(--sv-line-20);
+  color: var(--sv-white);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sv-promo-chip-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-md);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.sv-promo-chip-icon img {
+  width: 20px;
+  height: 21.7px;
+}
+
+/* Figma exports Close as a flat image; rebuilt with Lucide X per the
+   project's icons-are-Lucide-only rule. */
+/* Every bottom sheet parks its close in the same corner (Figma 19661:16109
+   on the search sheet): 36px, 12px in from the top and right edges. */
+.sv-sheet-close-corner {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+}
+
+.sv-sheet-close {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-100);
+  border: none;
+  padding: 0;
+  color: var(--sv-neutral-600);
+  cursor: pointer;
+}
+
+.sv-promo-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+}
+
+/* Component: Promo Card (Figma 19564:172570 / 19564:172586) */
+.sv-promo-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+  padding: var(--sv-space-3);
+  /* Figma says 16; raised to 24 at Siya's direction. */
+  border-radius: var(--sv-radius-3xl);
+  background: var(--sv-white);
+  filter: drop-shadow(0px 0px 7.5px rgba(0, 0, 0, 0.1));
+}
+
+.sv-promo-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-promo-card-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sv-space-1-5);
+  min-width: 0;
+}
+
+.sv-promo-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-promo-card-expiry {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+/* (the promo card's expiry badge is now the shared .sv-expiry-pill) */
+
+.sv-promo-card-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-promo-card-terms {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-zinc-500);
+}
+
+/* ==================================================================
+   Offers for you — Figma 19243:4646 (in place on Home: 19650:15069)
+   Replaces the old centred promotions modal.
+   ================================================================== */
+
+/* This sheet uses the shared `.sv-scrim.over-topbar` — see the pop-up
+   overlay block above. Figma leaves the map undimmed here, but every
+   pop-up in the app now dims behind it, and consistency wins over the
+   node. Its own translucency still lets the map read through the sheet. */
+
+/* Translucent white over a 7.5px blur, so the map reads through. */
+.sv-offers-sheet {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 11;
+  width: 402px;
+  height: 636px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: var(--sv-space-2);
+  overflow: hidden;
+  border-radius: var(--sv-radius-3xl) var(--sv-radius-3xl) 0 0;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+  touch-action: none;
+}
+
+.sv-offers-handle {
+  width: 48px;
+  height: 4px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-neutral-300);
+}
+
+.sv-offers-body {
+  flex: 1 0 0;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: 0 var(--sv-space-4) 15px;
+}
+
+.sv-offers-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* The close now sits in the sheet corner, so the title block keeps clear of
+   it rather than sharing a row. */
+.sv-offers-titles {
+  flex: 1 0 0;
+  min-width: 0;
+  padding-right: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+}
+
+.sv-offers-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-offers-sub {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+/* The sheet is a fixed 636px, so the two sections scroll inside it. */
+.sv-offers-scroll {
+  flex: 1 0 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-8);
+}
+
+.sv-offers-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-offers-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+}
+
+.sv-offers-promos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+}
+
+/* Component: Offer Card (Figma 19243:4657) */
+.sv-offer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+  width: 100%;
+}
+
+.sv-offer-photo {
+  position: relative;
+  width: 97px;
+  height: 108px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-xl);
+  overflow: hidden;
+}
+
+.sv-offer-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The boosted rate burns into the bottom 32px of the photo, with the rate
+   it replaces struck through beside it. */
+.sv-offer-rate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 0 0 var(--sv-space-2) var(--sv-space-2);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
+  backdrop-filter: blur(0.9px);
+  -webkit-backdrop-filter: blur(0.9px);
+  color: var(--sv-white);
+  line-height: 1.2;
+}
+
+.sv-offer-rate-new {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.sv-offer-rate-old {
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+/* Pill at the top, CTA at the bottom, so rows align however long the
+   merchant name runs. */
+.sv-offer-body {
+  flex: 1 0 0;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.sv-offer-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.sv-offer-name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-offer-meta {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  white-space: nowrap;
+}
+
+/* ---------- placeholder state for undesigned tabs ---------- */
+.sv-coming-soon {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.sv-coming-soon h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sv-coming-soon p {
+  font-size: 13px;
+  color: var(--sv-neutral-500);
+}
+
+/* ==================================================================
+   Profile (Figma Profile-Public 19612:9840 / Profile-Private 19703:52774)
+   ================================================================== */
+.sv-profile-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 13;
+}
+
+.sv-profile-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sv-profile-nav-actions {
+  display: flex;
+  gap: var(--sv-space-2);
+}
+
+/* Both headers overlay the feed with the same white → transparent fade as the
+   community header, so content scrolls up under them. me mode carries the
+   Home top bar (balance pills + bell/settings); public mode the back arrow +
+   Follow / Send money. The 75.492% white stop fixes the fade height where the
+   header row ends. */
+.sv-profile-topbar,
+.sv-profile-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: calc((var(--sv-statusbar-h) + 41px) / 0.75492);
+  padding: calc(var(--sv-statusbar-h) + 6px) var(--sv-space-4) 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--sv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  margin: 0;
+}
+
+/* While the Combined Spendable sheet is open the bar has to clear the scrim
+   (z-7), the way the map's permanent z-8 top bar does — the pills are what
+   the sheet hangs from, so they stay lit. Only for that sheet: the stats
+   popover deliberately dims everything above it. */
+.sv-profile-topbar.lit {
+  z-index: 8;
+}
+
+.sv-profile-topbar-row,
+.sv-profile-nav-row {
+  width: 370px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+/* The scroll fills the frame and passes under the faded header — so it always
+   clears the header up top, and clears the dock at the bottom in me mode. */
+.sv-profile-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Hidden like every other scroller in the app (social feed, search, offers).
+     This one was the exception, and a desktop scrollbar is not just cosmetic
+     here: it took 15px off the content box, so the 370px cards measured 355. */
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: calc(var(--sv-statusbar-h) + 65px) var(--sv-space-4) 24px;
+}
+
+.sv-profile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-profile-scroll.has-dock {
+  padding-bottom: 140px;
+}
+
+/* ---------- header ---------- */
+.sv-profile-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-4);
+}
+
+.sv-profile-avatar {
+  flex-shrink: 0;
+  width: 67px;
+  height: 91px;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+/* Everything under the header — held back (see ProfileScreen) until the
+   hero avatar lands, then fades in as one group. Repeats .sv-profile-scroll's
+   own gap so wrapping these children doesn't change their spacing. */
+.sv-profile-below-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+}
+
+/* The flying avatar clone — see ProfileLauncher. A sibling of .sv-profile-wrap
+   (z-index 13), not nested inside it, so its own opacity is never dragged
+   down by the wrap's entrance fade. Rendered at its landing rect and
+   animated in with a transform only (translate + scale), so the flight is a
+   pure compositor operation, never a layout one. */
+.sv-avatar-fly {
+  position: absolute;
+  z-index: 14;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sv-inset-bubble);
+  pointer-events: none;
+}
+
+.sv-profile-identity {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.sv-profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+}
+
+.sv-profile-name {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-profile-name-row .sv-ach-label {
+  /* labels hug together, not the 12px name gap */
+  margin-left: 0;
+}
+
+.sv-profile-joined {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-400);
+}
+
+.sv-profile-counts {
+  display: flex;
+  gap: var(--sv-space-4);
+  color: var(--sv-neutral-600);
+}
+
+.sv-profile-counts span {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sv-profile-counts b {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ---------- stat cards ---------- */
+.sv-profile-stats {
+  display: flex;
+  gap: var(--sv-space-2);
+}
+
+.sv-profile-stat {
+  flex: 1;
+  height: 63px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--sv-radius-lg);
+  background: var(--sv-neutral-50);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    0 0 0.5px rgba(0, 0, 0, 0.24);
+}
+
+.sv-profile-stat b {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-profile-stat span {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+/* ---------- challenge strip ---------- */
+.sv-profile-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+  padding: var(--sv-space-4);
+  border-radius: var(--sv-radius-2xl);
+  background: var(--sv-white);
+  box-shadow: 0 0 7.5px rgba(0, 0, 0, 0.1);
+}
+
+/* The card's tappable body ('start'/'invited' only) — reproduces the
+   section's own 12px column gap for its children (top, headline, the 6px
+   numbers+track group), plus a button reset when it IS a button. */
+.sv-profile-challenge-open {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  /* Only a <button> (onOpen given) gets the browser's own pointer cursor —
+     the plain-<div> fallback below stays non-interactive. */
+}
+
+.sv-profile-challenge-top {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+}
+
+.sv-profile-challenge-stack {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.sv-profile-challenge-stack > span,
+.sv-profile-challenge-add {
+  box-sizing: border-box;
+  width: 48px;
+  height: 64px;
+  border-radius: var(--sv-radius-full);
+  border: 2px solid var(--sv-white);
+  background-size: cover;
+  background-position: center;
+  background-clip: padding-box;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-profile-challenge-stack > span:not(:first-child),
+.sv-profile-challenge-add {
+  margin-left: -15px;
+}
+
+.sv-profile-challenge-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sv-neutral-300);
+  color: var(--sv-white);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.sv-profile-challenge-blurb {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-profile-challenge-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sv-profile-challenge-headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-profile-challenge-title {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-profile-challenge-days {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-profile-challenge-reward {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+  font-family: var(--sv-font-display);
+  font-size: 14px;
+  color: var(--sv-black);
+}
+
+.sv-profile-challenge-numbers {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-profile-challenge-track {
+  position: relative;
+  height: 9px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.sv-profile-challenge-fill {
+  height: 100%;
+  border-radius: 1000px;
+  background: #343434;
+  box-shadow: var(--sv-inset-accent);
+}
+
+/* ---------- invited mode: Decline / Accept ---------- */
+.sv-profile-challenge-actions {
+  display: flex;
+  gap: var(--sv-space-3);
+  width: 100%;
+}
+
+.sv-profile-challenge-actions .sv-button {
+  flex: 1;
+}
+
+/* Figma specs border-default (a soft 12%-black hairline) here, lighter than
+   Button's own outline style (border-strong) — this is the one place that
+   hairline appears, so it is overridden rather than added as a new variant. */
+.sv-profile-challenge-actions .sv-button-outline {
+  border-color: var(--sv-border-default);
+}
+
+/* ---------- tabs ---------- */
+.sv-profile-tabs .sv-section-tab {
+  width: auto;
+}
+
+.sv-profile-tabs .sv-section-tab-label {
+  /* body face, not the social tabs' Boldonse */
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--sv-neutral-400);
+}
+
+.sv-profile-tabs .sv-section-tab.active .sv-section-tab-label {
+  color: var(--sv-black);
+  font-weight: 700;
+}
+
+/* ---------- feed / empty ---------- */
+.sv-profile-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sv-profile-empty {
+  padding: 48px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--sv-neutral-400);
+}
+
+/* ==================================================================
+   Component: Empty State (Figma 19895:20914) — the dashed card a
+   brand-new account sees on every surface. See EmptyState.tsx.
+   ================================================================== */
+.sv-empty-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 17px;
+  /* No bottom padding, by design: the photo fan runs off the bottom edge and
+     is cut by the overflow below — that half-hidden stack is the point. */
+  padding: var(--sv-space-6) 57px 0;
+  /* neutral-300, not the neutral-200 Figma names: the two ramps disagree at
+     that step (Figma's 200 is #d1d1d6, ours is #e5e5e5) and #e5e5e5 leaves
+     the dashes nearly invisible on white. neutral-300 (#d4d4d4) is within a
+     hair of the colour the design actually draws. */
+  border: 1px dashed var(--sv-neutral-300);
+  border-radius: var(--sv-radius-lg);
+  overflow: hidden;
+}
+
+.sv-empty-copy {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-600);
+  text-align: center;
+}
+
+/* The fan reserves only 52px, far less than the cards inside it are tall.
+   That difference IS the crop — the card's overflow does the cutting. */
+.sv-empty-fan {
+  position: relative;
+  width: 162px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.sv-empty-fan-card {
+  position: absolute;
+  width: 70.5px;
+  height: 68.46px;
+  border: 1px solid var(--sv-white);
+  border-radius: 11px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Three hand-set positions and angles, straight from Figma. Each card is
+   placed by its unrotated top-left — Figma reports the rotated bounding box,
+   so these are those boxes with the card re-centred inside them. */
+.sv-empty-fan-card.i0 {
+  left: 5.59px;
+  top: 5.79px;
+  transform: rotate(-10.39deg);
+}
+
+.sv-empty-fan-card.i1 {
+  left: 46.66px;
+  top: 11.96px;
+  transform: rotate(15deg);
+}
+
+.sv-empty-fan-card.i2 {
+  left: 89.83px;
+  top: 9.88px;
+  transform: rotate(-3.15deg);
+}
+
+/* ---------- Taste Identity tab (Figma 19677:16435) ----------
+   Three stacked cards: the dark "Top N% Diner" summary, the AI read over the
+   Taste DNA radar, then the cuisine breakdown. See TasteIdentityPanel. */
+.sv-taste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+}
+
+/* -- Top N% Diner (19668:16136) --
+   The one dark surface in the app. Figma paints a flat #747474 under a 40%
+   radial that runs DARK at the middle out to near-white at the rim — an
+   inverted vignette, which is what gives the card its brushed-metal read.
+   The ellipse is measured off the node (276.48 x 95 on a 370 x 190 box, so
+   74.72% x 50%), and the layer's 40% is baked into the stops because a
+   background layer cannot carry its own opacity. */
+.sv-taste-stat {
+  box-sizing: border-box;
+  display: flex;
+  /* 370px in the design — which is exactly the scroll's content width on the
+     402 artboard, so this stays 100% rather than hardcoding it. */
+  width: 100%;
+  padding: var(--sv-space-4);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sv-space-8);
+
+  border-radius: var(--sv-radius-2xl);
+  /* The 2px edge is a GRADIENT, not a flat colour — #707070 at the top down
+     to #626262, so the rim catches light like a real bezel. A border cannot
+     take a gradient directly, so the border sits transparent and the stroke
+     is a third background layer clipped to the border box, with the two
+     surface layers clipped to the padding box on top of it. That also means
+     the surface's flat #747474 has to be a gradient layer rather than a
+     background-color, which would fill the border box and hide the stroke. */
+  border: 2px solid #A7A7A7;
+  background: radial-gradient(
+        74.72% 50% at 50% 50%,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(181, 181, 181, 0.4) 100%
+      )
+      padding-box,
+    linear-gradient(#747474, #747474) padding-box,
+    linear-gradient(180deg, #707070 0%, #626262 100%) border-box;
+  box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.34),
+    -1.3px 0 2px 0 rgba(255, 255, 255, 0.45) inset,
+    1.3px 0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 2px 5.4px 0 rgba(255, 255, 255, 0.45) inset;
+  color: var(--sv-white);
+}
+
+/* The card centres its children, so each row carries its own full width —
+   without it they shrink to content and space-between stops spreading. */
+.sv-taste-stat-head,
+.sv-taste-stat-metrics,
+.sv-taste-stat-foot {
+  width: 100%;
+}
+
+.sv-taste-stat-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.sv-taste-stat-identity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+}
+
+/* Stretches to the row's height at the node's own 78:106, so it always
+   matches the two lines of type beside it rather than fighting them.
+   align-self, not height:100% — a percentage height against an auto-height
+   flex parent resolves to auto, which collapsed it. */
+.sv-taste-stat-avatar {
+  flex-shrink: 0;
+  align-self: stretch;
+  aspect-ratio: 78 / 106;
+  border-radius: 100px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--sv-white);
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-taste-stat-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+}
+
+/* Both lines are nowrap in Figma; without it the headline breaks after
+   "Top 32%" as soon as space-between squeezes the column. */
+.sv-taste-stat-period {
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sv-taste-stat-headline {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sv-taste-stat-share {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--sv-white);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.sv-taste-stat-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sv-taste-stat-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* The trailing two are floored so the three columns keep Figma's rhythm
+   rather than bunching around their own text widths. */
+.sv-taste-stat-metric:not(:first-child) {
+  min-width: 82px;
+}
+
+.sv-taste-stat-metric b {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sv-taste-stat-metric span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-150);
+}
+
+.sv-taste-stat-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-3);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.sv-taste-stat-brand {
+  flex-shrink: 0;
+  display: block;
+  width: 45.42px;
+  height: 13px;
+}
+
+/* -- the AI read + radar (19677:16426) -- */
+.sv-taste-ai {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-8);
+  padding: var(--sv-space-4);
+  border-radius: var(--sv-radius-2xl);
+  border: 1px solid var(--sv-neutral-200);
+}
+
+.sv-taste-ai-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-3);
+  width: 100%;
+}
+
+.sv-taste-ai-says {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+/* Figma slants the word rather than setting an italic cut — DM Sans has no
+   true italic here, so the skew is the design, not a fallback. */
+.sv-taste-ai-says-word {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  transform: skewX(-10deg) scaleY(0.98);
+}
+
+.sv-taste-ai-summary {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-taste-radar {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sv-taste-radar-ring {
+  fill: none;
+  stroke: var(--sv-neutral-200);
+  stroke-width: 1;
+}
+
+.sv-taste-radar-fill {
+  fill: #25cdd9;
+  fill-opacity: 0.3;
+}
+
+.sv-taste-radar-name,
+.sv-taste-radar-value {
+  font-family: var(--sv-font);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sv-taste-radar-name {
+  fill: var(--sv-neutral-500);
+}
+
+.sv-taste-radar-value {
+  fill: var(--sv-black);
+}
+
+/* -- cuisine breakdown (19635:14218) -- */
+.sv-taste-dna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+}
+
+.sv-taste-dna-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sv-taste-dna-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sv-taste-dna-since {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-taste-dna-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+/* Artwork, not a glyph — no chip behind it, exactly as drawn. */
+.sv-taste-dna-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.sv-taste-dna-meter {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.sv-taste-dna-label {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+/* A single drawn bar, not a filled track — the design has no rail behind it.
+   Width is set inline, in artboard px, straight from the node. */
+.sv-taste-dna-bar {
+  flex-shrink: 0;
+  height: 4px;
+  border-radius: 1000px;
+  background: #343434;
+}
+
+.sv-taste-dna-pct {
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* ==================================================================
+   Rewards tab — Figma 19457:11305 ("Home"). Who you are, the daily
+   check-in, the challenge you are in, and the badges rail.
+   ================================================================== */
+.sv-rewards-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* Same fade as the community header: the page runs under it and dissolves
+   rather than sliding behind a hard edge. Content is statusbar + 6 + 37,
+   and the 75.492% white stop is what fixes the frame height — the fade has
+   to begin where the identity row ends. */
+.sv-rewards-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: calc((var(--sv-statusbar-h) + 43px) / 0.75492);
+  padding: calc(var(--sv-statusbar-h) + 6px) var(--sv-space-4) 0;
+  background: linear-gradient(
+    180deg,
+    var(--sv-white) 75.492%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.sv-rewards-topbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 37px;
+  pointer-events: auto;
+}
+
+.sv-rewards-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  min-width: 0;
+}
+
+/* 45:60 in Figma — a tall pill, not a circle. */
+.sv-rewards-face {
+  width: 27.75px;
+  height: 37px;
+  flex-shrink: 0;
+  border-radius: var(--sv-radius-full);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sv-inset-bubble);
+}
+
+.sv-rewards-who {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 37px;
+  min-width: 0;
+}
+
+.sv-rewards-name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #303030;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* A <button>: the two chips together open the stats popover that explains
+   what they are counting. Reset back to the plain row they look like. */
+.sv-rewards-labels {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The same pair on someone else's profile: a label, not a control — there is
+   no popover behind it, so it must not offer one. */
+.sv-rewards-labels.is-static {
+  cursor: default;
+}
+
+/* Hangs off the header chips: status bar + 6 (bar margin) + 37 (identity
+   row) + 12 (gap). Above the scrim, which dims the header along with
+   everything else — the popover is the whole story, not an annotation. */
+.sv-rewards-stats-anchor {
+  position: absolute;
+  top: calc(var(--sv-statusbar-h) + 55px);
+  left: var(--sv-space-4);
+  right: var(--sv-space-4);
+  z-index: 9;
+}
+
+/* ---- stats popover — Figma 19982:31109 ----
+   Two meters side by side. 36px radius, like the Combined Spendable sheet;
+   the radius scale stops at 24, so both are deliberate literals. */
+.sv-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sv-space-3);
+  border-radius: 36px;
+  background: var(--sv-white);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+}
+
+.sv-stats-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+  width: 100%;
+}
+
+/* Equal halves that may shrink below their content — min-width:0 is what
+   lets a long caption ellipsize instead of shoving its neighbour over. */
+.sv-stats-card {
+  flex: 1 0 0;
+  min-width: 0;
+  height: 161px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sv-space-4);
+  padding: 0 var(--sv-space-3);
+  border-radius: var(--sv-radius-3xl);
+  background: var(--sv-neutral-150);
+}
+
+/* The card that leads somewhere — the chevron in its label says so. */
+.sv-stats-card.is-link {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-stats-head,
+.sv-stats-foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1);
+  width: 100%;
+}
+
+.sv-stats-label {
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+/* The label plus its chevron. inline-flex, not a gap on the head: the head
+   is a column, so the chevron has to ride WITH the text rather than become
+   a third row under it. */
+.sv-stats-label-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sv-space-1);
+}
+
+.sv-stats-value {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* The sparks sit tighter in their box than the flame does, so they need the
+   wider gap to read as the same distance from the number. */
+.sv-stats-value-spark {
+  gap: var(--sv-space-1-5);
+}
+
+.sv-stats-value b {
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  white-space: nowrap;
+}
+
+.sv-stats-glyph {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.sv-stats-glyph img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Figma crops the flame to 117% inside its box — same correction as the
+   11px chip, for the same transparent margin. */
+.sv-stats-glyph-zoom {
+  overflow: hidden;
+}
+
+.sv-stats-glyph-zoom img {
+  transform: scale(1.17);
+}
+
+/* Same bar recipe as the challenge cards: 9px, fully round, and the Figma
+   "accent-default" inset on the fill. */
+.sv-stats-track {
+  width: 100%;
+  height: 9px;
+  border-radius: 1000px;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.sv-stats-fill {
+  height: 100%;
+  border-radius: 1000px;
+  background: #343434;
+  box-shadow: var(--sv-inset-accent);
+}
+
+.sv-stats-caption {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The caption and the spark you are heading towards, pushed apart. */
+.sv-stats-caption-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-1);
+  width: 100%;
+}
+
+.sv-stats-next-spark {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+
+.sv-rewards-scroll {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-6);
+  /* puts the Daily Check-in heading at y=126 per Figma */
+  padding-top: calc(var(--sv-statusbar-h) + 67px);
+  padding-bottom: 140px;
+}
+
+.sv-rewards-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-rewards-scroll > * {
+  flex-shrink: 0;
+}
+
+.sv-rewards-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: 0 var(--sv-space-4);
+}
+
+/* The rail bleeds to the screen edge, so it undoes the section's padding
+   and re-applies it as its own — the cards scroll off, they do not stop. */
+.sv-rewards-section:has(.sv-ach-rail) {
+  padding: 0;
+}
+
+/* The head row carries the padding the section gave up, so the title and its
+   count sit on the same margins the cards below them scroll past. */
+.sv-rewards-section:has(.sv-ach-rail) .sv-rewards-section-head {
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-rewards-section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* Title on the left, "1/7" pushed to the right edge. */
+.sv-rewards-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-rewards-section-count {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+/* ---------- Daily Check-in (Figma 19905:21350) ---------- */
+.sv-checkin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: 0 var(--sv-space-4);
+}
+
+/* stretch, not center: both sides are two-line stacks, and each pushes its
+   lines to the top and bottom so the count sits level with the title and the
+   best with the "ends" line. */
+.sv-checkin-head {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--sv-space-2);
+}
+
+.sv-checkin-score {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sv-space-1-5);
+}
+
+.sv-checkin-titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-1-5);
+  min-width: 0;
+}
+
+.sv-checkin-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-checkin-ends {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-info-300);
+}
+
+.sv-checkin-streak {
+  flex-shrink: 0;
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* The record under the current run — a quieter line, matching the "ends"
+   line it sits level with. */
+.sv-checkin-best {
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  white-space: nowrap;
+}
+
+.sv-checkin-week {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.sv-checkin-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+.sv-checkin-dow {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+}
+
+.sv-checkin-mark {
+  width: 23.556px;
+  height: 23.556px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11.778px;
+  /* Overridden per state below; the border is declared here so the dashed
+     "today" square is the same size as the filled ones rather than 2px
+     bigger — border-box would still shift the icon. */
+  border: 1px solid transparent;
+  /* Collecting moves a square from one state to the next, and the tint has to
+     travel with it — a hard swap would look like a re-render, not a claim. */
+  transition: background 0.25s var(--sv-ease-out),
+    border-color 0.25s var(--sv-ease-out), color 0.25s var(--sv-ease-out);
+}
+
+.sv-checkin-amount {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  transition: color 0.25s var(--sv-ease-out);
+}
+
+/* Claimed: filled, and the amount is coloured to match — the row of blue is
+   the streak, read before any number is. */
+/* The filled hand, exported from Figma and painted through a mask: one
+   silhouette, tinted by whatever `color` the state below sets. An <img>
+   would bake the colour in and need three copies of the same glyph. */
+.sv-checkin-glyph {
+  width: 16px;
+  height: 16px;
+  display: block;
+  background: currentColor;
+  -webkit-mask: url('./assets/rewards/hand-metal-filled.svg') center / 16px 16px
+    no-repeat;
+  mask: url('./assets/rewards/hand-metal-filled.svg') center / 16px 16px
+    no-repeat;
+}
+
+/* Collected: a pale blue on the info fill, not pure white — Figma's own
+   value for the glyph once the day has been claimed. */
+.sv-checkin-day.is-collected .sv-checkin-mark {
+  background: var(--sv-info-300);
+  color: #cadef4;
+}
+
+.sv-checkin-day.is-collected .sv-checkin-amount {
+  color: var(--sv-info-300);
+}
+
+/* Today: an outline waiting to be filled, not a state of its own colour. */
+.sv-checkin-day.is-today .sv-checkin-mark {
+  border: 1px dashed var(--sv-neutral-300);
+  color: var(--sv-neutral-300);
+}
+
+.sv-checkin-day.is-today .sv-checkin-amount {
+  color: var(--sv-neutral-300);
+}
+
+.sv-checkin-day.is-upcoming .sv-checkin-mark {
+  background: var(--sv-neutral-300);
+  color: var(--sv-white);
+}
+
+.sv-checkin-day.is-upcoming .sv-checkin-amount {
+  color: var(--sv-neutral-300);
+}
+
+.sv-checkin-collect {
+  height: 44px;
+  border: none;
+  border-radius: var(--sv-radius-lg);
+  background: var(--sv-black);
+  box-shadow: var(--sv-inset-accent);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  color: var(--sv-white);
+  cursor: pointer;
+  /* The label swaps by animating in and out of the same slot, so the button
+     has to centre whichever line is in it — and clip the one on its way past
+     the edges rather than growing to fit both. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background 0.25s var(--sv-ease-out),
+    box-shadow 0.25s var(--sv-ease-out), color 0.25s var(--sv-ease-out);
+}
+
+/* Claimed: the accent is spent. It keeps the same box so nothing below it
+   moves, but drops to a flat neutral surface — a statement of what happened,
+   sitting where the control used to be. */
+.sv-checkin-collect.is-collected {
+  background: var(--sv-neutral-100);
+  box-shadow: none;
+  color: var(--sv-neutral-500);
+  cursor: default;
+}
+
+/* ---------- Achievements rail (Figma 19970:30547) ---------- */
+
+/* Holds the fade. The rail itself scrolls, so a fade painted on IT would
+   travel with the content instead of staying pinned to the edge. */
+.sv-ach-rail-wrap {
+  position: relative;
+}
+
+/* Says "there is more" without a scrollbar: seven cards in a 402 phone, and
+   only two and a bit fit, so the cut has to look deliberate. */
+.sv-ach-rail-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--sv-white));
+}
+
+.sv-ach-rail {
+  display: flex;
+  gap: var(--sv-space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 var(--sv-space-4);
+  /* A finger swipes this; a mouse grabs it — see useDragScroll. */
+  cursor: grab;
+}
+
+.sv-ach-rail.is-grabbing {
+  cursor: grabbing;
+  /* Dragging a rail must not paint a text selection across the labels. */
+  user-select: none;
+}
+
+.sv-ach-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.sv-ach-card {
+  width: 179px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-2);
+  padding: var(--sv-space-3);
+  border: 1px solid var(--sv-neutral-200);
+  border-radius: 13px;
+  background: var(--sv-white);
+}
+
+.sv-ach-art {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  display: block;
+}
+
+.sv-ach-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--sv-black);
+  text-align: center;
+}
+
+/* The date sits in the same 32px the CTA occupies, so an earned card and an
+   unearned one are exactly the same height in the rail. */
+.sv-ach-earned {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  font-size: 12px;
+  line-height: var(--sv-line-20);
+  color: var(--sv-neutral-400);
+  text-align: center;
+}
+
+.sv-ach-cta {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-black);
+  box-shadow: var(--sv-inset-accent);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--sv-line-20);
+  color: var(--sv-white);
+  cursor: pointer;
+}
+
+/* The Rewards header's popover, anchored on the profile instead. Its `top`
+   is set inline from the chips' measured position — they sit in the scroll,
+   not in a pinned bar, so there is no fixed offset to hard-code. */
+.sv-profile-stats-anchor {
+  position: absolute;
+  left: var(--sv-space-4);
+  right: var(--sv-space-4);
+  z-index: 9;
+}
+
+/* ==================================================================
+   Spend Levels — Figma 19988:31193. The whole ramp as one arc, your
+   spark large in the middle and the tiers either side falling away
+   off both edges. Pushed in from the Rewards stats popover.
+   ================================================================== */
+.sv-levels-wrap {
+  position: absolute;
+  inset: 0;
+  /* above the stats popover (9) and its scrim (7) */
+  z-index: 12;
+}
+
+.sv-levels-screen {
+  position: absolute;
+  inset: 0;
+  background: var(--sv-white);
+  overflow: hidden;
+}
+
+/* Three blurred colour fields, exported from the frame rather than rebuilt:
+   they are 200px-and-175px Gaussian blurs, which no CSS gradient reproduces
+   exactly. Both sit far outside the artboard and are clipped by it. */
+.sv-levels-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Figma nests these as percentage insets on a percentage-inset box; resolved,
+   the purple/cyan pair is a 1429x1256 sheet hanging off the top-left. */
+.sv-levels-glow {
+  position: absolute;
+  left: -462px;
+  top: -517px;
+  width: 1429px;
+  height: 1256px;
+  display: block;
+}
+
+/* The warm one is rotated on its own axis, so it is placed by its CENTRE
+   (33.8, 360.8) and turned about that point. */
+.sv-levels-wash {
+  position: absolute;
+  left: 33.79px;
+  top: 360.8px;
+  width: 992.689px;
+  height: 896.258px;
+  display: block;
+  transform: translate(-50%, -50%) rotate(43.33deg);
+}
+
+.sv-levels-head {
+  position: absolute;
+  top: calc(var(--sv-statusbar-h) + 6px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-1-5);
+  padding: 0 var(--sv-space-4);
+}
+
+.sv-levels-title {
+  margin: 0;
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+/* The arc is positioned, not laid out: every spark is placed from the frame's
+   own measurements (see SLOTS in SpendLevelsScreen), and the ones at the ends
+   are MEANT to run off the edges.
+   It is also the swipe surface, so it takes pointer events — the header and
+   the copy sit above it at z-2 and keep their own taps. */
+.sv-levels-arc {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: grab;
+  outline: none;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sv-levels-arc:active {
+  cursor: grabbing;
+}
+
+/* The sparks ride the drag; they must not start one of their own. */
+.sv-levels-spark,
+.sv-levels-ribbon {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.sv-levels-ribbon {
+  position: absolute;
+  left: calc(50% - 0.55px);
+  top: 419.15px;
+  width: 457.539px;
+  height: 61.308px;
+  display: block;
+  transform: translateX(-50%);
+}
+
+.sv-levels-spark {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+}
+
+/* Yours carries a soft ground shadow the smaller ones do not — it is the one
+   sitting on the ribbon rather than travelling along it. */
+.sv-levels-spark.is-current {
+  filter: drop-shadow(0 10px 18px rgba(32, 32, 32, 0.16));
+}
+
+/* Anchored to the BOTTOM, not the top. Figma pins it at top:687 because that
+   frame's caption is a fixed four lines; here the tagline wraps to two on
+   Lv.6 and the "next glow-up" line only shows at your own level, so a
+   top-anchored block grows downward and crowds the bottom edge by different
+   amounts on different tiers. Growing UP from a fixed 24px instead keeps that
+   margin the same on every level — 24px is where Figma's own block ends
+   (687 + 163 of content in an 874 frame). */
+.sv-levels-copy {
+  position: absolute;
+  bottom: 24px;
+  left: var(--sv-space-4);
+  right: var(--sv-space-4);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-8);
+}
+
+/* The caption is one unit — the tier's name and what it took change together
+   or not at all. Carries the 32px the copy column used to. */
+.sv-levels-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-8);
+  width: 100%;
+}
+
+.sv-levels-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sv-space-2);
+}
+
+.sv-levels-lv {
+  font-family: var(--sv-font-display);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--sv-black);
+}
+
+.sv-levels-name {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sv-black);
+  text-align: center;
+}
+
+.sv-levels-tagline {
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-neutral-500);
+  text-align: center;
+}
+
+.sv-levels-spent {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--sv-black);
+  text-align: center;
+}
+
+/* ---------- Presentation stage (clone-local) ----------
+   The Live demo's full-screen stage is styled in src/styles/app.css as
+   .bv-stage / .bv-stage-close / .bv-stage-hint. That file belongs to the
+   review site, not to the phone build, so it was never copied — but this
+   tree renders `sv-` class names, which those rules no longer match. These
+   are that block, renamed, so Present full screen works here and can be
+   restyled without touching the Live demo or the Web section (which also
+   uses the .bv- originals, via WebPresentMode). */
+.sv-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* dvh follows the viewport as mobile browser chrome hides/shows */
+  height: 100dvh;
+  overscroll-behavior: none;
+}
+
+/* On a phone the artboard is fitted, not cropped, so the whole app stays
+   visible. The surround is white rather than black so the few px left over
+   read as the app's own background instead of letterbox bars. */
+.sv-stage.compact {
+  background: #fff;
+}
+
+.sv-stage-close {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-capsule);
+  /* dark fill so it reads over the app's light surfaces too */
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  transition: opacity 0.4s ease;
+}
+
+/* Dims out of the way while presenting; any interaction brings it back. */
+.sv-stage-close.dim {
+  opacity: 0.25;
+}
+
+.sv-stage-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
