@@ -71,7 +71,9 @@ const VENUE = {
 const CAPTION = 'Best Cantonese cafe, will come again soon next time when my fam visit'
 
 // The six variants of PostCard, in the order Figma lists them.
-const POSTS: Post[] = [
+// Exported so the web build can render the same feed — one set of posts,
+// two front ends.
+export const POSTS: Post[] = [
   // 1 — comment with images + text
   {
     id: 'p1',
