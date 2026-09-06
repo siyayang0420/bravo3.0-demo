@@ -16,7 +16,6 @@ import useStandalone from '../hooks/useStandalone'
 const TAB_LABELS: Record<NavId, string> = {
   map: 'Map',
   friends: 'Friends',
-  scan: 'Scan & Pay',
   rewards: 'Rewards',
   profile: 'Profile',
 }
