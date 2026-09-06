@@ -221,9 +221,20 @@
   inset: 0;
   z-index: 0;
 }
-/* the tiles are light and clean on their own — no filter needed */
 .bv-map .maplibregl-canvas {
   outline: none;
+}
+
+/* Only when the raster fallback is standing in for the vector basemap (see
+   MapView). Positron needs no help; OpenStreetMap's own tiles are a far
+   louder map — pink motorways, beige land — so they are desaturated and
+   lifted toward white until they read as the same pale basemap. Saturation is
+   pulled down rather than out, so water keeps a trace of blue and parks a
+   trace of green, which is what the design has.
+   The filter is on the CANVAS, not on .bv-map, so the pins, the user dot and
+   every other marker layered over the map keep their full colour. */
+.bv-map.is-raster .maplibregl-canvas {
+  filter: saturate(0.35) brightness(1.16) contrast(0.84);
 }
 /* keep the attribution readable but out of the way, above the dock fade */
 .bv-map .maplibregl-ctrl-bottom-right {

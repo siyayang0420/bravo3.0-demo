@@ -1,38 +1,97 @@
 // Real, interactive map for the Home screen — replaces the static Figma crop.
 //
-// Uses MapLibre GL (the open-source fork of Mapbox GL) with OpenFreeMap's
-// free vector tiles: no account, no API key, no usage cap for a demo. The
-// "positron" style is the clean, low-contrast light basemap that matches the
-// original mock. To switch to Mapbox proper, swap `STYLE` for your Mapbox
-// style URL and set maplibregl equivalent — the marker code stays the same.
+// Uses MapLibre GL (the open-source fork of Mapbox GL) with VersaTiles' free
+// vector tiles: no account, no API key, no usage cap for a demo. To switch to
+// Mapbox proper, swap `VECTOR_STYLE` for your Mapbox style URL — the marker
+// code stays the same.
 import { useEffect, useRef } from 'react'
 import * as maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-// Free raster basemap, no token and no signup: CARTO's "Voyager" tiles — the
-// colourful Google/Apple-style look with green parks, blue water and warm
-// road casings. Raster keeps the pipeline dependency-free — no vector worker,
-// glyphs or sprites to stall on. (Swap `rastertiles/voyager` for `light_all`
-// to go back to the low-contrast Positron look, or point `STYLE` at a vector
-// style URL for crisp vector labels.)
-const STYLE: maplibregl.StyleSpecification = {
+// ---------------------------------------------------------------------------
+// The basemap, and why it is no longer CARTO.
+//
+// This used to draw CARTO's "Voyager" tiles, which were keyless for years.
+// CARTO has since put its basemaps behind an account: keyless requests are
+// still SERVED, but every tile now comes back with "API KEY REQUIRED —
+// carto.com/basemaps/apikey" painted into the PNG by their server. Nothing
+// changed in this file — their terms changed underneath it — which is why the
+// watermark reappeared on its own and why no amount of CSS could hide it. The
+// only two ways out are a CARTO key on every request, or another provider.
+//
+// So: VersaTiles' "colorful". Free, no account, no key, no cap, OSM data, and
+// chosen off a side-by-side of nine keyless styles rendered at this demo's own
+// centre. Warm off-white land, soft blue water, orange roads. Crisp at any
+// zoom and pixel density, since vectors are drawn rather than stretched.
+//
+// NOTE FOR ANYONE SWAPPING THIS AGAIN: VersaTiles is a different schema from
+// OpenFreeMap/MapTiler, not just a different palette. It is built on
+// Shortbread, with ~324 layers named `water-*` / `land-*` / `site-*` — so an
+// OpenFreeMap style URL is a drop-in for the map, but NOT for anything that
+// addresses layers by id (see the note where the palette override used to be).
+const VECTOR_STYLE = 'https://tiles.versatiles.org/assets/styles/colorful/style.json'
+
+// There is deliberately no palette override here any more.
+//
+// Under Positron there was one, because Positron is grey all the way through
+// — water rgb(194,200,202), parks rgb(230,233,229), i.e. two more shades of
+// the land — and the reference wants those two features to carry colour. It
+// hand-painted water #bcdcef and parks #dcecd4 by layer id.
+//
+// Colorful ships that colour itself: its water is rgb(190,221,243), which is
+// the same blue as #bcdcef to within 3/255. Re-pointing the override would be
+// repainting a colour with itself.
+//
+// It would ALSO have been silently dead code: the override addressed `water`,
+// `waterway`, `park` and `landcover_wood`, and Shortbread has none of those
+// ids — the `if (m.getLayer(...))` guard would have skipped all four and left
+// no trace that the tinting had stopped working.
+//
+// The one real difference from the old look is parks. Colorful draws
+// `land-park` / `land-garden` / `land-vegetation` as olive rgb(217,217,165)
+// rather than the soft green #dcecd4 (its `land-grass`, rgb(216,232,200), is
+// close to the old green). To put the design's green back, set a fill-color on
+// those three ids on 'style.load' — guarded, since the raster fallback has
+// none of them either.
+
+// The safety net: OpenStreetMap's own raster tiles (keyless, unstamped,
+// heavier-looking but honest) stand in whenever the vector style fails to come
+// up. See the timeout in the setup effect below.
+//
+// This was originally blamed on software WebGL. It was not. The real cause was
+// that Vite pre-bundled maplibre-gl into .vite/deps, which broke the URL the
+// library uses to spawn its tile-parsing Web Worker: the worker started,
+// accepted messages and answered none, so every vector tile sat in state
+// "loading" forever and the map painted only its background colour — with no
+// error, a "loaded" source, and nothing in the network panel, because the
+// worker is what does the fetching. `optimizeDeps.exclude` in vite.config.ts
+// is the fix; until it went in, this fallback was what the demo actually
+// showed, since raster decodes on the main thread and needs no worker.
+//
+// The fallback is kept anyway — it still covers a genuinely failed style URL
+// or an offline reviewer — but it should now be the exception, not the norm.
+// If you ever see the map go raster again, suspect the worker first.
+const RASTER_FALLBACK: maplibregl.StyleSpecification = {
   version: 8,
   sources: {
-    carto: {
+    osm: {
       type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-        'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-      ],
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
       tileSize: 256,
+      maxzoom: 19,
       attribution:
-        '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+        '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   },
-  layers: [{ id: 'carto', type: 'raster', source: 'carto' }],
+  layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
 }
+
+/**
+ * How long the vector style gets to paint before the raster stands in.
+ * Generous on purpose: falling back on a slow connection would swap a map
+ * that was about to arrive for a worse-looking one.
+ */
+const VECTOR_TIMEOUT_MS = 8000
 
 export type MapPlace = {
   id: string
@@ -103,7 +162,7 @@ export default function MapView({
     if (!container.current) return
     const m = new maplibregl.Map({
       container: container.current,
-      style: STYLE,
+      style: VECTOR_STYLE,
       center,
       zoom,
       attributionControl: { compact: true },
@@ -115,8 +174,39 @@ export default function MapView({
     })
     m.touchZoomRotate.disableRotation()
     m.on('click', () => handlers.current.onDeselect?.())
+
+    // Vector or nothing is not a choice worth offering in a demo: if the style
+    // has not finished coming up by now, it never will here, so swap in the
+    // raster one. `isStyleLoaded` is the test rather than an error handler —
+    // the failure mode is silence, not an exception. Cleared the moment the
+    // map goes idle, i.e. the vector style did paint.
+    let fallback: number | undefined = window.setTimeout(() => {
+      // "Has anything actually been drawn", not "does the style say it is
+      // loaded". The failure this catches renders nothing while reporting no
+      // error, and `isStyleLoaded` can read false on a perfectly good map that
+      // is merely still fetching — the wrong question in both directions.
+      if (m.queryRenderedFeatures().length > 0) return
+      m.setStyle(RASTER_FALLBACK)
+      // OSM's own tiles are a much louder map than Positron — pink motorways,
+      // beige land, a label on everything. The class pales them back down
+      // (see .bv-map.is-raster in the CSS) so the fallback still reads as the
+      // quiet basemap the design asks for rather than a different product.
+      container.current?.classList.add('is-raster')
+    }, VECTOR_TIMEOUT_MS)
+    const settle = () => {
+      window.clearTimeout(fallback)
+      fallback = undefined
+    }
+    m.once('idle', settle)
+    // Deliberately no 'error' handler driving this: a vector style emits
+    // errors for things it recovers from (a sprite icon it cannot find, one
+    // tile that 404s), and treating those as fatal would throw away a map
+    // that was about to draw perfectly well. The timeout catches every real
+    // failure anyway — including the ones that raise nothing at all.
+
     map.current = m
     return () => {
+      window.clearTimeout(fallback)
       m.remove()
       map.current = null
     }
