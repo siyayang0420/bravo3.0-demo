@@ -16,14 +16,17 @@ const TABS: { id: SearchTabId; label: string }[] = [
 
 export default function SearchTabs({
   active,
+  hidden,
   onSelect,
 }: {
   active: SearchTabId
+  /** Tabs with nothing in them, left out of the row. */
+  hidden?: SearchTabId[]
   onSelect: (id: SearchTabId) => void
 }) {
   return (
     <div className="bv-search-tabs" role="tablist">
-      {TABS.map((tab) => (
+      {TABS.filter((tab) => !hidden?.includes(tab.id)).map((tab) => (
         <button
           key={tab.id}
           type="button"

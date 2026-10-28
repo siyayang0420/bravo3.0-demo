@@ -1,15 +1,14 @@
 // Home — implements Figma node 19237:3737 (Home-Default)
 // Map-first discovery screen with balance pills, filter chips,
 // AI prompt dock, and bottom nav.
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ScanLine, Bell } from 'lucide-react'
+import { ScanLine, Bell, LocateFixed, SlidersHorizontal } from 'lucide-react'
 import BalancePill from '../components/BalancePill'
 import SpendableSheet, { formatMoney, type SpendableTab } from '../components/SpendableSheet'
 import CircleIconButton from '../components/CircleIconButton'
-import FilterChip from '../components/FilterChip'
-import SuggestionChip from '../components/SuggestionChip'
 import PromoChip from '../components/PromoChip'
+import useDragScroll from '../hooks/useDragScroll'
 import OffersSheet, { type Promotion } from '../components/OffersSheet'
 import { type Offer } from '../components/OfferCard'
 import PromptBox from '../components/PromptBox'
@@ -31,21 +30,18 @@ import thumbDimsum from '../assets/thumb-dimsum.jpg'
 import thumbRestaurants from '../assets/thumb-restaurants.png'
 import offerVeras from '../assets/offer-veras.png'
 import offerDawn from '../assets/offer-dawn.png'
+import michelin from '../assets/taste/cuisine-michelin.png'
 
-// Figma annotation (node 19453:11110): other than Cuisine and Price
-// (defaults), the remaining 2–3 tags are LLM-generated from user preferences.
-const FILTERS = [
-  { label: 'Cuisine', hasDropdown: true },
-  { label: 'Featured', hasDropdown: false },
-  { label: 'Price', hasDropdown: true },
-  { label: 'Micheline', hasDropdown: false },
-]
-// An emoji rather than a photo: these are QUESTIONS, and a thumbnail of one
-// restaurant promises a specific place the question does not actually name.
-// The glyph reads as a category and stays honest about that.
-const SUGGESTIONS = [
-  { emoji: '🥟', label: 'Best dim sum in Richmond' },
-  { emoji: '✨', label: 'New onboarded restaurants' },
+// Category cards over the dock — eyeballed from 20303:28671, where they are
+// part of a flattened screenshot rather than layers. Icon over label in a
+// white card. Michelin is the real mark (the Taste Identity asset); the rest
+// are emoji, which render as the same glossy 3D glyphs on Apple devices.
+const CATEGORIES = [
+  { label: 'Near me', emoji: '📍' },
+  { label: 'Featured', emoji: '⚡' },
+  { label: 'Michelin', img: michelin },
+  { label: 'Award-winning', emoji: '🏅' },
+  { label: 'Brunch', emoji: '🥪' },
 ]
 
 // EDIT ME — the real map's opening view and restaurant pins.
@@ -159,7 +155,33 @@ export default function HomeScreen({
   const [spendableOpen, setSpendableOpen] = useState(false)
   const [spendableTab, setSpendableTab] = useState<SpendableTab>('balance')
   const [promoOpen, setPromoOpen] = useState(false)
-  const { searchOpen, ask, promptProps, overlays } = useSearchLauncher('map')
+  // Which category card is on. Visual only for now — the map has no
+  // category filter to drive yet.
+  const [category, setCategory] = useState<string | null>(null)
+  // Drag and wheel scroll the cards on a desktop, where touch isn't there.
+  const categoryRail = useDragScroll<HTMLDivElement>()
+  const { searchOpen, ask, promptProps, overlays, results } = useSearchLauncher('map')
+  // A search that has run swaps the pins for what it found and frames them in
+  // the map left showing above the results sheet (55% of the screen).
+  const searchMap = useMemo(() => {
+    if (!results) return null
+    const places: MapPlace[] = results.map((h) => ({
+      id: h.id,
+      name: h.name,
+      meta: h.meta.split(' • ')[0],
+      lng: h.lng,
+      lat: h.lat,
+      photo: h.photo,
+    }))
+    return {
+      places,
+      focus: {
+        points: places.map((p): [number, number] => [p.lng, p.lat]),
+        // Clear of the top bar, the sheet, and the pin label running right.
+        padding: { top: 130, bottom: 520, left: 40, right: 170 },
+      },
+    }
+  }, [results])
   // Your balances, and whether you have any history at all. The map itself is
   // the world's, not yours — the pins and their savers stay — but what the
   // map says about YOU empties out for a brand-new account.
@@ -202,7 +224,8 @@ export default function HomeScreen({
       <MapView
         center={MAP_CENTER}
         zoom={MAP_ZOOM}
-        places={MAP_PLACES}
+        places={searchMap?.places ?? MAP_PLACES}
+        focus={searchMap?.focus}
         onSelectPlace={setPlace}
         onDeselect={() => setPlace(null)}
       />
@@ -237,29 +260,59 @@ export default function HomeScreen({
         animate={{ y: place ? 260 : 0, opacity: place ? 0 : 1 }}
         transition={{ type: 'spring', stiffness: 320, damping: 32, delay: place ? 0 : 0.1 }}
       >
-        <div className="bv-filter-row">
-          {FILTERS.map((f) => (
-            <FilterChip key={f.label} label={f.label} hasDropdown={f.hasDropdown} />
-          ))}
-        </div>
-        <div className="bv-suggestion-row">
-          {hasPromotion && <PromoChip onClick={() => setPromoOpen(true)} />}
-          {/* Each chip is a canned prompt — tapping it sends its own copy to
-              the AI thread, no typing. */}
-          {SUGGESTIONS.map((s) => (
-            <SuggestionChip
-              key={s.label}
-              emoji={s.emoji}
-              label={s.label}
-              onClick={() => ask(s.label)}
-            />
+        {/* Recentre — inside the stack so it rides up and out with the chips
+            when a pin takes the bottom of the screen, rather than hanging
+            over the venue card. */}
+        <button
+          className="bv-map-locate"
+          aria-label="Recentre map"
+          onClick={() => setPlace(null)}
+        >
+          <LocateFixed size={20} strokeWidth={1.9} />
+        </button>
+        {/* The promotion chip outlives the suggestion row it used to share:
+            it is how the "Promotion live" demo state shows itself. */}
+        {hasPromotion && (
+          <div className="bv-suggestion-row">
+            <PromoChip onClick={() => setPromoOpen(true)} />
+          </div>
+        )}
+        <div className="bv-category-row" ref={categoryRail}>
+          {CATEGORIES.map((c) => (
+            <button
+              key={c.label}
+              type="button"
+              className="bv-category"
+              aria-pressed={category === c.label}
+              onClick={() => setCategory((cur) => (cur === c.label ? null : c.label))}
+            >
+              <span className="bv-category-icon" aria-hidden="true">
+                {c.img ? <img src={c.img} alt="" /> : c.emoji}
+              </span>
+              {c.label}
+            </button>
           ))}
         </div>
         <div className="bv-dock">
-          {/* Mic and voice act in place; tapping the placeholder opens the
-              search sheet, where the real keyboard belongs. */}
-          <div className="bv-dock-search-trigger">
-            <PromptBox {...promptProps} />
+          <div className="bv-dock-row">
+            {/* Mic and voice act in place; tapping the placeholder opens the
+                search sheet, where the real keyboard belongs. */}
+            <div className="bv-dock-search-trigger">
+              {/* The gradient ring box, minus its plus. One static line, not
+                  the rotating hints: it names what the field searches rather
+                  than advertising the assistant. */}
+              <PromptBox
+                {...promptProps}
+                showAdd={false}
+                placeholders={undefined}
+                placeholder="Search restaurants, people and more"
+              />
+            </div>
+            {/* ponytail: decorative for now — there is no filter panel to
+                open yet. Wire it when that design lands. */}
+            <button type="button" className="bv-dock-filter" aria-label="Filters">
+              <SlidersHorizontal size={20} strokeWidth={1.9} />
+            </button>
           </div>
           <BottomNav active={active} onSelect={onNavigate} avatar={avatar} />
         </div>
@@ -325,35 +378,40 @@ export default function HomeScreen({
       {overlays}
 
       {/* Combined Spendable sheet — opens from either balance pill */}
+      {/* Keyed siblings, not a fragment — see the note in SearchLauncher: a
+          fragment hides these two from AnimatePresence's bookkeeping, and a
+          fast open/close strands the scrim invisibly over the whole phone. */}
       <AnimatePresence>
         {spendableOpen && (
-          <>
-            <motion.button
-              type="button"
-              className="bv-scrim"
-              aria-label="Close balance details"
-              onClick={() => setSpendableOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
+          <motion.button
+            key="spendable-scrim"
+            type="button"
+            className="bv-scrim"
+            aria-label="Close balance details"
+            onClick={() => setSpendableOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          />
+        )}
+        {spendableOpen && (
+          <motion.div
+            key="spendable-sheet"
+            className="bv-spendable-anchor"
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          >
+            <SpendableSheet
+              balance={cash}
+              bonus={coin}
+              topUpBonus={TOP_UP_BONUS}
+              tab={spendableTab}
+              onTabChange={setSpendableTab}
             />
-            <motion.div
-              className="bv-spendable-anchor"
-              initial={{ opacity: 0, y: -8, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-            >
-              <SpendableSheet
-                balance={cash}
-                bonus={coin}
-                topUpBonus={TOP_UP_BONUS}
-                tab={spendableTab}
-                onTabChange={setSpendableTab}
-              />
-            </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -362,23 +420,25 @@ export default function HomeScreen({
           pills dim with the rest of the screen. */}
       <AnimatePresence>
         {promoOpen && hasPromotion && (
-          <>
-            <motion.button
-              type="button"
-              className="bv-scrim over-topbar"
-              aria-label="Close offers"
-              onClick={() => setPromoOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-            />
-            <OffersSheet
-              offers={OFFERS}
-              promotions={PROMOTIONS}
-              onClose={() => setPromoOpen(false)}
-            />
-          </>
+          <motion.button
+            key="promo-scrim"
+            type="button"
+            className="bv-scrim over-topbar"
+            aria-label="Close offers"
+            onClick={() => setPromoOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          />
+        )}
+        {promoOpen && hasPromotion && (
+          <OffersSheet
+            key="promo-sheet"
+            offers={OFFERS}
+            promotions={PROMOTIONS}
+            onClose={() => setPromoOpen(false)}
+          />
         )}
       </AnimatePresence>
     </>

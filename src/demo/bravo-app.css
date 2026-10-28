@@ -7034,3 +7034,707 @@ button.bv-balance-pill:active {
   color: var(--bv-black);
   text-align: center;
 }
+
+/* ---- Home dock box, plain skin (Figma 20303:28673) ----
+   Home's search bar is not the AI ring box: no gradient, no plus, a 46px
+   white pill carrying only the placeholder and the mic/voice pair. The ring
+   box stays as it is for the AI chat and social docks, which still use it. */
+.bv-prompt-box.plain {
+  padding: 0;
+  background: var(--bv-white);
+  animation: none;
+  filter: drop-shadow(0 0 12.5px rgba(0, 0, 0, 0.15));
+}
+
+.bv-prompt-box.plain .bv-prompt-inner {
+  gap: var(--bv-space-1);
+  /* 8 all round per the node; the leading 12 is the text's own inset, which
+     used to come from the plus sitting in that slot. */
+  padding: var(--bv-space-2);
+  padding-left: var(--bv-space-3);
+}
+
+.bv-prompt-box.plain .bv-prompt-input::placeholder {
+  color: var(--bv-neutral-300);
+}
+
+/* Icon Button / Secondary — the hairline circle the node uses for the mic.
+   The voice button beside it is already the filled black one. */
+.bv-prompt-box.plain .bv-prompt-mic {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  border: 0.5px solid var(--bv-neutral-200);
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+/* ---- Recentre button (Figma 20303:28695) ----
+   Sits above the bottom stack on the right, clear of the dock. 35px white
+   circle, the same chip shadow the map pins carry. */
+.bv-map-locate {
+  /* A flex child of the bottom stack, not absolute: the stack is a column
+     and already spaces its rows, so aligning right is the whole job. */
+  align-self: flex-end;
+  margin-right: 18px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  border: none;
+  color: var(--bv-black);
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+/* =====================================================================
+   Home 3.0 search flow — Figma 20303:28671 (home), 20301:24988 (tapped),
+   20301:24443 (typing), 20302:25288 / 20302:25498 / 20303:28516 (results).
+   Appended after the earlier search-sheet rules on purpose: the same
+   selectors, later in the file, win without !important.
+   ===================================================================== */
+
+/* ---- Home: bottom stack spacing (locate → cards 13, cards → bar 10) ---- */
+.bv-bottom-stack {
+  gap: 13px;
+}
+
+.bv-bottom-stack > .bv-dock {
+  margin-top: -3px;
+  gap: 20px;
+}
+
+.bv-bottom-stack .bv-dock-row {
+  gap: 6px;
+}
+
+/* Home's dock bar is the ring box without its plus, so the text takes the
+   leading slot — inset to match the right edge's 16. */
+.bv-bottom-stack .bv-dock-search-trigger .bv-prompt-inner {
+  padding-left: 16px;
+}
+
+/* 14px per the node, ellipsised so the long placeholder truncates inside the
+   pill rather than running under the mic. */
+.bv-prompt-box.plain .bv-prompt-input {
+  font-size: 14px;
+  text-overflow: ellipsis;
+}
+
+/* Installed to the home screen, iOS zooms any focused input under 16px —
+   the one place the design's 14 has to give. */
+.bravo-app.standalone .bv-prompt-box.plain .bv-prompt-input {
+  font-size: 16px;
+}
+
+.bv-prompt-box.plain .bv-prompt-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bv-prompt-back {
+  flex-shrink: 0;
+  display: flex;
+  padding: 0;
+  /* 4 from the row's gap + 8 = the node's 12 between arrow and text */
+  margin-right: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.bv-prompt-back img {
+  display: block;
+}
+
+/* Sliders button beside the bar — same white disc and shadow as the bar. */
+.bv-dock-filter {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  color: var(--bv-black);
+  filter: drop-shadow(0 0 12.5px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+}
+
+/* ---- Home: category cards (eyeballed from the flattened frame) ---- */
+.bv-category-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-category-row::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-category {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 63px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 12px;
+  background: var(--bv-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s var(--bv-ease-out), background 0.15s ease;
+}
+
+.bv-category:active {
+  transform: scale(0.96);
+}
+
+.bv-category[aria-pressed='true'] {
+  background: var(--bv-neutral-150);
+}
+
+.bv-category-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.bv-category-icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* ---- Search sheet ---- */
+.bv-scrim.clear {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Content-sized and bottom-anchored. Results stop below the top bar (the
+   balances stay visible over the sheet, as in 20302:25288); while typing it
+   stands to its full height so the keyboard has room. min-height is what
+   animates between the two — height cannot transition to or from auto, a
+   length can. */
+.bv-search-sheet {
+  align-items: stretch;
+  gap: 0;
+  padding-top: 0;
+  background: var(--bv-white);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  min-height: 0;
+  /* Once a search has run: a sheet over the map, low enough that the
+     result pins show above it (Home frames them in the top 45%). */
+  max-height: 55%;
+  transition:
+    min-height 0.32s var(--bv-ease-out),
+    max-height 0.32s var(--bv-ease-out),
+    border-radius 0.32s var(--bv-ease-out);
+}
+
+/* Before a search runs: the whole screen, status bar to keyboard. */
+.bv-search-sheet.full {
+  min-height: calc(100% - var(--bv-kb-inset, 0px));
+  max-height: calc(100% - var(--bv-kb-inset, 0px));
+  border-radius: 0;
+}
+
+.bv-search-sheet.full .bv-search-handle {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bv-search-sheet {
+    transition: none;
+  }
+}
+
+.bv-search-handle {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 32px;
+  height: 3px;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-400);
+}
+
+.bv-search-head {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 45px var(--bv-space-4) 0;
+  transition: padding-top 0.32s var(--bv-ease-out);
+}
+
+/* Full page: the head starts under the status bar instead of the handle. */
+.bv-search-sheet.full .bv-search-head {
+  padding-top: calc(var(--bv-statusbar-h) + var(--bv-space-2));
+}
+
+.bv-search-sheet .bv-prompt-box.plain {
+  filter: drop-shadow(0 0 7.5px rgba(0, 0, 0, 0.1));
+}
+
+.bv-search-sheet .bv-prompt-input::placeholder {
+  color: var(--bv-neutral-500);
+}
+
+/* "bravo AI is here" over the cyan → yellow → red wash. The wash is a 34px
+   strip blurred 40px, so it spreads into a soft halo behind the row. */
+.bv-search-ai {
+  position: relative;
+  isolation: isolate;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bv-search-ai::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(98deg, #4af3ff 0.17%, #fee160 50%, #f94f4f 99.83%);
+  filter: blur(40px);
+  opacity: 0.8;
+}
+
+.bv-search-ai-mark {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bv-search-ai-mark em {
+  display: inline-block;
+  font-style: normal;
+  transform: skewX(-10deg);
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+/* The wordmark, solid black here. Same mask technique as the gradient one
+   in .bv-search-ask-brand, so it is one file in two paints. */
+.bv-search-wordmark {
+  display: inline-block;
+  width: 70px;
+  height: 12px;
+  background: var(--bv-black);
+  -webkit-mask: url('./assets/bravo-ai-wordmark.svg') no-repeat center / contain;
+  mask: url('./assets/bravo-ai-wordmark.svg') no-repeat center / contain;
+}
+
+.bv-search-ai-ask {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 12px;
+  background: var(--bv-white);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+.bv-search-sheet .bv-search-scroll {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 16px var(--bv-space-4) 24px;
+}
+
+/* tapped: recent + other searches */
+.bv-search-starters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bv-search-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.bv-search-group-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bv-black);
+}
+
+.bv-search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bv-search-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 52px;
+  background: #f2f2f7;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.bv-search-chip.ai {
+  background: #f2f2f2;
+  color: #282828;
+}
+
+.bv-search-chip-main,
+.bv-search-chip-x {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.bv-search-chip-more svg {
+  transition: transform 0.2s var(--bv-ease-out);
+}
+
+.bv-search-chip-more.open svg {
+  transform: rotate(180deg);
+}
+
+/* results */
+.bv-search-sheet .bv-search-results,
+.bv-search-sheet .bv-search-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: auto;
+  min-height: 0;
+}
+
+/* Flush left at the gutter in every results frame; the old sheet centred them. */
+.bv-search-sheet .bv-search-tabs {
+  justify-content: flex-start;
+}
+
+/* "Ask bravo AI about …" — a white chip over a 2.5px-blurred gradient of the
+   same shape, so the gradient only shows as a glow round its edge. */
+.bv-search-askpill {
+  position: relative;
+  isolation: isolate;
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.bv-search-askpill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 100px;
+  background: linear-gradient(94.4deg, #4af3ff 0.17%, #fee160 50%, #f94f4f 99.83%);
+  filter: blur(2.5px);
+  opacity: 0.8;
+}
+
+.bv-search-askpill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 52px;
+  background: var(--bv-white);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-search-askpill .bv-search-wordmark {
+  width: 60px;
+  height: 10.3px;
+}
+
+/* people rail — four 61x82 arches, name under each */
+.bv-search-people {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.bv-search-rail {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.bv-search-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 61px;
+}
+
+.bv-search-face > span {
+  width: 61px;
+  height: 82px;
+  border-radius: 100px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--bv-inset-bubble, inset 0 1px 4px #fff, inset 0 -2px 5px rgba(0, 0, 0, 0.1));
+}
+
+.bv-search-face > b {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--bv-black);
+  white-space: nowrap;
+}
+
+.bv-search-sheet .bv-search-more {
+  padding: 6px 12px;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: var(--bv-white);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--bv-neutral-400);
+  cursor: pointer;
+}
+
+/* committed result cards, a 1px rule under each (16 above, 16 below) */
+.bv-search-hits {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bv-search-hits > * {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--bv-neutral-200);
+}
+
+.bv-hit {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  height: 85px;
+}
+
+.bv-hit-photo {
+  position: relative;
+  flex: 0 0 63px;
+  height: 85px;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.bv-hit-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bv-hit-rate {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  padding: 4px 6px;
+  border-radius: 100px;
+  background: #fee160;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  color: #202020;
+}
+
+.bv-hit-body {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.bv-hit-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.bv-hit-name,
+.bv-hit-meta {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-hit-name {
+  font-size: 14px;
+  color: var(--bv-black);
+}
+
+.bv-hit-meta {
+  font-size: 12px;
+  color: var(--bv-neutral-500);
+}
+
+.bv-hit-tag {
+  padding: 4px;
+  border-radius: 6px;
+  background: #f5f5f5;
+  font-size: 12px;
+  line-height: 1;
+  color: #202020;
+  white-space: nowrap;
+}
+
+.bv-hit-savers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.bv-hit-faces {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.bv-hit-faces > span {
+  box-sizing: border-box;
+  width: 14.44px;
+  height: 19.26px;
+  border-radius: 100px;
+  border: 0.889px solid var(--bv-white);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0.889px 3.556px #fff, inset 0 -1.778px 4.445px rgba(0, 0, 0, 0.1);
+}
+
+.bv-hit-faces > span + span {
+  margin-left: -6px;
+}
+
+.bv-hit-note {
+  min-width: 0;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--bv-neutral-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-hit-save {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+  color: var(--bv-black);
+  filter: drop-shadow(0 4px 3.2px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+}
+
+/* Five nav items now: the frame's icons sit on a 72px pitch starting 45px
+   from the screen edge. The nav already sits inside the dock's 16px gutter,
+   so its own padding is the other 29. */
+.bv-bottom-nav {
+  padding: 0 29px;
+}
+
+/* Result card tag row — the grey transactions tag, plus the yellow pickup tag
+   on venues that take pickup orders. */
+.bv-hit-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* Figma 20349:21032 — shopping bag + label on warning-100. */
+.bv-hit-tag.pickup {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fbf2cb;
+}
+.bv-hit-tag.pickup img {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Voice screen header — it is not inside .bv-ai-topbar like the chat's, so
+   it has to clear the status bar itself. Same offsets the topbar uses. */
+.bv-ai-voice .bv-ai-header {
+  margin-top: calc(var(--bv-statusbar-h) + var(--bv-space-2));
+}
+
+.bv-ai-voice .bv-ai-disclaimer {
+  margin-top: var(--bv-space-4);
+}

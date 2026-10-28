@@ -379,35 +379,38 @@ export default function ProfileScreen({
           same pills. me mode only, since the public header has no balances.
           The scrim is the plain one: the top bar is `lit` above it, so the
           pills stay readable as the sheet's anchor, exactly as on the map. */}
+      {/* Keyed siblings, not a fragment — see the note in SearchLauncher. */}
       <AnimatePresence>
         {isMe && spendableOpen && (
-          <>
-            <motion.button
-              type="button"
-              className="bv-scrim"
-              aria-label="Close balance details"
-              onClick={() => setSpendableOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
+          <motion.button
+            key="spendable-scrim"
+            type="button"
+            className="bv-scrim"
+            aria-label="Close balance details"
+            onClick={() => setSpendableOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          />
+        )}
+        {isMe && spendableOpen && (
+          <motion.div
+            key="spendable-sheet"
+            className="bv-spendable-anchor"
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          >
+            <SpendableSheet
+              balance={cash}
+              bonus={coin}
+              topUpBonus={TOP_UP_BONUS}
+              tab={spendableTab}
+              onTabChange={setSpendableTab}
             />
-            <motion.div
-              className="bv-spendable-anchor"
-              initial={{ opacity: 0, y: -8, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-            >
-              <SpendableSheet
-                balance={cash}
-                bonus={coin}
-                topUpBonus={TOP_UP_BONUS}
-                tab={spendableTab}
-                onTabChange={setSpendableTab}
-              />
-            </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -415,32 +418,34 @@ export default function ProfileScreen({
           off the chips that were tapped here instead. */}
       <AnimatePresence>
         {statsOpen && (
-          <>
-            <motion.button
-              type="button"
-              className="bv-scrim"
-              aria-label="Close"
-              onClick={() => setStatsOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
+          <motion.button
+            key="stats-scrim"
+            type="button"
+            className="bv-scrim"
+            aria-label="Close"
+            onClick={() => setStatsOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          />
+        )}
+        {statsOpen && (
+          <motion.div
+            key="stats-anchor"
+            className="bv-profile-stats-anchor"
+            style={{ top: statsTop }}
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          >
+            <AchievementStats
+              streak={profile.streak}
+              level={profile.level}
+              onOpenLevels={() => setLevelsOpen(true)}
             />
-            <motion.div
-              className="bv-profile-stats-anchor"
-              style={{ top: statsTop }}
-              initial={{ opacity: 0, y: -8, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-            >
-              <AchievementStats
-                streak={profile.streak}
-                level={profile.level}
-                onOpenLevels={() => setLevelsOpen(true)}
-              />
-            </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 

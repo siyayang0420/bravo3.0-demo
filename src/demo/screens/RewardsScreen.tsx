@@ -183,33 +183,36 @@ export default function RewardsScreen({
           scrim-plus-anchor pattern as Home's Combined Spendable sheet, but
           the scrim covers the header too: this explains the whole identity
           row, so there is nothing up there left to keep lit. */}
+      {/* Keyed siblings, not a fragment — see the note in SearchLauncher. */}
       <AnimatePresence>
         {statsOpen && (
-          <>
-            <motion.button
-              type="button"
-              className="bv-scrim"
-              aria-label="Close"
-              onClick={() => setStatsOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
+          <motion.button
+            key="stats-scrim"
+            type="button"
+            className="bv-scrim"
+            aria-label="Close"
+            onClick={() => setStatsOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+          />
+        )}
+        {statsOpen && (
+          <motion.div
+            key="stats-anchor"
+            className="bv-rewards-stats-anchor"
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          >
+            <AchievementStats
+              streak={profile.streak}
+              level={profile.level}
+              onOpenLevels={() => setLevelsOpen(true)}
             />
-            <motion.div
-              className="bv-rewards-stats-anchor"
-              initial={{ opacity: 0, y: -8, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-            >
-              <AchievementStats
-                streak={profile.streak}
-                level={profile.level}
-                onOpenLevels={() => setLevelsOpen(true)}
-              />
-            </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 

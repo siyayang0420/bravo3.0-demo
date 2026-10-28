@@ -1,20 +1,20 @@
-// Component — Figma bottom nav row (node 19453:11130)
-// Icons per design layer names: map, users-round, circle-star (all Lucide),
-// plus the profile avatar.
+// Component — bottom nav row, eyeballed from the Home frame (20303:28671).
 //
-// The design's fifth item, scan-qr-code ("Scan & Pay"), is deliberately not
-// here: it had no screen behind it and only ever reached a placeholder, so
-// the nav now carries four destinations that all lead somewhere.
-import { Map, UsersRound } from 'lucide-react'
-import CircleStar from './icons/CircleStar'
+// That frame's nav is part of a flattened screenshot, not layers, so the
+// icons are read off the picture: map, compass, scan, wallet, then your
+// avatar. The destinations behind them are the demo's existing tabs —
+// compass is the friends feed (discovery), wallet is Rewards — and scan has
+// no screen yet, so it opens the "design in progress" placeholder.
+import { Map, Compass, ScanQrCode, WalletCards } from 'lucide-react'
 import { BOBBY } from '../data/people'
 
-export type NavId = 'map' | 'friends' | 'rewards' | 'profile'
+export type NavId = 'map' | 'friends' | 'scan' | 'rewards' | 'profile'
 
 const ITEMS: { id: NavId; icon: React.ReactNode; label: string }[] = [
   { id: 'map', icon: <Map size={24} strokeWidth={1.9} />, label: 'Map' },
-  { id: 'friends', icon: <UsersRound size={24} strokeWidth={1.9} />, label: 'Friends' },
-  { id: 'rewards', icon: <CircleStar size={24} strokeWidth={1.9} />, label: 'Rewards' },
+  { id: 'friends', icon: <Compass size={24} strokeWidth={1.9} />, label: 'Discover' },
+  { id: 'scan', icon: <ScanQrCode size={24} strokeWidth={1.9} />, label: 'Scan & Pay' },
+  { id: 'rewards', icon: <WalletCards size={24} strokeWidth={1.9} />, label: 'Wallet' },
 ]
 
 export default function BottomNav({

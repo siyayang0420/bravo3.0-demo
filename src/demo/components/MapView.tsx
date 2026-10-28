@@ -133,6 +133,7 @@ export default function MapView({
   zoom = 13.5,
   places = [],
   showUser = true,
+  focus,
   onSelectPlace,
   onDeselect,
 }: {
@@ -142,6 +143,11 @@ export default function MapView({
   places?: MapPlace[]
   /** Draw the blue "you are here" dot at the center. */
   showUser?: boolean
+  /**
+   * Frame these points instead of center/zoom — Home's search results. The
+   * padding keeps them clear of whatever covers the map (the results sheet).
+   */
+  focus?: { points: [number, number][]; padding: maplibregl.PaddingOptions }
   /** Tapping a pin. */
   onSelectPlace?: (place: MapPlace) => void
   /** Tapping the map itself — dismisses whatever a pin opened. */
@@ -213,10 +219,19 @@ export default function MapView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Fly to a new center/zoom when props change (e.g. new restaurant set).
+  // Fly to a new center/zoom when props change (e.g. new restaurant set), or
+  // frame the focus points while there are any — and back again after.
   useEffect(() => {
-    map.current?.easeTo({ center, zoom, duration: 600 })
-  }, [center, zoom])
+    const m = map.current
+    if (!m) return
+    if (focus?.points.length) {
+      const bounds = new maplibregl.LngLatBounds(focus.points[0], focus.points[0])
+      for (const pt of focus.points) bounds.extend(pt)
+      m.fitBounds(bounds, { padding: focus.padding, maxZoom: 14, duration: 600 })
+    } else {
+      m.easeTo({ center, zoom, padding: { top: 0, bottom: 0, left: 0, right: 0 }, duration: 600 })
+    }
+  }, [center, zoom, focus])
 
   // Rebuild the markers whenever the place list changes.
   useEffect(() => {

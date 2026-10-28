@@ -13,6 +13,7 @@ import SearchSheet, { SEARCH_INPUT_ID } from './SearchSheet'
 import AiChatScreen from '../screens/AiChatScreen'
 import AiVoiceScreen from '../screens/AiVoiceScreen'
 import { PROMPTS, type PromptContext } from '../data/promptDemo'
+import { type SearchHit } from '../data/searchDemo'
 
 /**
  * @param context Which screen the dock is sitting on. Picks the rotating
@@ -24,6 +25,14 @@ export default function useSearchLauncher(context: PromptContext = 'map') {
   const [searchOpen, setSearchOpen] = useState(false)
   const [askQuery, setAskQuery] = useState('')
   const [voiceOpen, setVoiceOpen] = useState(false)
+  // What the last search found, while its sheet is open — Home puts these on
+  // the map. Null whenever search is closed, so the map goes back to normal.
+  const [results, setResults] = useState<SearchHit[] | null>(null)
+
+  const closeSearch = () => {
+    setSearchOpen(false)
+    setResults(null)
+  }
 
   const openSearch = () => {
     flushSync(() => setSearchOpen(true))
@@ -33,7 +42,7 @@ export default function useSearchLauncher(context: PromptContext = 'map') {
   // Send a query straight to the AI thread, skipping the search sheet — the
   // suggestion chips use this, so tapping one reads as "asked and sent".
   const ask = (query: string) => {
-    setSearchOpen(false)
+    closeSearch()
     setAskQuery(query)
   }
 
@@ -55,38 +64,44 @@ export default function useSearchLauncher(context: PromptContext = 'map') {
     <>
       {/* Search — slides up over the dock, keyboard and all. The keyboard
           lives inside the sheet, so it stays above the scrim with it. */}
+      {/* The tap-catcher above the sheet. Clear, not dimmed — none of the
+          search frames darken the map — so it has nothing to fade, and it is
+          deliberately NOT inside AnimatePresence. An exiting child is only
+          removed when its exit animation reports done on a later animation
+          frame; the review site's browser pane can stop delivering frames,
+          and a close that stalls there left this invisible button over the
+          whole phone, eating every click. Plain conditional rendering means
+          it is gone the instant search closes, frames or no frames. */}
+      {searchOpen && (
+        <button
+          type="button"
+          className="bv-scrim over-topbar clear"
+          aria-label="Close search"
+          onClick={closeSearch}
+        />
+      )}
       <AnimatePresence>
         {searchOpen && (
-          <>
-            <motion.button
-              type="button"
-              className="bv-scrim over-topbar"
-              aria-label="Close search"
-              onClick={() => setSearchOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-            />
-            <SearchSheet
-              starters={prompts.starters}
-              onClose={() => setSearchOpen(false)}
-              onAsk={(q) => {
-                setAskQuery(q)
-                setSearchOpen(false)
-              }}
-              onVoiceMode={() => setVoiceOpen(true)}
-            />
-          </>
+          <SearchSheet
+            key="search-sheet"
+            onClose={closeSearch}
+            onAsk={ask}
+            onVoiceMode={() => setVoiceOpen(true)}
+            onResults={setResults}
+          />
         )}
       </AnimatePresence>
 
-      {/* bravo AI thread — pushes in over everything once you send a query */}
+      {/* bravo AI thread — pushes in over everything once you send a query.
+          It arrives opaque and slides, rather than fading: asking from the
+          search sheet closes that sheet in the same moment, and a fading
+          chat let the sheet show through while it slid away — both screens
+          half-visible at once, which read as "the tap did nothing". */}
       <AnimatePresence>
         {askQuery && (
           <motion.div
             className="bv-ai-screen-wrap"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 1, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}
@@ -116,5 +131,5 @@ export default function useSearchLauncher(context: PromptContext = 'map') {
     </>
   )
 
-  return { searchOpen, openSearch, ask, promptProps, overlays }
+  return { searchOpen, openSearch, ask, promptProps, overlays, results }
 }

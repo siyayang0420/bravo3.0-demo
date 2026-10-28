@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Plus, Mic, AudioLines, Search, ArrowUp } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import VoiceInput from './VoiceInput'
+import arrowLeft from '../assets/search/arrow-left.svg'
 
 /** How long each rotating placeholder holds before the next one turns up. */
 const ROTATE_MS = 3600
@@ -24,6 +25,8 @@ export default function PromptBox({
   placeholder,
   placeholders,
   variant = 'ai',
+  plain = false,
+  showAdd = true,
   value,
   autoFocus = false,
   inputId,
@@ -33,6 +36,9 @@ export default function PromptBox({
   onActivate,
   onChange,
   onSubmit,
+  onBack,
+  onFocus,
+  onBlur,
 }: {
   /** A single, static placeholder. Ignored when `placeholders` is given. */
   placeholder?: string
@@ -45,6 +51,16 @@ export default function PromptBox({
    */
   placeholders?: string[]
   variant?: 'ai' | 'search'
+  /**
+   * Home's dock box (Figma 20303:28673): no gradient ring, no plus, just a
+   * white pill with a soft shadow and the mic/voice pair. The 'ai' and
+   * 'search' variants are both still rings-or-hairline boxes with something
+   * in the leading slot, so this is a third skin rather than a variant of
+   * either.
+   */
+  plain?: boolean
+  /** False drops the ring box's leading plus — Home's dock search bar. */
+  showAdd?: boolean
   /** Controlled value. Omit to let the box hold its own. */
   value?: string
   /** Take the caret on mount — see the note in SearchSheet. */
@@ -70,9 +86,17 @@ export default function PromptBox({
   onActivate?: () => void
   onChange?: (value: string) => void
   onSubmit?: (value: string) => void
+  /** Plain skin only: a back arrow in the leading slot (the search sheet). */
+  onBack?: () => void
+  onFocus?: () => void
+  onBlur?: () => void
 }) {
   const [internal, setInternal] = useState('')
   const [recording, setRecording] = useState(false)
+  // The plain box swaps voice for submit only while you are TYPING — focused
+  // with text in it. Once Enter commits the search the field blurs, and the
+  // same query sits there with the voice button back (Figma 20302:25288).
+  const [focused, setFocused] = useState(false)
   const input = useRef<HTMLInputElement>(null)
   const reduce = useReducedMotion()
 
@@ -109,6 +133,25 @@ export default function PromptBox({
   // the dock box has an inert field (onActivate opens the sheet) but a working
   // mic, just like the sheet's own box.
   const canRecord = !isSearch && !!voiceTranscript
+  const showSubmit = plain ? !!text && focused : !!text
+
+  const mic = canRecord ? (
+    <motion.button
+      type="button"
+      className="bv-prompt-mic"
+      aria-label="Record"
+      onClick={() => setRecording(true)}
+      whileTap={{ scale: 0.92 }}
+    >
+      <Mic size={plain ? 20 : 22} strokeWidth={1.8} />
+    </motion.button>
+  ) : plain ? (
+    <span className="bv-prompt-mic">
+      <Mic size={20} strokeWidth={1.8} />
+    </span>
+  ) : (
+    <Mic size={22} strokeWidth={1.8} />
+  )
 
   // Recording sends what it heard, not what is in the field — the field is
   // empty and hidden for the whole take.
@@ -121,16 +164,24 @@ export default function PromptBox({
   }
 
   return (
-    <div className={`bv-prompt-box${isSearch ? ' search' : ''}`}>
+    <div className={`bv-prompt-box${isSearch ? ' search' : ''}${plain ? ' plain' : ''}`}>
       <div className="bv-prompt-inner">
         {isSearch ? (
           <span className="bv-prompt-search-icon">
             <Search size={20} strokeWidth={1.9} />
           </span>
+        ) : plain ? (
+          onBack && (
+            <button type="button" className="bv-prompt-back" aria-label="Back" onClick={onBack}>
+              <img src={arrowLeft} alt="" width={18} height={18} />
+            </button>
+          )
         ) : (
-          <button className="bv-prompt-plus" aria-label="Add">
-            <Plus size={20} strokeWidth={2.2} />
-          </button>
+          showAdd && (
+            <button className="bv-prompt-plus" aria-label="Add">
+              <Plus size={20} strokeWidth={2.2} />
+            </button>
+          )
         )}
         {/* Hidden rather than unmounted while recording (Figma hides the
             placeholder at opacity 0): the pill takes the width, and the
@@ -161,6 +212,14 @@ export default function PromptBox({
           }
           onClick={onActivate && !recording ? () => onActivate() : undefined}
           onChange={(e) => setText(e.target.value)}
+          onFocus={() => {
+            setFocused(true)
+            onFocus?.()
+          }}
+          onBlur={() => {
+            setFocused(false)
+            onBlur?.()
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') submit()
           }}
@@ -188,6 +247,9 @@ export default function PromptBox({
         </span>
         {!isSearch && (
           <div className="bv-prompt-end">
+            {/* Plain skin: the mic never leaves, so it sits outside the swap
+                and only its neighbour changes. */}
+            {plain && !recording && mic}
             {/* Scale from 0.9, never 0 — nothing in the real world appears
                 out of nothing. Exit is quicker than enter. */}
             <AnimatePresence mode="wait" initial={false}>
@@ -211,12 +273,16 @@ export default function PromptBox({
                     <ArrowUp size={20} strokeWidth={2.4} />
                   </motion.button>
                 </motion.div>
-              ) : text ? (
+              ) : showSubmit ? (
                 <motion.button
                   key="submit"
                   type="button"
                   className="bv-prompt-voice"
                   aria-label="Search"
+                  // Keep the field focused through the press: blurring first
+                  // would swap this button back to voice under the finger
+                  // before the click lands.
+                  onPointerDown={(e) => e.preventDefault()}
                   onClick={submit}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -235,19 +301,7 @@ export default function PromptBox({
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
                 >
-                  {canRecord ? (
-                    <motion.button
-                      type="button"
-                      className="bv-prompt-mic"
-                      aria-label="Record"
-                      onClick={() => setRecording(true)}
-                      whileTap={{ scale: 0.92 }}
-                    >
-                      <Mic size={22} strokeWidth={1.8} />
-                    </motion.button>
-                  ) : (
-                    <Mic size={22} strokeWidth={1.8} />
-                  )}
+                  {!plain && mic}
                   <motion.button
                     type="button"
                     className="bv-prompt-voice"
