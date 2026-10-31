@@ -252,10 +252,11 @@ export default function VenueDetailScreen({
 
       {/* ---- dock: assistant + the things you can do here ---- */}
       <div className="bv-vd-dock">
-        {/* Spread first, then override: the launcher supplies the map's
-            rotating placeholders, and here the prompt is about this venue. */}
+        {/* Spread first, then override: not a tab, so it keeps the plus and
+            asks about this venue rather than searching. */}
         <PromptBox
           {...promptProps}
+          showAdd
           placeholders={['What do you recommend here']}
           placeholder="What do you recommend here"
         />

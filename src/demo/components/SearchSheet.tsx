@@ -23,10 +23,13 @@ import PromptBox from './PromptBox'
 import IosKeyboard from './IosKeyboard'
 import SearchTabs, { type SearchTabId } from './SearchTabs'
 import SearchHitRow from './SearchHitRow'
+import PromoBanner from './PromoBanner'
+import { SEARCH_BANNER } from '../data/homeListDemo'
 import PersonRow, { type FollowState } from './PersonRow'
 import { useDemoUser } from './DemoIdentity'
 import {
   SEARCH_HITS,
+  matchesHit,
   SEARCH_OTHER,
   SEARCH_PEOPLE,
   SEARCH_RECENT,
@@ -81,6 +84,9 @@ export default function SearchSheet({
   // False: the full-page search. True once a search has run: a sheet over the
   // map, which is showing the results.
   const [committed, setCommitted] = useState(false)
+  // The results sheet, dragged up by its top to fill the screen.
+  const [expanded, setExpanded] = useState(false)
+  const dragFrom = useRef<number | null>(null)
   const [tabPicked, setTab] = useState<SearchTabId>('all')
   const [recent, setRecent] = useState(SEARCH_RECENT)
   const [recentOpen, setRecentOpen] = useState(false)
@@ -103,7 +109,7 @@ export default function SearchSheet({
 
   const q = query.trim().toLowerCase()
   const hasQuery = q.length > 0
-  const hits = SEARCH_HITS.filter((h) => h.name.toLowerCase().includes(q))
+  const hits = SEARCH_HITS.filter((h) => matchesHit(h, q))
   // Only people whose name matches — a restaurant query shows no faces.
   const matchedPeople = people.filter((p) => p.name.toLowerCase().includes(q))
   const hasResults = hits.length > 0 || matchedPeople.length > 0
@@ -139,7 +145,8 @@ export default function SearchSheet({
     if (!v) return
     setQuery(v)
     setCommitted(true)
-    onResults?.(SEARCH_HITS.filter((h) => h.name.toLowerCase().includes(v.toLowerCase())))
+    setExpanded(false)
+    onResults?.(SEARCH_HITS.filter((h) => matchesHit(h, v)))
     setTab('all')
     setPeopleOpen(false)
     setRecent((r) => [v, ...r.filter((x) => x.toLowerCase() !== v.toLowerCase())])
@@ -164,7 +171,7 @@ export default function SearchSheet({
 
   return (
     <motion.div
-      className={`bv-search-sheet${committed ? '' : ' full'}`}
+      className={`bv-search-sheet${committed ? (expanded ? ' expanded' : '') : ' full'}`}
       initial={{ y: '100%' }}
       animate={{ y: 0 }}
       exit={{ y: '100%' }}
@@ -181,7 +188,27 @@ export default function SearchSheet({
     >
       <span className="bv-search-handle" />
 
-      <div className="bv-search-head">
+      {/* The top of the results sheet is its grab area: drag up to expand
+          it to the top, down to drop it back. Snaps on release rather than
+          following the finger. Buttons and the field keep their taps. */}
+      <div
+        className="bv-search-head"
+        onPointerDown={(e) => {
+          if (!committed || (e.target as HTMLElement).closest('button, input')) return
+          dragFrom.current = e.clientY
+          e.currentTarget.setPointerCapture(e.pointerId)
+        }}
+        onPointerUp={(e) => {
+          if (dragFrom.current === null) return
+          const dy = e.clientY - dragFrom.current
+          dragFrom.current = null
+          if (dy < -24) setExpanded(true)
+          else if (dy > 24) setExpanded(false)
+        }}
+        onPointerCancel={() => {
+          dragFrom.current = null
+        }}
+      >
         <div className="bv-search-ai">
           <span className="bv-search-ai-mark">
             <span className="bv-search-wordmark" role="img" aria-label="bravo AI" />
@@ -283,6 +310,11 @@ export default function SearchSheet({
                 </span>
               </button>
             )}
+
+            {/* Once the search has run, the limited-time offer leads the
+                results. Not while typing — it would push them down under the
+                keyboard. */}
+            {committed && hasResults && <PromoBanner banner={SEARCH_BANNER} />}
 
             {hasResults && (
               <SearchTabs

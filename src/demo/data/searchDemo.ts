@@ -10,6 +10,7 @@ import { PERSON, pickPeople } from './people'
 import type { FollowState } from '../components/PersonRow'
 import haidilao from '../assets/search/haidilao.webp'
 import cafe from '../assets/social/venue-amcafe.jpg'
+import dimsum from '../assets/thumb-dimsum.jpg'
 
 // Happy leads so a "happy" query still returns a person by name; the rest
 // come from offset 6 — clear of the other pool draws (profileDemo.ts uses
@@ -43,7 +44,7 @@ export type SearchHit = {
   lat: number
   photo: string
   cashback: string
-  /** The grey tag under the meta — "150+ transactions". */
+  /** The grey tag under the meta — see cardTag. */
   tag: string
   /** Adds the yellow "Pickup order available" tag beside it. */
   pickup?: boolean
@@ -52,6 +53,31 @@ export type SearchHit = {
   note: string
   /** The note is a diner's own words — shown in quotes beside their face. */
   quote?: boolean
+  /** Extra search terms — cuisine and area in Chinese, e.g. "中餐 列治文". */
+  keywords?: string
+}
+
+/**
+ * The grey tag on a result card. Transactions only earn the tag once there
+ * are 100 or more — "100+ transactions" is social proof; "12 transactions"
+ * is not. Below that the card shows something useful about the place.
+ */
+export function cardTag(transactions: number, label: string) {
+  return transactions >= 100 ? '100+ transactions' : label
+}
+
+/**
+ * Every word typed has to appear in the name, the meta (cuisine • area) or
+ * the keywords — so "列治文 中餐" finds Chinese places in Richmond, and
+ * "hotpot burnaby" finds the Burnaby hotpot.
+ */
+export function matchesHit(hit: SearchHit, query: string) {
+  const hay = `${hit.name} ${hit.meta} ${hit.keywords ?? ''}`.toLowerCase()
+  return query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((term) => hay.includes(term))
 }
 
 // The five follow states Figma shows across 19380:5756 and 19559:167807.
@@ -71,6 +97,7 @@ const faces = (...ids: (keyof typeof PERSON)[]) => ids.map((id) => PERSON[id].av
 export const SEARCH_HITS: SearchHit[] = [
   {
     id: 'hdl-burnaby',
+    keywords: '火锅 本拿比',
     name: 'Haidilao Burnaby',
     meta: 'Hotpot • Burnaby • 6.7km',
     distance: '6.7 km',
@@ -78,13 +105,14 @@ export const SEARCH_HITS: SearchHit[] = [
     lat: 49.2276,
     photo: haidilao,
     cashback: '5%',
-    tag: '150+ transactions',
+    tag: cardTag(150, 'Open until 2am'),
     pickup: true,
     savers: faces('jason', 'ken', 'cathy'),
     note: 'Jason and 35 others saved it',
   },
   {
     id: 'hdl-richmond',
+    keywords: '火锅 列治文',
     name: 'Haidilao Richmond',
     meta: 'Hotpot • Richmond • 3.2km',
     distance: '3.2 km',
@@ -92,12 +120,13 @@ export const SEARCH_HITS: SearchHit[] = [
     lat: 49.1695,
     photo: haidilao,
     cashback: '5%',
-    tag: '150+ transactions',
+    tag: cardTag(150, 'Open until 2am'),
     savers: faces('ken', 'emma', 'tom'),
     note: 'Your friend Ken and 35 others saved it',
   },
   {
     id: 'hdl-vancouver',
+    keywords: '火锅 温哥华',
     name: 'Haidilao Vancouver',
     meta: 'Hotpot • Vancouver • 9.1km',
     distance: '9.1 km',
@@ -105,13 +134,14 @@ export const SEARCH_HITS: SearchHit[] = [
     lat: 49.284,
     photo: haidilao,
     cashback: '5%',
-    tag: '150+ transactions',
+    tag: cardTag(150, 'Open until 2am'),
     savers: faces('emma'),
     note: 'The customer service is great, like the dance here',
     quote: true,
   },
   {
     id: 'happy-lamb',
+    keywords: '火锅 列治文',
     name: 'Happy Lamb Hot Pot Richmond',
     meta: 'Hotpot • Richmond • 3.7km',
     distance: '3.7 km',
@@ -119,13 +149,14 @@ export const SEARCH_HITS: SearchHit[] = [
     lat: 49.1838,
     photo: haidilao,
     cashback: '3%',
-    tag: '80+ transactions',
+    tag: cardTag(80, 'All-you-can-eat'),
     pickup: true,
     savers: faces('tom', 'yvon', 'cathy'),
     note: 'Tom and 12 others saved it',
   },
   {
     id: 'happy-day',
+    keywords: '咖啡 列治文',
     name: 'Happy Day Cafe Richmond',
     meta: 'Cafe • Richmond • 3.7km',
     distance: '3.7 km',
@@ -133,9 +164,55 @@ export const SEARCH_HITS: SearchHit[] = [
     lat: 49.1785,
     photo: cafe,
     cashback: '4%',
-    tag: '60+ transactions',
+    tag: cardTag(60, 'Great for brunch'),
     savers: faces('yvon', 'jason', 'ken'),
     note: 'Your friend Yvon and 8 others saved it',
+  },
+  // The "列治文 中餐" (Richmond, Chinese food) demo — these three, all
+  // tagged Chinese • Richmond.
+  {
+    id: 'jade-garden',
+    keywords: '中餐 点心 粤菜 列治文 dim sum cantonese',
+    name: 'Jade Garden Dim Sum',
+    meta: 'Chinese • Richmond • 1.1km',
+    distance: '1.1 km',
+    lng: -123.136,
+    lat: 49.1745,
+    photo: dimsum,
+    cashback: '6%',
+    tag: cardTag(300, 'Dim sum all day'),
+    pickup: true,
+    savers: faces('ken', 'emma', 'tom'),
+    note: 'Your friend Ken and 20 others saved it',
+  },
+  {
+    id: 'szechuan-house',
+    keywords: '中餐 川菜 列治文 szechuan sichuan',
+    name: 'Szechuan House',
+    meta: 'Chinese • Richmond • 2.3km',
+    distance: '2.3 km',
+    lng: -123.129,
+    lat: 49.1715,
+    photo: haidilao,
+    cashback: '5%',
+    tag: cardTag(95, 'Spicy favourites'),
+    savers: faces('jason', 'cathy', 'yvon'),
+    note: 'Jason and 18 others saved it',
+  },
+  {
+    id: 'lucky-wok',
+    keywords: '中餐 面 列治文 noodles wonton',
+    name: 'Lucky Wok Kitchen',
+    meta: 'Chinese • Richmond • 0.9km',
+    distance: '0.9 km',
+    lng: -123.1395,
+    lat: 49.181,
+    photo: dimsum,
+    cashback: '4%',
+    tag: cardTag(90, 'Hand-pulled noodles'),
+    savers: faces('emma'),
+    note: 'The wonton noodles taste like home',
+    quote: true,
   },
 ]
 

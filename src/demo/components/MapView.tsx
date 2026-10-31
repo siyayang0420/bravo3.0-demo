@@ -93,6 +93,11 @@ const RASTER_FALLBACK: maplibregl.StyleSpecification = {
  */
 const VECTOR_TIMEOUT_MS = 8000
 
+// Below this zoom the pins fold down to orange dots (see .bv-map.zoomed-out),
+// the way corner's map does — labels only once you are close enough to read
+// them. Home opens at 12.9, so its first view keeps the full pins.
+const DOT_ZOOM = 12.4
+
 export type MapPlace = {
   id: string
   name: string
@@ -180,6 +185,10 @@ export default function MapView({
     })
     m.touchZoomRotate.disableRotation()
     m.on('click', () => handlers.current.onDeselect?.())
+    const syncZoom = () =>
+      container.current?.classList.toggle('zoomed-out', m.getZoom() < DOT_ZOOM)
+    m.on('zoom', syncZoom)
+    syncZoom()
 
     // Vector or nothing is not a choice worth offering in a demo: if the style
     // has not finished coming up by now, it never will here, so swap in the

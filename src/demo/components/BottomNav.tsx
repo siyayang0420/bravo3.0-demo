@@ -1,17 +1,19 @@
 // Component — bottom nav row, eyeballed from the Home frame (20303:28671).
 //
 // That frame's nav is part of a flattened screenshot, not layers, so the
-// icons are read off the picture: map, compass, scan, wallet, then your
+// icons are read off the picture: map (now a house), compass, scan, wallet, then your
 // avatar. The destinations behind them are the demo's existing tabs —
 // compass is the friends feed (discovery), wallet is Rewards — and scan has
 // no screen yet, so it opens the "design in progress" placeholder.
-import { Map, Compass, ScanQrCode, WalletCards } from 'lucide-react'
+import { House, Compass, ScanQrCode, WalletCards } from 'lucide-react'
 import { BOBBY } from '../data/people'
 
 export type NavId = 'map' | 'friends' | 'scan' | 'rewards' | 'profile'
 
 const ITEMS: { id: NavId; icon: React.ReactNode; label: string }[] = [
-  { id: 'map', icon: <Map size={24} strokeWidth={1.9} />, label: 'Map' },
+  // Home opens on the restaurant list now, so a house rather than a map; the
+  // id stays 'map' so the tabs wired to it keep working.
+  { id: 'map', icon: <House size={24} strokeWidth={1.9} />, label: 'Home' },
   { id: 'friends', icon: <Compass size={24} strokeWidth={1.9} />, label: 'Discover' },
   { id: 'scan', icon: <ScanQrCode size={24} strokeWidth={1.9} />, label: 'Scan & Pay' },
   { id: 'rewards', icon: <WalletCards size={24} strokeWidth={1.9} />, label: 'Wallet' },

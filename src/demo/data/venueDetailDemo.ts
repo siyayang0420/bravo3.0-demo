@@ -6,6 +6,7 @@
 // here as on the map card that got you in.
 import { type AchievementLevel } from '../components/AchievementLabel'
 import { levelFor, PERSON, pickPeople } from './people'
+import { type SearchHit } from './searchDemo'
 import postPhoto from '../assets/social/post-photo.jpg'
 // Same-vibe cards want PHOTOGRAPHS. The merchant-1..4 files are brand logos —
 // circular marks on their own backgrounds — so three of them side by side
@@ -132,4 +133,24 @@ const friendPost = ELLIPSIS_DETAIL.posts.find((p) => p.id === FRIEND_POST_ID)!
 export const ELLIPSIS_FRIEND_COMMENT = {
   avatar: friendPost.avatar,
   text: friendPost.text,
+}
+
+/**
+ * A restaurant card's detail page. The demo has one fully written venue
+ * (Ellipsis), so every other place borrows its posts, savers and same-vibe
+ * row, with the card's own name, photo, cuisine, cashback and distance on top.
+ */
+export function detailForHit(hit: SearchHit): VenueDetail {
+  const [cuisine, area = 'Richmond'] = hit.meta.split(' • ')
+  return {
+    ...ELLIPSIS_DETAIL,
+    title: hit.name,
+    logo: hit.photo,
+    meta: `${cuisine} • $$ • ${hit.distance.replace(' ', '')}`,
+    address: `${area}, BC`,
+    description: `A ${cuisine} favourite in ${area}. Come hungry, and earn ${hit.cashback} back every time you pay with Bravo.`,
+    photos: [hit.photo, ELLIPSIS_DETAIL.photos[0]],
+    offer: { ...ELLIPSIS_DETAIL.offer, rate: hit.cashback },
+    distance: hit.distance.replace(' ', ''),
+  }
 }

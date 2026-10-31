@@ -2,22 +2,14 @@ import { useState, type ComponentType } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import NavBar from './components/NavBar'
 import Sidebar, { type SectionId } from './components/Sidebar'
-import WhatChanged from './sections/WhatChanged'
 import LiveDemo from './sections/LiveDemo'
 import SocialDemo from './sections/SocialDemo'
 import WebDemo from './sections/WebDemo'
-import DesignSystem from './sections/DesignSystem'
-import Rationale from './sections/Rationale'
-import FlutterNotes from './sections/FlutterNotes'
 
 const SECTIONS: Record<SectionId, ComponentType> = {
-  changes: WhatChanged,
   demo: LiveDemo,
   social: SocialDemo,
   web: WebDemo,
-  system: DesignSystem,
-  rationale: Rationale,
-  flutter: FlutterNotes,
 }
 
 export default function App() {

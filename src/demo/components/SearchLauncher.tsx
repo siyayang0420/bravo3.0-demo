@@ -12,16 +12,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import SearchSheet, { SEARCH_INPUT_ID } from './SearchSheet'
 import AiChatScreen from '../screens/AiChatScreen'
 import AiVoiceScreen from '../screens/AiVoiceScreen'
-import { PROMPTS, type PromptContext } from '../data/promptDemo'
+import { type PromptContext } from '../data/promptDemo'
 import { type SearchHit } from '../data/searchDemo'
 
 /**
- * @param context Which screen the dock is sitting on. Picks the rotating
- *   placeholders and the sheet's starter chips — the assistant is useful for
- *   different things on the map, in the feed, and on your own profile.
+ * @param context Which screen the dock is sitting on. Every tab now shows the
+ *   same search bar, so nothing reads it today; kept so call sites still say
+ *   where they are.
  */
 export default function useSearchLauncher(context: PromptContext = 'map') {
-  const prompts = PROMPTS[context]
   const [searchOpen, setSearchOpen] = useState(false)
   const [askQuery, setAskQuery] = useState('')
   const [voiceOpen, setVoiceOpen] = useState(false)
@@ -50,9 +49,12 @@ export default function useSearchLauncher(context: PromptContext = 'map') {
   // uses; these props make its field inert-but-tappable (onActivate opens the
   // sheet) while arming the mic (voiceTranscript) and the voice orb
   // (onVoiceMode). A completed recording sends straight to the AI thread.
+  // Every tab's dock is the same search bar: the ring box without its plus,
+  // one static placeholder naming what it searches.
   const promptProps = {
     interactive: false,
-    placeholders: prompts.placeholders,
+    showAdd: false,
+    placeholder: 'Search restaurants, people and more',
     voiceTranscript: 'Happy',
     onVoiceMode: () => setVoiceOpen(true),
     onActivate: openSearch,

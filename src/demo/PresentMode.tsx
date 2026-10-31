@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import PhoneFrame, { FRAME_WIDTH, FRAME_HEIGHT } from './PhoneFrame'
+import { type ViewToggleStyle } from './screens/HomeScreen'
 import BravoApp from './BravoApp'
 import { DEMO_USERS, type DemoUser } from './data/profileDemo'
 import { type UnlockKind } from './data/unlockDemo'
@@ -131,12 +132,14 @@ export default function PresentMode({
   hasPromotion = false,
   unlock = 'none',
   user = DEMO_USERS[0],
+  viewToggle,
 }: {
   open: boolean
   onClose: () => void
   hasPromotion?: boolean
   unlock?: UnlockKind
   user?: DemoUser
+  viewToggle?: ViewToggleStyle
 }) {
   const compact = useIsCompact()
   const standalone = useStandalone()
@@ -249,11 +252,21 @@ export default function PresentMode({
                   ['--bv-kb-open' as string]: keyboardInset > 0 ? '1' : '0',
                 }}
               >
-                <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
+                <BravoApp
+                  hasPromotion={hasPromotion}
+                  unlock={unlock}
+                  user={user}
+                  viewToggle={viewToggle}
+                />
               </div>
             ) : (
               <PhoneFrame scale={scale}>
-                <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
+                <BravoApp
+                  hasPromotion={hasPromotion}
+                  unlock={unlock}
+                  user={user}
+                  viewToggle={viewToggle}
+                />
               </PhoneFrame>
             )}
           </motion.div>
