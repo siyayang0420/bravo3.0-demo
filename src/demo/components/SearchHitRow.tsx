@@ -8,14 +8,25 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SaveGlyph from './SaveGlyph'
+import useDragScroll from '../hooks/useDragScroll'
 import shoppingBag from '../assets/search/shopping-bag.svg'
 import { type SearchHit } from '../data/searchDemo'
 
-export default function SearchHitRow({ hit }: { hit: SearchHit }) {
+export default function SearchHitRow({
+  hit,
+  onOpen,
+}: {
+  hit: SearchHit
+  /** Tapping the card — opens the store's detail page. */
+  onOpen?: () => void
+}) {
   const [saved, setSaved] = useState(false)
+  // The tags stay on one line; when they outgrow the card they scroll
+  // sideways (touch, trackpad, or a mouse drag on the review site).
+  const tagRail = useDragScroll<HTMLDivElement>()
 
   return (
-    <article className="bv-hit">
+    <article className={`bv-hit${onOpen ? ' openable' : ''}`} onClick={onOpen}>
       <div className="bv-hit-photo">
         <img src={hit.photo} alt="" />
         <span className="bv-hit-rate">{hit.cashback}</span>
@@ -26,7 +37,7 @@ export default function SearchHitRow({ hit }: { hit: SearchHit }) {
           <h3 className="bv-hit-name">{hit.name}</h3>
           <p className="bv-hit-meta">{hit.meta}</p>
         </div>
-        <div className="bv-hit-tags">
+        <div className="bv-hit-tags" ref={tagRail}>
           <span className="bv-hit-tag">{hit.tag}</span>
           {hit.pickup && (
             <span className="bv-hit-tag pickup">
@@ -36,11 +47,14 @@ export default function SearchHitRow({ hit }: { hit: SearchHit }) {
           )}
         </div>
         <div className="bv-hit-savers">
-          <span className="bv-hit-faces">
-            {hit.savers.map((src, i) => (
-              <span key={i} style={{ backgroundImage: `url(${src})` }} />
-            ))}
-          </span>
+          {/* No faces = a reason line ("Close to you…"), text only. */}
+          {hit.savers.length > 0 && (
+            <span className="bv-hit-faces">
+              {hit.savers.map((src, i) => (
+                <span key={i} style={{ backgroundImage: `url(${src})` }} />
+              ))}
+            </span>
+          )}
           <span className="bv-hit-note">{hit.quote ? `“${hit.note}”` : hit.note}</span>
         </div>
       </div>
@@ -50,7 +64,11 @@ export default function SearchHitRow({ hit }: { hit: SearchHit }) {
         className="bv-hit-save"
         aria-label={saved ? 'Saved' : 'Save'}
         aria-pressed={saved}
-        onClick={() => setSaved((s) => !s)}
+        // Saving is its own action — it must not also open the store.
+        onClick={(e) => {
+          e.stopPropagation()
+          setSaved((s) => !s)
+        }}
         whileTap={{ scale: 0.86 }}
         transition={{ type: 'spring', stiffness: 520, damping: 24 }}
       >

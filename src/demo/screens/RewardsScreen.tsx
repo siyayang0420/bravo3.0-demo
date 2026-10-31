@@ -165,13 +165,7 @@ export default function RewardsScreen({
       >
         <div className="bv-dock-row">
           <div className="bv-dock-search-trigger">
-            {/* Spread first, then override: this tab's prompt is about people,
-                not places. */}
-            <PromptBox
-              {...promptProps}
-              placeholders={['Look for a friend ...']}
-              placeholder="Look for a friend ..."
-            />
+            <PromptBox {...promptProps} />
           </div>
         </div>
         <div className="bv-nav-slot">

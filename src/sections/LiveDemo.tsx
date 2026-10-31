@@ -6,6 +6,7 @@ import { Maximize2 } from 'lucide-react'
 import useStandalone from '../hooks/useStandalone'
 import { DEMO_USERS, type DemoUserId } from '../demo/data/profileDemo'
 import { type UnlockKind } from '../demo/data/unlockDemo'
+import { type ViewToggleStyle } from '../demo/screens/HomeScreen'
 
 // Demo-state tweaker. Not product UI — a control panel so the review can
 // drive the demo into states that have designs, without a backend. It is
@@ -28,6 +29,12 @@ const HOME_STATES = [
 ] as const
 
 type HomeState = (typeof HOME_STATES)[number]['id']
+
+// The two List/Map toggle placements under review, side by side.
+const VIEW_TOGGLES: readonly { id: ViewToggleStyle; label: string; hint: string }[] = [
+  { id: 'icons', label: 'Icons', hint: 'List | Map icon switch at the end of the filter row.' },
+  { id: 'floating', label: 'Floating', hint: 'One pill above the search bar in both views.' },
+]
 
 // The three "you just unlocked something" sheets (Figma 20016:12777,
 // 20016:12891, 20017:13218). Nothing in the app fires these yet — they land
@@ -128,6 +135,7 @@ export default function LiveDemo() {
   const [homeState, setHomeState] = useState<HomeState>('default')
   const [userId, setUserId] = useState<DemoUserId>('bobby')
   const [unlock, setUnlock] = useState<UnlockKind>('none')
+  const [viewToggle, setViewToggle] = useState<ViewToggleStyle>('icons')
   const phoneScale = useFitScale()
 
   const user = DEMO_USERS.find((u) => u.id === userId)!
@@ -171,12 +179,23 @@ export default function LiveDemo() {
             value={unlock}
             onChange={setUnlock}
           />
+          <ControlRow
+            label="Map toggle"
+            options={VIEW_TOGGLES}
+            value={viewToggle}
+            onChange={setViewToggle}
+          />
         </div>
 
         {/* The phone surface stays free for the app's own taps —
             full screen is entered from the button below only. */}
         <PhoneFrame scale={phoneScale}>
-          <BravoApp hasPromotion={hasPromotion} unlock={unlock} user={user} />
+          <BravoApp
+            hasPromotion={hasPromotion}
+            unlock={unlock}
+            user={user}
+            viewToggle={viewToggle}
+          />
         </PhoneFrame>
         <button className="btn btn-secondary" onClick={() => setPresenting(true)}>
           <Maximize2 size={14} />
@@ -190,6 +209,7 @@ export default function LiveDemo() {
         hasPromotion={hasPromotion}
         unlock={unlock}
         user={user}
+        viewToggle={viewToggle}
       />
     </div>
   )

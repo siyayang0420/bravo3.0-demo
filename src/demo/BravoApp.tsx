@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Signal, Wifi, BatteryFull } from 'lucide-react'
-import HomeScreen from './screens/HomeScreen'
+import { Signal, Wifi, BatteryFull, ArrowLeft } from 'lucide-react'
+import HomeScreen, { type ViewToggleStyle } from './screens/HomeScreen'
 import SocialScreen from './screens/SocialScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import RewardsScreen from './screens/RewardsScreen'
@@ -22,12 +22,13 @@ const TAB_LABELS: Record<NavId, string> = {
 }
 
 /** Tabs with an implemented design — the rest show the placeholder. */
-const BUILT_TABS: NavId[] = ['map', 'friends', 'rewards', 'profile']
+const BUILT_TABS: NavId[] = ['map', 'friends', 'scan', 'rewards', 'profile']
 
 export default function BravoApp({
   hasPromotion = false,
   unlock = 'none',
   user = DEMO_USERS[0],
+  viewToggle = 'icons',
 }: {
   /** Demo state toggled from the review site — see LiveDemo. */
   hasPromotion?: boolean
@@ -38,6 +39,8 @@ export default function BravoApp({
   unlock?: UnlockKind
   /** Who you are signed in as — drives your own profile. */
   user?: DemoUser
+  /** How Home swaps between its list and map — see HomeScreen. */
+  viewToggle?: ViewToggleStyle
 }) {
   const [tab, setTab] = useState<NavId>('map')
   // Dismissing puts the sheet away without touching the tweaker, so the
@@ -95,6 +98,20 @@ export default function BravoApp({
             />
           ) : tab === 'friends' ? (
             <SocialScreen active={tab} onNavigate={setTab} intro={intro} avatar={user.avatar} />
+          ) : tab === 'scan' ? (
+            // Pay — a plain white page that says what it is. No search bar
+            // or nav, so the back arrow is the way out, to the map.
+            <div className="bv-pay-screen">
+              <button
+                type="button"
+                className="bv-pay-back"
+                aria-label="Back"
+                onClick={() => setTab('map')}
+              >
+                <ArrowLeft size={20} strokeWidth={1.9} />
+              </button>
+              <h2 className="bv-pay-title">{TAB_LABELS.scan}</h2>
+            </div>
           ) : tab === 'rewards' ? (
             <RewardsScreen profile={me} active={tab} onNavigate={setTab} intro={intro} />
           ) : (
@@ -104,6 +121,7 @@ export default function BravoApp({
               hasPromotion={hasPromotion}
               intro={intro}
               avatar={user.avatar}
+              viewToggle={viewToggle}
             />
           )}
 

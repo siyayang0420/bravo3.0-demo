@@ -256,17 +256,14 @@
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-/* restaurant pin — white pill, round photo on the left, name + meta.
+/* restaurant pin — the photo in a white frame, with the name + meta sitting
+   straight on the map like a map label (a white halo keeps them legible).
    Anchored at its left edge so the photo sits on the location. */
 .bv-map-pin {
   display: flex;
   align-items: center;
-  gap: 8px;
-  max-width: 210px;
-  padding: 5px 12px 5px 5px;
-  background: var(--bv-white);
-  border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  gap: 6px;
+  max-width: 190px;
   cursor: pointer;
   user-select: none;
 }
@@ -275,8 +272,58 @@
   flex: 0 0 34px;
   width: 34px;
   height: 34px;
+  border: 4px solid var(--bv-white);
   border-radius: 999px;
   background: #e6e6e6 50% / cover no-repeat;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: content-box;
+}
+
+/* Zoomed out, each pin folds to an orange dot: the photo shrinks into it and
+   the label slides shut. `!important` because the photo arrives as an inline
+   background-image. */
+.bv-map-pin,
+.bv-map-pin-photo,
+.bv-map-pin-text {
+  transition:
+    gap 0.2s ease,
+    width 0.2s ease,
+    height 0.2s ease,
+    flex-basis 0.2s ease,
+    border-width 0.2s ease,
+    max-width 0.2s ease,
+    opacity 0.15s ease;
+}
+
+.bv-map-pin-text {
+  max-width: 150px;
+}
+
+.bv-map.zoomed-out .bv-map-pin {
+  gap: 0;
+}
+
+.bv-map.zoomed-out .bv-map-pin-photo {
+  flex-basis: 10px;
+  width: 10px;
+  height: 10px;
+  border-width: 2px;
+  background-image: none !important;
+  background-color: var(--bv-orange-bright);
+}
+
+.bv-map.zoomed-out .bv-map-pin-text {
+  max-width: 0;
+  opacity: 0;
+}
+
+.bv-map-pin-text {
+  text-shadow:
+    -1px -1px 0 var(--bv-white),
+    1px -1px 0 var(--bv-white),
+    -1px 1px 0 var(--bv-white),
+    1px 1px 0 var(--bv-white),
+    0 0 3px var(--bv-white);
 }
 
 .bv-map-pin-text {
@@ -296,8 +343,8 @@
 }
 
 .bv-map-pin-meta {
-  font-size: 11px;
-  color: #6b6b6b;
+  font-size: 12px;
+  color: var(--bv-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -503,8 +550,9 @@ button.bv-balance-pill:active {
   left: 6px;
   padding: 6.25px 12.5px;
   border-radius: var(--bv-radius-full);
-  background: var(--bv-black);
-  color: var(--bv-white);
+  /* Same yellow as the list card's rate badge (.bv-hit-rate). */
+  background: #fee160;
+  color: #202020;
   font-size: 18px;
   font-weight: 700;
   line-height: 1.2;
@@ -5035,7 +5083,9 @@ button.bv-balance-pill:active {
 .bv-nav-slot {
   width: 100%;
   height: 27.6px;
-  margin-top: var(--bv-space-3);
+  /* 20 — the same bar-to-nav gap as Home's dock, so the search bar sits at
+     one height on every tab. */
+  margin-top: 20px;
   overflow: hidden;
   perspective: 320px;
   perspective-origin: 50% 0%;
@@ -5050,14 +5100,14 @@ button.bv-balance-pill:active {
     opacity 0.22s ease-out;
 }
 
-.bv-dock-social.nav-hidden .bv-nav-slot {
+.bv-dock.nav-hidden .bv-nav-slot {
   height: 0;
   margin-top: 0;
 }
 
 /* -90deg swings the lower edge away from the viewer (−Z), so the face
    turns out of sight instead of toward you. */
-.bv-dock-social.nav-hidden .bv-nav-slot .bv-bottom-nav {
+.bv-dock.nav-hidden .bv-nav-slot .bv-bottom-nav {
   transform: rotateX(-90deg);
   opacity: 0;
 }
@@ -7109,7 +7159,8 @@ button.bv-balance-pill:active {
 
 .bv-bottom-stack > .bv-dock {
   margin-top: -3px;
-  gap: 20px;
+  /* The bar-to-nav 20 lives on .bv-nav-slot, shared with the other tabs. */
+  gap: 0;
 }
 
 .bv-bottom-stack .bv-dock-row {
@@ -7154,23 +7205,6 @@ button.bv-balance-pill:active {
 
 .bv-prompt-back img {
   display: block;
-}
-
-/* Sliders button beside the bar — same white disc and shadow as the bar. */
-.bv-dock-filter {
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  border-radius: var(--bv-radius-full);
-  background: var(--bv-white);
-  color: var(--bv-black);
-  filter: drop-shadow(0 0 12.5px rgba(0, 0, 0, 0.15));
-  cursor: pointer;
 }
 
 /* ---- Home: category cards (eyeballed from the flattened frame) ---- */
@@ -7572,7 +7606,9 @@ button.bv-balance-pill:active {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  height: 85px;
+  /* 85 is the photo; a card whose tags wrap grows instead of spilling into
+     the next one. */
+  min-height: 85px;
 }
 
 .bv-hit-photo {
@@ -7714,8 +7750,19 @@ button.bv-balance-pill:active {
    on venues that take pickup orders. */
 .bv-hit-tags {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  /* One line, always — sideways scroll when the tags outgrow the card. */
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-hit-tags::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-hit-tags > .bv-hit-tag {
+  flex-shrink: 0;
 }
 /* Figma 20349:21032 — shopping bag + label on warning-100. */
 .bv-hit-tag.pickup {
@@ -7737,4 +7784,398 @@ button.bv-balance-pill:active {
 
 .bv-ai-voice .bv-ai-disclaimer {
   margin-top: var(--bv-space-4);
+}
+
+/* =====================================================================
+   Home list view — the default Home. Result cards (SearchHitRow) on white,
+   laid over the map; the top bar and bottom stack float over the list the
+   same way they float over the map.
+   ===================================================================== */
+.bv-home-list {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--bv-white);
+}
+
+/* White behind the status bar and top bar, so content scrolls under them
+   cleanly — fading out over its last 24px, the same soft edge the dock has
+   below. */
+.bv-home-list::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: calc(var(--bv-statusbar-h) + 52px + 24px);
+  /* The stuck filter row sits above this (z-index 4) on its own solid white,
+     so the fade only ever shows over content, never over the chips. */
+  background: linear-gradient(var(--bv-white) calc(100% - 24px), rgba(255, 255, 255, 0));
+  transition: height 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* Scrolled down: the top bar has folded away, so the strip shrinks to the
+   status bar and the filters stick right under it. */
+.bv-home-list.bars-hidden::before {
+  height: calc(var(--bv-statusbar-h) + 24px);
+}
+
+.bv-home-list.bars-hidden .bv-home-list-filters {
+  top: -56px;
+}
+
+.bv-home-list-scroll {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Clears the top bar above and the search bar + nav below. */
+  padding: calc(var(--bv-statusbar-h) + 56px) var(--bv-space-4) 170px;
+}
+
+.bv-home-list-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Banner — title, subtitle, button on the left; image on the right. */
+.bv-home-banner {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--bv-neutral-100);
+}
+
+.bv-home-banner-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.bv-home-banner-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--bv-text-primary);
+}
+
+.bv-home-banner-sub {
+  /* At least 8 above the button, which otherwise sits on the bottom edge. */
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--bv-neutral-500);
+}
+
+.bv-home-banner-cta {
+  /* Pinned to the banner's bottom-left, level with the image's bottom. */
+  margin-top: auto;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-black);
+  color: var(--bv-white);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.bv-home-banner-img {
+  flex: 0 0 96px;
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Filter chips + the Map button, one line. Sticks under the top bar once the
+   banner has scrolled away; edge to edge so the chips scroll sideways from
+   the screen's edge. The button stays pinned right. */
+.bv-home-list-filters {
+  position: sticky;
+  /* Sticky offsets count from inside the scroller's padding (statusbar + 56),
+     so -4 lands the row at statusbar + 52 — just under the top bar. */
+  top: -4px;
+  z-index: 4;
+  /* Slides up into the top bar's place as it folds away — same timing. */
+  transition: top 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* 16 below: the same gap as between cards, and room for the fade under
+     the row, which then only ever covers this gap while the list is at rest. */
+  margin: 0 calc(-1 * var(--bv-space-4)) 16px;
+  padding: 4px var(--bv-space-4) 8px 0;
+  background: var(--bv-white);
+}
+
+/* Stuck, the cards slide under the row through a soft white fade rather than
+   a hard edge — the same treatment as the top bar and the dock. */
+.bv-home-list-filters::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: linear-gradient(var(--bv-white), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.bv-map-filters .bv-home-list-filters::after {
+  content: none;
+}
+
+.bv-home-list-filters .bv-filter-row {
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+  /* Room for the chips' shadow, which overflow-x would otherwise clip. */
+  padding-block: 4px;
+}
+
+/* Over the list the floating cards need a floor: white fades in behind the
+   category row and dock. */
+.bv-bottom-stack.list::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: linear-gradient(rgba(255, 255, 255, 0), var(--bv-white) 32px);
+  pointer-events: none;
+}
+
+/* List/Map toggle, with the recentre button beside it in map view. */
+.bv-view-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 18px;
+}
+
+.bv-view-row .bv-map-locate {
+  margin-right: 0;
+  align-self: auto;
+}
+
+.bv-view-toggle {
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-black);
+  color: var(--bv-white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+/* Results sheet dragged up: stands to the top, just under the status bar. */
+.bv-search-sheet.expanded {
+  min-height: calc(100% - var(--bv-statusbar-h) - 8px);
+  max-height: calc(100% - var(--bv-statusbar-h) - 8px);
+}
+
+/* The head is the results sheet's grab area. The handle is only a picture of
+   one, so presses fall through it to the head. */
+.bv-search-handle {
+  pointer-events: none;
+}
+
+.bv-search-sheet:not(.full) .bv-search-head {
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Home list's reason line ("Close to you…") reads at 12, not the 10 of the
+   search card's "… saved it" note beside faces. */
+.bv-home-list .bv-hit-note {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* Dock search bars on every tab: a placeholder longer than the bar ends in
+   "…" instead of being cut mid-word. */
+.bv-prompt-input {
+  text-overflow: ellipsis;
+}
+
+/* ---- Pay tab: placeholder page — white, its name, a way back. ---- */
+.bv-pay-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bv-white);
+}
+
+.bv-pay-back {
+  position: absolute;
+  top: calc(var(--bv-statusbar-h) + 8px);
+  left: var(--bv-space-4);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: none;
+  color: var(--bv-black);
+  cursor: pointer;
+}
+
+.bv-pay-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--bv-text-primary);
+}
+
+/* Home list filters: flat neutral-100 pills — no bubble effect. */
+.bv-home-list-filters .bv-filter-chip {
+  background: var(--bv-neutral-100);
+  box-shadow: none;
+}
+
+/* List | Map switch at the end of the filter row — a quiet outline whose
+   current side is filled black. Same 32 tall as the chips beside it. */
+.bv-view-switch {
+  flex-shrink: 0;
+  display: flex;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid var(--bv-neutral-200);
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-white);
+}
+
+.bv-view-switch button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: none;
+  color: var(--bv-text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.bv-view-switch button[aria-pressed='true'] {
+  background: var(--bv-black);
+  color: var(--bv-white);
+}
+
+/* Map view's copy of the row: the spot the list's row sticks to, floating
+   over the tiles — so the chips and switch go white and lift off the map. */
+.bv-map-filters {
+  position: absolute;
+  top: calc(var(--bv-statusbar-h) + 52px);
+  left: 0;
+  right: 0;
+  z-index: 7;
+}
+
+.bv-map-filters .bv-home-list-filters {
+  position: static;
+  margin: 0;
+  background: none;
+}
+
+.bv-map-filters .bv-filter-chip {
+  background: var(--bv-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.bv-map-filters .bv-view-switch {
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Floating style: one pill centred above the search bar in both views; the
+   recentre button keeps its corner beside it on the map. */
+.bv-view-row.floating {
+  position: relative;
+  justify-content: center;
+  min-height: 35px;
+}
+
+.bv-view-row.floating .bv-map-locate {
+  position: absolute;
+  right: 18px;
+}
+
+/* In search results the column's own gap spaces the banner. */
+.bv-search-results .bv-home-banner {
+  margin-bottom: 0;
+}
+
+/* Home banner carousel — full-width slides that snap one at a time. */
+.bv-banner-rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.bv-banner-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-banner-rail > .bv-home-banner {
+  flex: 0 0 100%;
+  margin-bottom: 0;
+  scroll-snap-align: start;
+}
+
+.bv-banner-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0 8px;
+}
+
+.bv-banner-dots button {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: var(--bv-radius-full);
+  background: var(--bv-neutral-300);
+  cursor: pointer;
+  transition: width 0.2s ease-out, background-color 0.2s ease-out;
+}
+
+.bv-banner-dots button[aria-current='true'] {
+  width: 16px;
+  background: var(--bv-black);
+}
+
+/* A result card that opens its store. */
+.bv-hit.openable {
+  cursor: pointer;
 }

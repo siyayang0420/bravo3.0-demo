@@ -1,9 +1,11 @@
 // Home — implements Figma node 19237:3737 (Home-Default)
-// Map-first discovery screen with balance pills, filter chips,
-// AI prompt dock, and bottom nav.
-import { useEffect, useMemo, useState } from 'react'
+// Discovery screen with balance pills, filter chips, the search dock and
+// bottom nav. Opens on a list of restaurants picked for you; the map is the
+// secondary view, behind the List/Map toggle. A search that has run always
+// shows the map, since its results are pinned there.
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ScanLine, Bell, LocateFixed, SlidersHorizontal } from 'lucide-react'
+import { ScanLine, Bell, LocateFixed, List, Map as MapIcon } from 'lucide-react'
 import BalancePill from '../components/BalancePill'
 import SpendableSheet, { formatMoney, type SpendableTab } from '../components/SpendableSheet'
 import CircleIconButton from '../components/CircleIconButton'
@@ -17,10 +19,19 @@ import BottomNav, { type NavId } from '../components/BottomNav'
 import Coin from '../components/Coin'
 import MapView, { type MapPlace } from '../components/MapView'
 import MapVenueCard from '../components/MapVenueCard'
+import SearchHitRow from '../components/SearchHitRow'
+import FilterChip from '../components/FilterChip'
+import PromoBanner from '../components/PromoBanner'
+import { HOME_BANNERS, HOME_LIST } from '../data/homeListDemo'
 import MapFriendComment from '../components/MapFriendComment'
 import { useDemoUser } from '../components/DemoIdentity'
 import VenueDetailScreen from './VenueDetailScreen'
-import { ELLIPSIS_FRIEND_COMMENT, FRIEND_POST_ID } from '../data/venueDetailDemo'
+import {
+  ELLIPSIS_FRIEND_COMMENT,
+  FRIEND_POST_ID,
+  detailForHit,
+  type VenueDetail,
+} from '../data/venueDetailDemo'
 import { TOP_UP_BONUS } from '../data/spendableDemo'
 import { pickPeople } from '../data/people'
 import ellipsisInterior from '../assets/venue/ellipsis-interior.png'
@@ -30,19 +41,7 @@ import thumbDimsum from '../assets/thumb-dimsum.jpg'
 import thumbRestaurants from '../assets/thumb-restaurants.png'
 import offerVeras from '../assets/offer-veras.png'
 import offerDawn from '../assets/offer-dawn.png'
-import michelin from '../assets/taste/cuisine-michelin.png'
-
-// Category cards over the dock — eyeballed from 20303:28671, where they are
-// part of a flattened screenshot rather than layers. Icon over label in a
-// white card. Michelin is the real mark (the Taste Identity asset); the rest
-// are emoji, which render as the same glossy 3D glyphs on Apple devices.
-const CATEGORIES = [
-  { label: 'Near me', emoji: '📍' },
-  { label: 'Featured', emoji: '⚡' },
-  { label: 'Michelin', img: michelin },
-  { label: 'Award-winning', emoji: '🏅' },
-  { label: 'Brunch', emoji: '🥪' },
-]
+import { type SearchHit } from '../data/searchDemo'
 
 // EDIT ME — the real map's opening view and restaurant pins.
 // [lng, lat]. This opens on the Bridgeport area of Richmond, BC (the same
@@ -97,6 +96,114 @@ const MAP_PLACES: MapPlace[] = [
     },
   },
 ]
+
+// Real Bravo partners in Richmond (bravoup.ca/restaurants/all/richmond).
+// Photos are each store's cover from its Bravo gallery, loaded from Bravo's
+// image bucket. The pins are laid out to fill the opening view without their
+// labels colliding — not placed at the real street addresses.
+const bravoPhoto = (hash: string) =>
+  `https://bravo-auto.s3.ca-central-1.amazonaws.com/thumbnails/300/${hash}.webp`
+type BravoPin = {
+  id: string
+  name: string
+  cuisine: string
+  price: string
+  photo: string
+  cashback: string
+  distance: string
+  lng: number
+  lat: number
+}
+const pin = (
+  id: string,
+  name: string,
+  cuisine: string,
+  price: string,
+  photo: string,
+  cashback: string,
+  distance: string,
+  lng: number,
+  lat: number,
+): BravoPin => ({ id, name, cuisine, price, photo, cashback, distance, lng, lat })
+
+const BRAVO_PINS: BravoPin[] = [
+  pin('lanxuan', 'Lanxuan Restaurant', 'Cantonese', '$$', bravoPhoto('412dd1890c40c4953c48127950a0e009'), '6%', '2.4km', -123.1429, 49.2076),
+  pin('zenbu', 'Zenbu Aburi', 'Japanese', '$$', bravoPhoto('0780334432f7c1e19e2a4cb31af4219b'), '5%', '2.6km', -123.1233, 49.2076),
+  pin('kiyo', 'Kiyo Sushi', 'Sushi', '$$', bravoPhoto('c02f9215ba4439b6d450d46b5ce7cb7a'), '4%', '2.0km', -123.121, 49.2043),
+  pin('drama', 'Drama Hot Pot', 'Hot pot', '$$', bravoPhoto('4f8ddeb2a8b09c92d0ce91aa86693c81'), '5%', '1.7km', -123.1422, 49.2043),
+  pin('yuans', "Yuan's Hot Pot", 'Hot pot', '$$', bravoPhoto('ea020ee74b590307a57c690cab3edcbd'), '6%', '1.2km', -123.132, 49.201),
+  pin('wuhan', 'Wu Han Spicy Duck', 'Chinese', '$', bravoPhoto('16b78ea3da6d03f7b98d3dea2f063e98'), '8%', '1.5km', -123.1422, 49.1908),
+  pin('typhoon-tea', 'Typhoon Bubble Tea Taiwanese Cuisine', 'Taiwanese & HK Café', '$', bravoPhoto('74e3993f8272c235fbd63fb1a5908269'), '5%', '0.9km', -123.1348, 49.1872),
+  pin('egg-lab', 'Egg Lab', 'Brunch', '$', bravoPhoto('b84551a7ac75ff65f88d10638af0fca1'), '4%', '1.9km', -123.1192, 49.195),
+  pin('dawn-steak', 'House of Dawn Steakhouse', 'Steakhouse', '$$$', bravoPhoto('81aa69b4ad6dd1fbb2a8f214336afad8'), '8%', '2.2km', -123.1357, 49.18),
+  pin('oui', 'Oui Patisserie', 'Dessert', '$$', bravoPhoto('5f599d178c90e807abc6b0d6aafe5e56'), '5%', '2.8km', -123.1431, 49.1836),
+  pin('azure', 'Azure Cafe', 'Cafe', '$', bravoPhoto('fae1ad48fdd9cffc8de25e4203f77a80'), '3%', '3.1km', -123.1219, 49.1836),
+  // Past the opening view — pan or zoom out to find them.
+  // South, toward City Centre.
+  pin('curry-express', 'Curry Express Richmond Center', 'Indian', '$', bravoPhoto('6f4681110abdc9f4559c6795b2e1506c'), '4%', '3.4km', -123.14, 49.16),
+  pin('three-woks', 'Three Woks', 'Chinese', '$', bravoPhoto('c8d9e904a8c22e18af5acfb5eb5c9afa'), '5%', '3.7km', -123.115, 49.157),
+  pin('malaya', 'Malaya Kitchen', 'Malaysian', '$$', bravoPhoto('3b064a0e314ae5f95b6333466552f3bd'), '6%', '4.0km', -123.142, 49.152),
+  pin('88-malaysian', '88 Malaysian Crystal BBQ Pork & Food', 'Malaysian BBQ', '$', bravoPhoto('bd73e857e51bc72c61e1fe98f99b51eb'), '5%', '4.3km', -123.117, 49.149),
+  pin('hainan', 'Hainan Kitchen', 'Hainanese', '$', bravoPhoto('af8872c329d5e4512eedc47f07edfae1'), '4%', '4.6km', -123.14, 49.144),
+  pin('flour-dance', 'Flour Dance', 'Bakery', '$', bravoPhoto('1438fdd14ece5cad732b31ae74f4ef0f'), '3%', '4.9km', -123.118, 49.141),
+  pin('bbq-chicken', 'BBQ Chicken', 'Korean fried chicken', '$$', bravoPhoto('6f59e859a95ec230bff2925aaec21961'), '5%', '5.2km', -123.143, 49.136),
+  // East, past Bridgeport.
+  pin('chuan-ku', 'Chuan Ku BBQ Restaurant', 'Sichuan BBQ', '$$', bravoPhoto('9853592baaa49c9cd982254e7b73a052'), '6%', '2.9km', -123.1, 49.208),
+  pin('taos', 'TAOS CAFE', 'Cafe', '$', bravoPhoto('04d9c04cfea63eccbd293daf0b0d0083'), '4%', '4.1km', -123.075, 49.204),
+  pin('masa', 'Masa Ishibashi', 'Japanese', '$$$', bravoPhoto('c5bfee61d2c521e4131603c533cde570'), '7%', '2.7km', -123.1, 49.198),
+  pin('pho7', 'Pho 7', 'Vietnamese', '$', bravoPhoto('655a5d10f623a9b48617e6e900aa81f8'), '5%', '4.4km', -123.075, 49.192),
+  pin('grill-king', 'Grill King', 'Grill', '$$', bravoPhoto('a18716deabd01774ce77ec7b703944af'), '4%', '2.9km', -123.098, 49.182),
+  pin('mango-yummy', 'Mango Yummy', 'Dessert', '$', bravoPhoto('5abfdaebfd849b6f9a64cf0d5ebb71fd'), '5%', '4.6km', -123.074, 49.178),
+  pin('protein-go', 'Protein Go Smoothie Bar', 'Smoothies', '$', bravoPhoto('8879f1f9f2392d0b5b25d1b1cab0695e'), '3%', '3.3km', -123.097, 49.172),
+  // West, toward Terra Nova.
+  pin('meraki', 'Meraki Street', 'Greek', '$$', bravoPhoto('8950dc636916a3e2aaf3e4aa558fa626'), '5%', '3.6km', -123.178, 49.188),
+  pin('and-drinks', 'And Drinks', 'Bubble tea', '$', bravoPhoto('dbc78f427f28b21edd0c9dda58987d33'), '6%', '3.4km', -123.175, 49.181),
+  pin('100e-fruit', '100E FRUIT', 'Fruit tea', '$', bravoPhoto('c10572e2595f790a32129102fde7ce95'), '5%', '3.8km', -123.178, 49.1745),
+  pin('fruit-box', 'Fruit Box', 'Fruit', '$', bravoPhoto('e6a86d0d4de791c626fe3f08c903c5d9'), '4%', '4.0km', -123.172, 49.168),
+  pin('aw', 'A&W Canada', 'Burgers', '$', bravoPhoto('5a566380ff4e2091872f3ef2ad154ac6'), '3%', '4.4km', -123.176, 49.1615),
+]
+
+// The same records as a search hit, so their detail pages come from the
+// shared builder (detailForHit), keyed by pin id.
+const bravoHit = (p: BravoPin): SearchHit => ({
+  id: p.id,
+  name: p.name,
+  meta: `${p.cuisine} • Richmond • ${p.distance}`,
+  distance: p.distance,
+  lng: p.lng,
+  lat: p.lat,
+  photo: p.photo,
+  cashback: p.cashback,
+  tag: '',
+  savers: [],
+  note: '',
+})
+const PIN_DETAILS: Record<string, VenueDetail> = Object.fromEntries(
+  BRAVO_PINS.map((p) => [p.id, detailForHit(bravoHit(p))]),
+)
+
+MAP_PLACES.push(
+  ...BRAVO_PINS.map(
+    (p, i): MapPlace => ({
+      id: p.id,
+      name: p.name,
+      meta: `${p.cuisine} · ${p.price}`,
+      lng: p.lng,
+      lat: p.lat,
+      photo: p.photo,
+      venue: {
+        title: p.name,
+        logo: p.photo,
+        photos: [p.photo, ellipsisInterior],
+        cashback: p.cashback,
+        savers: venueFaces.slice(0, 3).map((f) => f.avatar),
+        savedLabel: `${4 + i * 3}+`,
+        meta: `${p.cuisine} • Richmond • ${p.price}`,
+        distance: p.distance,
+      },
+    }),
+  ),
+)
 // Shown only when the Home "promotion" state is on (Figma 19243:4646).
 // The activatable merchant offers at the top of the sheet.
 const OFFERS: Offer[] = [
@@ -136,12 +243,25 @@ const PROMOTIONS: Promotion[] = [
   },
 ]
 
+/**
+ * How you swap between the list and the map — a demo state the tweaker picks:
+ * `icons` is a List | Map icon switch at the end of the filter row;
+ * `floating` is one pill above the search bar.
+ */
+export type ViewToggleStyle = 'icons' | 'floating'
+
+const VIEWS = [
+  { id: 'list', label: 'List', Icon: List },
+  { id: 'map', label: 'Map', Icon: MapIcon },
+] as const
+
 export default function HomeScreen({
   active,
   onNavigate,
   hasPromotion = false,
   intro = false,
   avatar,
+  viewToggle = 'icons',
 }: {
   active: NavId
   onNavigate: (id: NavId) => void
@@ -151,16 +271,83 @@ export default function HomeScreen({
   intro?: boolean
   /** The signed-in demo user's own face — the nav's last item. */
   avatar?: string
+  viewToggle?: ViewToggleStyle
 }) {
   const [spendableOpen, setSpendableOpen] = useState(false)
   const [spendableTab, setSpendableTab] = useState<SpendableTab>('balance')
   const [promoOpen, setPromoOpen] = useState(false)
-  // Which category card is on. Visual only for now — the map has no
-  // category filter to drive yet.
-  const [category, setCategory] = useState<string | null>(null)
-  // Drag and wheel scroll the cards on a desktop, where touch isn't there.
-  const categoryRail = useDragScroll<HTMLDivElement>()
+  // Drag and wheel scroll the filter chips on a desktop, where touch isn't there.
+  const filterRail = useDragScroll<HTMLDivElement>()
+  const mapFilterRail = useDragScroll<HTMLDivElement>()
   const { searchOpen, ask, promptProps, overlays, results } = useSearchLauncher('map')
+  const [view, setView] = useState<'list' | 'map'>('list')
+  const showMap = view === 'map' || !!results
+  const floating = viewToggle === 'floating'
+  const switchView = (v: 'list' | 'map') => {
+    setPlace(null)
+    setView(v)
+  }
+  // The same filter row heads both views — stuck under the top bar in the
+  // list, floating over the tiles on the map — with the List | Map switch at
+  // its end, so the switch sits in one place whichever view you are in.
+  // ponytail: the filters are decorative — no Cuisine/Price menus exist yet.
+  const filterHeader = (rail: RefObject<HTMLDivElement>) => (
+    <div className="bv-home-list-filters">
+      {/* Scrolls sideways (drag on the review site); the switch stays put. */}
+      <div className="bv-filter-row" ref={rail}>
+        <FilterChip label="🔥 Big saving" />
+        <FilterChip label="Cuisine" hasDropdown />
+        <FilterChip label="Featured" />
+        <FilterChip label="Price" hasDropdown />
+        <FilterChip label="Areas" hasDropdown />
+        <FilterChip label="Categories" hasDropdown />
+      </div>
+      {!floating && (
+        <div
+          className="bv-view-switch"
+          role="group"
+          aria-label="View"
+        >
+          {VIEWS.map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={view === id}
+              aria-label={label}
+              onClick={() => switchView(id)}
+            >
+              <Icon size={16} strokeWidth={2} />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+  // Scrolling the list down tips the bottom nav away; scrolling up brings it
+  // back — the same behaviour as the Discover feed.
+  const [navHidden, setNavHidden] = useState(false)
+  const listScroller = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    setNavHidden(false)
+    const el = listScroller.current
+    if (!el) return
+    let last = el.scrollTop
+    const onScroll = () => {
+      const now = el.scrollTop
+      const delta = now - last
+      // Ignore jitter, and never hide it right at the top of the list.
+      if (Math.abs(delta) < 6) return
+      last = now
+      setNavHidden(delta > 0 && now > 40)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [showMap])
+  // The banner carousel: one full-width slide at a time, snapping. The dots
+  // follow the swipe and jump to a slide when tapped.
+  const bannerRail = useRef<HTMLDivElement>(null)
+  const [bannerAt, setBannerAt] = useState(0)
+  const slideStep = (el: HTMLDivElement) => el.clientWidth + 12 // slide + gap
   // A search that has run swaps the pins for what it found and frames them in
   // the map left showing above the results sheet (55% of the screen).
   const searchMap = useMemo(() => {
@@ -196,8 +383,11 @@ export default function HomeScreen({
   // Set when the detail screen was opened by tapping the friend's note, so it
   // knows to scroll to that note rather than opening at the top.
   const [venueAnchor, setVenueAnchor] = useState<string | undefined>(undefined)
-  const openVenue = (anchor?: string) => {
+  // Which store the detail page shows. Unset = the map pin's venue (Ellipsis).
+  const [venueDetail, setVenueDetail] = useState<VenueDetail | undefined>(undefined)
+  const openVenue = (anchor?: string, detail?: VenueDetail) => {
     setVenueAnchor(anchor)
+    setVenueDetail(detail)
     setVenueOpen(true)
   }
   useEffect(() => {
@@ -230,12 +420,72 @@ export default function HomeScreen({
         onDeselect={() => setPlace(null)}
       />
 
+      {/* List view — the default. Laid over the map rather than replacing
+          it, so the map keeps its tiles and position for the toggle; hidden
+          rather than unmounted, so it keeps its scroll spot and its rails
+          keep their drag handlers. */}
+      <div className={`bv-home-list${navHidden ? ' bars-hidden' : ''}`} hidden={showMap}>
+        <div className="bv-home-list-scroll" ref={listScroller}>
+          <div
+            className="bv-banner-rail"
+            ref={bannerRail}
+            onScroll={(e) => setBannerAt(Math.round(e.currentTarget.scrollLeft / slideStep(e.currentTarget)))}
+          >
+            {HOME_BANNERS.map((b) => (
+              <PromoBanner key={b.title} banner={b} />
+            ))}
+          </div>
+          <div className="bv-banner-dots">
+            {HOME_BANNERS.map((b, i) => (
+              <button
+                key={b.title}
+                type="button"
+                aria-label={`Show banner ${i + 1}`}
+                aria-current={i === bannerAt}
+                onClick={() => {
+                  const el = bannerRail.current
+                  if (el) el.scrollTo({ left: i * slideStep(el), behavior: 'smooth' })
+                }}
+              />
+            ))}
+          </div>
+          {/* The banner scrolls away; the filters stick under the top bar. */}
+          {filterHeader(filterRail)}
+          <div className="bv-search-hits">
+            {HOME_LIST.map((h) => (
+              <SearchHitRow key={h.id} hit={h} onOpen={() => openVenue(undefined, detailForHit(h))} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Map view's copy of the filter row, at the spot the list's sticks to.
+          Hidden, not unmounted, so its rail keeps its drag handlers. A search
+          that has run has its own sheet, so the row steps aside for it. */}
+      <div className="bv-map-filters" hidden={view !== 'map' || !!results}>
+        {filterHeader(mapFilterRail)}
+      </div>
+
       {/* top bar */}
       <motion.div
         className="bv-topbar"
         initial={intro ? { opacity: 0, y: -10 } : false}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: 'easeOut' }}
+        // Scrolling the list down folds it away, the mirror of the nav: it
+        // turns back on its bottom edge, which rides up with the filter row
+        // taking its place. Scrolling up unfolds both.
+        animate={
+          navHidden ? { opacity: 0, rotateX: 90, y: -52 } : { opacity: 1, rotateX: 0, y: 0 }
+        }
+        transition={{
+          duration: 0.34,
+          ease: [0.4, 0, 0.2, 1],
+          opacity: { duration: 0.22, ease: 'easeOut' },
+        }}
+        style={{
+          pointerEvents: navHidden ? 'none' : undefined,
+          originY: 1,
+          transformPerspective: 320,
+        }}
       >
         <div className="bv-topbar-group">
           <BalancePill onClick={() => openSpendable('balance')}>
@@ -253,23 +503,46 @@ export default function HomeScreen({
 
       {/* bottom stack */}
       <motion.div
-        className={`bv-bottom-stack${searchOpen ? ' search-hidden' : ''}`}
+        className={`bv-bottom-stack${searchOpen ? ' search-hidden' : ''}${showMap ? '' : ' list'}`}
         initial={intro ? { y: 40, opacity: 0 } : false}
         // The venue card takes the bottom of the screen, so the chips and the
         // dock give it up and drop out of frame rather than stacking above it.
         animate={{ y: place ? 260 : 0, opacity: place ? 0 : 1 }}
-        transition={{ type: 'spring', stiffness: 320, damping: 32, delay: place ? 0 : 0.1 }}
+        transition={{
+          type: 'spring',
+          stiffness: 320,
+          damping: 32,
+          delay: place ? 0 : 0.1,
+        }}
       >
         {/* Recentre — inside the stack so it rides up and out with the chips
             when a pin takes the bottom of the screen, rather than hanging
             over the venue card. */}
-        <button
-          className="bv-map-locate"
-          aria-label="Recentre map"
-          onClick={() => setPlace(null)}
-        >
-          <LocateFixed size={20} strokeWidth={1.9} />
-        </button>
+        {/* The floating style's one pill, centred in both views; the
+            recentre button joins it on the map. */}
+        {(showMap || floating) && (
+          <div className={`bv-view-row${floating ? ' floating' : ''}`}>
+            {floating && (
+              <button
+                type="button"
+                className="bv-view-toggle"
+                onClick={() => switchView(showMap ? 'list' : 'map')}
+              >
+                {showMap ? <List size={16} strokeWidth={2} /> : <MapIcon size={16} strokeWidth={2} />}
+                {showMap ? 'List' : 'Map'}
+              </button>
+            )}
+            {showMap && (
+              <button
+                className="bv-map-locate"
+                aria-label="Recentre map"
+                onClick={() => setPlace(null)}
+              >
+                <LocateFixed size={20} strokeWidth={1.9} />
+              </button>
+            )}
+          </div>
+        )}
         {/* The promotion chip outlives the suggestion row it used to share:
             it is how the "Promotion live" demo state shows itself. */}
         {hasPromotion && (
@@ -277,44 +550,17 @@ export default function HomeScreen({
             <PromoChip onClick={() => setPromoOpen(true)} />
           </div>
         )}
-        <div className="bv-category-row" ref={categoryRail}>
-          {CATEGORIES.map((c) => (
-            <button
-              key={c.label}
-              type="button"
-              className="bv-category"
-              aria-pressed={category === c.label}
-              onClick={() => setCategory((cur) => (cur === c.label ? null : c.label))}
-            >
-              <span className="bv-category-icon" aria-hidden="true">
-                {c.img ? <img src={c.img} alt="" /> : c.emoji}
-              </span>
-              {c.label}
-            </button>
-          ))}
-        </div>
-        <div className="bv-dock">
+        <div className={`bv-dock${navHidden ? ' nav-hidden' : ''}`}>
           <div className="bv-dock-row">
             {/* Mic and voice act in place; tapping the placeholder opens the
                 search sheet, where the real keyboard belongs. */}
             <div className="bv-dock-search-trigger">
-              {/* The gradient ring box, minus its plus. One static line, not
-                  the rotating hints: it names what the field searches rather
-                  than advertising the assistant. */}
-              <PromptBox
-                {...promptProps}
-                showAdd={false}
-                placeholders={undefined}
-                placeholder="Search restaurants, people and more"
-              />
+              <PromptBox {...promptProps} />
             </div>
-            {/* ponytail: decorative for now — there is no filter panel to
-                open yet. Wire it when that design lands. */}
-            <button type="button" className="bv-dock-filter" aria-label="Filters">
-              <SlidersHorizontal size={20} strokeWidth={1.9} />
-            </button>
           </div>
-          <BottomNav active={active} onSelect={onNavigate} avatar={avatar} />
+          <div className="bv-nav-slot">
+            <BottomNav active={active} onSelect={onNavigate} avatar={avatar} />
+          </div>
         </div>
       </motion.div>
 
@@ -329,7 +575,12 @@ export default function HomeScreen({
             initial={{ y: '110%' }}
             animate={{ y: 0 }}
             exit={{ y: '110%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 32, mass: 0.8 }}
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 32,
+              mass: 0.8,
+            }}
           >
             <AnimatePresence>
               {/* A note from someone you follow — so there is none when you
@@ -340,7 +591,12 @@ export default function HomeScreen({
                   initial={{ opacity: 0, y: 18, scale: 0.94 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.96 }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 26, mass: 0.6 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 380,
+                    damping: 26,
+                    mass: 0.6,
+                  }}
                 >
                   <MapFriendComment
                     avatar={place.venue.friendComment.avatar}
@@ -350,7 +606,10 @@ export default function HomeScreen({
                 </motion.div>
               )}
             </AnimatePresence>
-            <MapVenueCard venue={place.venue} onOpen={() => openVenue()} />
+            <MapVenueCard
+              venue={place.venue}
+              onOpen={() => openVenue(undefined, PIN_DETAILS[place.id])}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -364,9 +623,15 @@ export default function HomeScreen({
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', stiffness: 320, damping: 34, mass: 0.7 }}
+            transition={{
+              type: 'spring',
+              stiffness: 320,
+              damping: 34,
+              mass: 0.7,
+            }}
           >
             <VenueDetailScreen
+              venue={venueDetail}
               anchorPostId={venueAnchor}
               onBack={() => setVenueOpen(false)}
             />
